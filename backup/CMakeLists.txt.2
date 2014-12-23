@@ -1,0 +1,9 @@
+cmake_minimum_required(VERSION 2.6)
+
+project(TEST)
+
+message(STATUS "This is BINARY dir " ${TEST_BINARY_DIR})
+message(STATUS "This is SOURCE dir " ${TEST_SOURCE_DIR})
+
+add_subdirectory(src/lib lib)
+add_subdirectory(src/test bin)

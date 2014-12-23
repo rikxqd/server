@@ -1,0 +1,70 @@
+1、CMAKE_BINARY_DIR，PROJECT_BINARY_DIR，<projectname>_BINARY_DIR
+      以上三个变量代表同一个值 执行cmake的路径
+
+2、CMAKE_SOURCE_DIR，PROJECT_SOURCE_DIR，<projectname>_SOURCE_DIR，
+      以上三个变量代表同一个值 工程的路径
+
+3、CMAKE_CURRENT_SOURCE_DIR
+      指的是当前处理的 CMakeLists.txt 所在的路径
+
+4、CMAKE_CURRRENT_BINARY_DIR
+      如果是 in-source 编译， 它跟 CMAKE_CURRENT_SOURCE_DIR 一致， 如果是 out- ofsource 编译， 他指的是 target 编译目录。
+      
+5、CMAKE_CURRENT_LIST_FILE
+      输出调用这个变量的 CMakeLists.txt 的完整路径
+      
+6、CMAKE_CURRENT_LIST_LINE
+      输出这个变量所在的行
+      
+7、CMAKE_MODULE_PATH
+      这个变量用来定义自 己的 cmake 模块所在的路径。 
+      
+8、EXECUTABLE_OUTPUT_PATH 和 LIBRARY_OUTPUT_PATH
+      分别用来重新定义最终结果的存放目录
+      
+9、PROJECT_NAME
+      返回通过 PROJECT 指令定义的项目名称。
+      
+五， 系统信息
+1, CMAKE_MAJOR_VERSION， CMAKE 主版本号， 比如 2. 4.6 中的 2
+2, CMAKE_MINOR_VERSION， CMAKE 次版本号， 比如 2. 4.6 中的 4
+3, CMAKE_PATCH_VERSION， CMAKE 补丁等级， 比如 2. 4.6 中的 6
+4, CMAKE_SYSTEM， 系统名称， 比如 Linux-2. 6.22
+5, CMAKE_SYSTEM_NAME， 不包含版本的系统名， 比如 Linux
+6, CMAKE_SYSTEM_VERSION， 系统版本， 比如 2.6. 22
+7, CMAKE_SYSTEM_PROCESSOR， 处理器名称， 比如 i686.
+8, UNIX， 在所有的类 UNIX 平台为 TRUE， 包括 OS X 和 cygwin
+9, WIN32， 在所有的 win32 平台为 TRUE， 包括 cygwin
+
+六， 主要的开关选项：
+1， CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS， 用来控制 IF ELSE 语句的书写方式
+2， BUILD_SHARED_LIBS
+这个开关用来控制默认的库编译方式， 如果不进行设置， 使用 ADD_LIBRARY 并没有指定库
+类型的情况下， 默认编译生成的库都是静态库。
+如果 SET(BUILD_SHARED_LIBS ON) 后， 默认生成的为动态库。
+3， CMAKE_C_FLAGS
+设置 C 编译选项， 也可以通过指令 ADD_DEFINITIONS( ) 添加。
+4， CMAKE_CXX_FLAGS
+设置 C++编译选项， 也可以通过指令 ADD_DEFINITIONS() 添加。
+
+
+命令
+1、ADD_DEFINITIONS
+      向 C/C++编译器添加-D 定义
+
+2、ADD_DEPENDENCIES
+      定义 target 依赖的其他 target， 确保在编译本 target 之前， 其他的 target 已经被构建。
+
+3、ADD_EXECUTABLE、 ADD_LIBRARY、 ADD_SUBDIRECTORY 
+
+4、ADD_TEST 与 ENABLE_TESTING 指令。
+
+5、AUX_SOURCE_DIRECTORY
+      作用是发现一个目录下所有的源代码文件并将列表存储在一个变量中， 这个指令临时被用来自动构建源文件列表。
+      
+6、CMAKE_MINIMUM_REQUIRED
+
+7、EXEC_PROGRAM
+      在 CMakeLists.txt 处理过程中执行命令， 并不会在生成的 Makefile 中执行。
+      
+9、INCLUDE 指令， 用来载入 CMakeLists.txt 文件， 也用于载入预定义的 cmake 模块.
