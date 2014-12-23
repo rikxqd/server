@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [ 6 == $# ]
+then
+	date -d"$1-$2-$3 $4:$5:$6" +%s
+elif [ 1 == $# ]
+then
+	date -d"@$1"
+fi
