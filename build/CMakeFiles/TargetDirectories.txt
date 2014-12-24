@@ -1,0 +1,3 @@
+/mnt/hgfs/share/server/build/lib/CMakeFiles/hello.dir
+/mnt/hgfs/share/server/build/lib/CMakeFiles/hello1.dir
+/mnt/hgfs/share/server/build/bin/CMakeFiles/main.dir
