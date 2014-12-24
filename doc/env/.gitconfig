@@ -1,0 +1,10 @@
+[user]
+	name = MrAlun
+	email = 850618956@qq.com
+[core]
+    editor = nano
+    whitespace = off
+[advice]
+    statusuoption = false
+[color]
+    ui = true
