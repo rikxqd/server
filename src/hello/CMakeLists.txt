@@ -12,7 +12,7 @@ endif()
 # 执行命令
 exec_program(ls ARGS "-a"  OUTPUT_VARIABLE LS_OUTPUT RETURN_VALUE LS_RVALUE)
 if(NOT LS_RVALUE)
-      MESSAGE(STATUS "ls result:  " ${LS_OUTPUT})
+      message(STATUS "ls result:  " ${LS_OUTPUT})
 endif(NOT LS_RVALUE)
 
 # 添加宏
