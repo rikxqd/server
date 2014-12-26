@@ -7,14 +7,11 @@
 #include <netinet/in.h>
 #include <string.h>
 #include <arpa/inet.h>
-#include <integer.h>
+
+#include <net/socket.h>
+
 
 #define	MAXLINE		4096	/* max text line length */
-
-int Socket( int domain, int type, int protocol )
-{
-	return socket( domain, type, protocol );
-}
 
 int Connect( int sockfd, const struct sockaddr *addr, socklen_t addrlen )
 {
@@ -23,7 +20,7 @@ int Connect( int sockfd, const struct sockaddr *addr, socklen_t addrlen )
 
 int main(int argc, char **argv)
 {
-	Uint8 a;
+	uint8 a;
 	a++;
 	printf("a ==== %d", a);
 	
