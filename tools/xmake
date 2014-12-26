@@ -1,0 +1,13 @@
+#!/bin/bash
+
+if [ 0 == $# ]
+then
+	cd /home/ubuntu/workspace/server/build
+	cmake ..
+	cd -
+elif [ 1 == $# ]
+then
+	cd /home/ubuntu/workspace/server/build
+        make $1
+        cd -
+fi
