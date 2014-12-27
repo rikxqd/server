@@ -13,8 +13,8 @@ if(UNIX)
       add_definitions(-DUNIX)
 endif(UNIX)
 
-# 添加工程子目录 add_subdirectory(src/hello bin)
-add_subdirectory(src/inc inc)
+# 添加工程子目录
+add_subdirectory(src/inc lib)
 add_subdirectory(src/test bin)
 
 # 添加测试

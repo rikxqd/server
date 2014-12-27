@@ -1,27 +1,13 @@
 #include <iostream>
-#include <unistd.h>
 #include <stdlib.h>
 
 #include "net/warp_socket.h"
+#include "process/process.h"
 
 
 #define SERVER_PORT 3000
 
 using namespace std;
-
-pid_t Fork(void)
-{
-	pid_t	pid = fork();
-	if ( -1 == pid )
-		cout << "fork error" << endl;
-	return pid;
-}
-
-void Close( int fd )
-{
-	if ( -1 == close( fd ) )
-		cout << " close fd fail " << endl;
-}
 
 int main( int argc, char* argv[] )
 {
@@ -41,21 +27,21 @@ int main( int argc, char* argv[] )
       res = Listen( ssock, 1024 );
       if ( 0 > res )
             exit( -1 );
-      
-      pid_t childpid;      
+            
       for ( ; ; )
       {
             struct sockaddr_in caddr = {0};
 		socklen_t ca_len = sizeof(caddr);
 		SOCKFD csock = Accept( ssock, (Address*)&caddr, &ca_len );
 
-		if ( ( childpid = Fork() ) == 0) 
+            pid_t childpid = Fork();
+		if ( 0 == childpid ) 
 		{
-			Close( ssock );
+			close( ssock );
 			// str_echo( csock );
 			exit( 0 );
 		}
-		Close( csock );
+		close( csock );
 	}
             
       exit( 0 );
