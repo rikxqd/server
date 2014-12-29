@@ -4,7 +4,7 @@
 cmake_minimum_required(VERSION 2.6)
 
 # cmake过程输出
-message(STATUS "GD_ENV = $ENV{GD_ENV}")
+message(STATUS "WS_PATH = $ENV{WS_PATH}")
 
 # 定义工程
 project(SERVER)
