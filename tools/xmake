@@ -1,16 +1,19 @@
 #!/bin/bash
 
-Path="/home/ubuntu/workspace/server/build"
-if [ ! -d $Path ]; then 
-	mkdir $Path 
+MakePath=${WS_PATH}/build
+if [ ! -d $MakePath ]; then 
+	mkdir $MakePath 
 fi
 
 if [ 0 == $# ]; then
-	cd $Path
+	cd $MakePath
 	cmake ..
 	cd -
+	cd ${WS_PATH}/third/tinyxml/
+	make
+	cd -
 elif [ 1 == $# ]; then
-	cd $Path
+	cd $MakePath
         make $1
         cd -
 fi

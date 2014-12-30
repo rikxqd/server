@@ -1,12 +1,7 @@
 <?xml version="1.0" standalone="no" ?>
 <Root>
-      <server id="1" index=3>
-            <ip>127.0.0.1</ip>
-            <port>3000</port>
-      </server>
-      
-      <client id="2" index=3>
-            <ip>127.0.0.1</ip>
-            <port>3000</port>
-      </client>
+	<server id="1" index=3>
+		<ip>127.0.0.1</ip>
+		<port>3000</port>
+	</server>
 </Root>

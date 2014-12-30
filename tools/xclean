@@ -2,5 +2,8 @@
 
 if [ 0 = $# ]
 then
-	rm -r /home/ubuntu/workspace/server/build/*
+	rm -r ${WS_PATH}/build/*
+	cd ${WS_PATH}/third/tinyxml
+	make clean
+	cd -
 fi
