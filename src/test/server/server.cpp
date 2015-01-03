@@ -49,6 +49,7 @@ int main( int argc, char* argv[] )
 	struct sockaddr_in saddr= {0};
 	saddr.sin_family        = AF_INET;
 	saddr.sin_port          = htons( port );
+	//saddr.sin_addr.s_addr	= inet_addr( ip );
 	saddr.sin_addr.s_addr   = htonl( INADDR_ANY );
 
 	int32 res = Bind( ssock, (Address*)&saddr, sizeof saddr );
