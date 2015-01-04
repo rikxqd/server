@@ -15,13 +15,21 @@ public:
 		E_NetStatus_End,
 	};
 
+	typedef void* ( *AcceptHandle )( void* );
+
 	Net();
 	~Net();
 
 	bool Init( const char* ip, uint16 port );
+
+	void Handle( AcceptHandle handle );
+
+	void Run();
+
 private:
-	SOCKFD		m_socket;
-	E_NetStatus	m_status;
+	SOCKFD			m_socket;
+	E_NetStatus		m_status;
+	AcceptHandle	m_accept_handle;
 };
 
 #endif//_NET_H_

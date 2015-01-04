@@ -1,5 +1,18 @@
 #include "net.h"
 #include <arpa/inet.h>
+#include <stdio.h>
+#include <pthread.h>
+
+Net::Net()
+	: m_socket( 0 )
+	, m_status( E_NetStatus_Default )
+	, m_accept_handle( NULL )
+{
+}
+
+Net::~Net()
+{
+}
 
 bool Net::Init( const char* ip, uint16 port )
 {
@@ -22,4 +35,18 @@ bool Net::Init( const char* ip, uint16 port )
 
 	m_status = E_NetStatus_Init;
 	return true;
+}
+
+void Net::Handle( AcceptHandle handle )
+{
+	m_accept_handle = handle;
+}
+
+void Net::Run()
+{
+	if ( m_accept_handle )
+	{
+		pthread_t tid;
+		pthread_create( &tid, NULL, m_accept_handle, NULL );
+	}
 }
