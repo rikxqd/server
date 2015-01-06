@@ -1,0 +1,13 @@
+#!/bin/bash
+
+result=`ps x | grep "" | sed -e '/grep/d' | cut -d '' -f 1`
+
+if [ $result ]
+then
+      echo $result
+else
+      result=`ps x | grep "" | sed -e '/grep/d' | cut -d '' -f 2`
+      echo $result
+fi
+
+gdb -p $result
