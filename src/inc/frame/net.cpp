@@ -25,7 +25,7 @@ bool Net::Init( const char* ip, uint16 port )
 	saddr.sin_port          = htons( port );
 	saddr.sin_addr.s_addr	= inet_addr( ip );
 
-	int32 res = Bind( m_socket, (Address*)&saddr, sizeof saddr );
+	int32 res = Bind( m_socket, (sockaddr*)&saddr, sizeof saddr );
 	if ( 0 > res )
 		return false;
 

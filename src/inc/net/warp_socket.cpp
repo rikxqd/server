@@ -5,27 +5,25 @@
 #include <errno.h>
 
 
-using namespace std;
-
 SOCKFD Socket( int32 domain, int32 type, int32 protocol )
 {
-      SOCKFD ssock = socket( domain, type, protocol );
-      if ( 0 > ssock )
-            cout << "create socket fail " << endl;
-      return ssock;
+	SOCKFD ssock = socket( domain, type, protocol );
+	if ( 0 > ssock )
+		cout << "create socket fail " << endl;
+	return ssock;
 }
 
-int32 Connect( int32 sockfd, const Address* addr, socklen_t addrlen )
+int32 Connect( int32 sockfd, const sockaddr* addr, socklen_t addrlen )
 {
-      int32 res = connect( sockfd, addr, addrlen );
-      if ( 0 > res )
-            cout << "connect fail " << endl;
+	int32 res = connect( sockfd, addr, addrlen );
+	if ( 0 > res )
+		cout << "connect fail " << endl;
 	return res;
 }
 
-int32 Bind( int32 sockfd, const Address* sa, socklen_t salen )
+int32 Bind( int32 sockfd, const sockaddr* sa, socklen_t salen )
 {
-      int32 res = bind( sockfd, sa, salen );
+	int32 res = bind( sockfd, sa, salen );
 	if ( 0 > res )
 		cout << "bind fail " << endl;
 	return res;
@@ -35,46 +33,45 @@ int32 Listen( int32 sockfd, int32 backlog )
 {
 	const char* env = getenv("LISTENQ"); // 获取环境变量
 	if ( NULL != env )
-	      backlog = atoi(env);
-      int32 res = listen( sockfd, backlog );
+		backlog = atoi(env);
+	int32 res = listen( sockfd, backlog );
 	if ( 0 > res )
 		cout << "listen fail " << endl;
-      return res;
+	return res;
 }
 
-SOCKFD Accept( int32 sockfd, Address* sa, socklen_t* len )
+SOCKFD Accept( int32 sockfd, sockaddr* sa, socklen_t* len )
 {
-      SOCKFD csock = 0;
-      while ( true )
-      {
-            csock = accept( sockfd, sa, len );
-	      if ( 0 <= csock )
-	            break;
+	SOCKFD csock = 0;
+	while ( true )
+	{
+		csock = accept( sockfd, sa, len );
+		if ( 0 <= csock )
+			break;
 	      
 #ifdef EPROTO
-	      if ( EPROTO == errno || ECONNABORTED == errno )
+		if ( EPROTO == errno || ECONNABORTED == errno )
 #else
-	      if ( ECONNABORTED == errno )
+		if ( ECONNABORTED == errno )
 #endif
-                  cout << "accept again " << endl;
-            else
-            {
-	            cout << "accept fail " << endl;
-		      break;
-            }
-            
+			cout << "accept again " << endl;
+		else
+		{
+			cout << "accept fail " << endl;
+			break;
+		}
 	}
 	return csock;
 }
 
 /*
-void Getpeername(int32 fd, Address *sa, socklen_t *salenptr)
+void Getpeername(int32 fd, sockaddr *sa, socklen_t *salenptr)
 {
 	if (getpeername(fd, sa, salenptr) < 0)
 		err_sys("getpeername error");
 }
 
-void Getsockname(int32 fd, Address *sa, socklen_t *salenptr)
+void Getsockname(int32 fd, sockaddr *sa, socklen_t *salenptr)
 {
 	if (getsockname(fd, sa, salenptr) < 0)
 		err_sys("getsockname error");
@@ -186,7 +183,7 @@ ssize_t Recv(int32 fd, void *ptr, size_t nbytes, int32 flags)
 	return(n);
 }
 
-ssize_t Recvfrom(int32 fd, void *ptr, size_t nbytes, int32 flags, Address *sa, socklen_t *salenptr)
+ssize_t Recvfrom(int32 fd, void *ptr, size_t nbytes, int32 flags, sockaddr *sa, socklen_t *salenptr)
 {
 	ssize_t		n;
 
@@ -219,7 +216,7 @@ void Send(int32 fd, const void *ptr, size_t nbytes, int32 flags)
 		err_sys("send error");
 }
 
-void Sendto(int32 fd, const void *ptr, size_t nbytes, int32 flags, const Address *sa, socklen_t salen)
+void Sendto(int32 fd, const void *ptr, size_t nbytes, int32 flags, const sockaddr *sa, socklen_t salen)
 {
 	if (sendto(fd, ptr, nbytes, flags, sa, salen) != (ssize_t)nbytes)
 		err_sys("sendto error");

@@ -31,7 +31,7 @@ int main( int argc, char **argv )
 	if ( inet_pton(AF_INET, argv[1], &servaddr.sin_addr ) <= 0)
 		printf( "inet_pton error for %s", argv[1] );
 
-	if ( Connect( sockfd, (Address*) &servaddr, sizeof servaddr ) < 0)
+	if ( Connect( sockfd, (sockaddr*) &servaddr, sizeof servaddr ) < 0)
 		printf( "connect error" );
 
 	while ( ( n = read(sockfd, recvline, MAXLINE ) ) > 0) 

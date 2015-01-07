@@ -3,6 +3,8 @@
 
 #include "define/integer.h"
 
+using namespace std;
+
 // 最大值，最小值
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))

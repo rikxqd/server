@@ -52,7 +52,7 @@ int main( int argc, char* argv[] )
 	//saddr.sin_addr.s_addr	= inet_addr( ip );
 	saddr.sin_addr.s_addr   = htonl( INADDR_ANY );
 
-	int32 res = Bind( ssock, (Address*)&saddr, sizeof saddr );
+	int32 res = Bind( ssock, (sockaddr*)&saddr, sizeof saddr );
 	if ( 0 > res )
 		exit( -1 );
             
@@ -64,7 +64,7 @@ int main( int argc, char* argv[] )
 	{
 		struct sockaddr_in caddr = {0};
 		socklen_t ca_len = sizeof(caddr);
-		SOCKFD csock = Accept( ssock, (Address*)&caddr, &ca_len );
+		SOCKFD csock = Accept( ssock, (sockaddr*)&caddr, &ca_len );
 
 		pid_t childpid = Fork();
 		if ( 0 == childpid ) 
