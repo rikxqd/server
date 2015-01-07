@@ -9,7 +9,10 @@ include_directories(${PROJECT_SOURCE_DIR}/third/tinyxml)
 # 添加编译可执行目标文件及其依赖
 add_executable(server server/server.cpp)
 add_executable(client client/client.cpp)
+add_executable(thread thread/thread.cpp)
 
 # 添加链接库
 target_link_libraries(server base $ENV{WS_PATH}/third/tinyxml/libxml.a)
 target_link_libraries(client base)
+
+target_link_libraries(thread pthread)
