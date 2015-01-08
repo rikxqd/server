@@ -13,6 +13,7 @@ public:
 	explicit Address( uint16 port );
 	Address( string& ip, uint16 port );
 	Address( uint32 ip, uint16 port );
+	Address( string& host );
       
 	~Address();
       

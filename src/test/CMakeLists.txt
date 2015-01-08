@@ -15,4 +15,4 @@ add_executable(thread thread/thread.cpp)
 target_link_libraries(server base $ENV{WS_PATH}/third/tinyxml/libxml.a)
 target_link_libraries(client base)
 
-target_link_libraries(thread pthread)
+target_link_libraries(thread pthread base)

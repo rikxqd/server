@@ -11,6 +11,7 @@ set(LIBBASE_SRC
 	net/warp_socket.cpp 
 	process/process.cpp
 	net/address.cpp
+	thread/thread.cpp
 	)
 set(LIBFRAME_SRC 
 	frame/net.cpp

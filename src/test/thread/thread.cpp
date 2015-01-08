@@ -1,45 +1,38 @@
 #include <pthread.h>
 #include <iostream>
-#include <sys/syscall.h>
-#include <sys/prctl.h>
-#include <unistd.h>
+#include "thread/thread.h"
 
 
 using namespace std;
 
-bool flag = false;
-
-pthread_attr_t tattr;
-
-__thread int a = 3;
-
-int b = 0;
+class TestThread : public Thread
+{
+public:
+      virtual void Run() 
+      { 
+            OnRun();
+            cout << "running" << endl;
+      }
+};
 
 void* ThreadFunc( void* param )
 {
-      pid_t pid = static_cast<pid_t>( ::syscall( SYS_gettid ) );
-      cout << "pid:" << pid << ", a:" << a << endl;
-      
-      ::prctl(PR_SET_NAME, "ThreadFunc");
-      
-      sleep( 10 );
-      
-      b = 100;
+      Thread* thread = static_cast<Thread*>( param );
+      if ( thread )
+            thread->Run();
 
-      return (void*)&b;
+      return (void*)thread;
 }
 
 int main( int argc, char* argv[] )
 {
-      a = 6;
+      TestThread thread;
       
       pthread_t tid;
-      pthread_create( &tid, NULL, ThreadFunc, NULL );
+      pthread_create( &tid, NULL, ThreadFunc, &thread );
       
-      int* c = NULL;
+      Thread* c = NULL;
       pthread_join( tid, (void**)&c );
-      if (c)
-          cout << "c:" << *c << endl;  
       
       return 0;
 }
