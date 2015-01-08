@@ -3,6 +3,11 @@
 
 #include "public.h"
 
+#include <pthread.h>
+
+
+namespace IThread
+{
 
 class Thread
 {
@@ -19,5 +24,9 @@ public:
       
       static int32 Key();
 };
+
+pthread_t Run( Thread* thread );
+
+}
 
 #endif//_THREAD_H_

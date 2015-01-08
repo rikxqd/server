@@ -27,5 +27,6 @@ include_directories(${PROJECT_SOURCE_DIR}/src/inc)
 
 # 添加动态库编译目标文件及其依赖文件
 add_library(base SHARED ${LIBBASE_SRC})
+target_link_libraries(base pthread)
 add_library(frame SHARED ${LIBFRAME_SRC})
 # 静态库 add_library(base STATIC ${LIBBASE_SRC})

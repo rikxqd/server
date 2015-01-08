@@ -5,7 +5,9 @@
 #include <sys/prctl.h>
 #include <unistd.h>
 
-
+namespace IThread
+{
+      
 __thread char m_name[64] = {"unknown"};
 
 void Thread::OnRun()
@@ -26,4 +28,22 @@ const char* Thread::Name() const
 int32 Thread::Key()
 {
       return ::syscall( SYS_gettid );
+}
+
+void* ThreadFunc( void* param )
+{
+      Thread* thread = static_cast<Thread*>( param );
+      if ( thread )
+            thread->Run();
+
+      return (void*)thread;
+}
+
+pthread_t Run( Thread* thread )
+{
+      pthread_t tid;
+      pthread_create( &tid, NULL, ThreadFunc, &thread );
+      return tid;
+}
+
 }
