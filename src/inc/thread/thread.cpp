@@ -42,7 +42,7 @@ void* ThreadFunc( void* param )
 pthread_t Run( Thread* thread )
 {
       pthread_t tid;
-      pthread_create( &tid, NULL, ThreadFunc, &thread );
+      pthread_create( &tid, NULL, ThreadFunc, thread );
       return tid;
 }
 

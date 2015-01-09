@@ -13,6 +13,18 @@ if(UNIX)
       add_definitions(-DUNIX)
 endif(UNIX)
 
+set(CMAKE_BUILD_TYPE "Release")
+
+if( CMAKE_BUILD_TYPE STREQUAL "Debug" )
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -g -Wall -Wno-unused-variable")
+else( CMAKE_BUILD_TYPE STREQUAL "Debug" )
+    set(CMAKE_BUILD_TYPE "Release")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O2")
+endif( CMAKE_BUILD_TYPE STREQUAL "Debug" )
+
+message("Build Type:" ${CMAKE_BUILD_TYPE} ${CMAKE_CXX_FLAGS})
+
+
 # 添加工程子目录
 add_subdirectory(src/inc lib)
 add_subdirectory(src/test bin)
