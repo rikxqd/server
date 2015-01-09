@@ -1,64 +1,44 @@
-//isclassttest.cpp：测试IsClassT的实现
 #include <iostream>
-#include "template.h"
+#include "define/is_class.h"
 
-template<typename T>
-void check()
-{ //检查T是否是类类型：以模板实参方式传递类型
-	if(IsClassT<T>::Yes)
-	{
-		std::cout<<" IsClassT(flag="<<IsClassT<T>::Yes<<")"<<std::endl;
-	}
-	else
-	{
-		std::cout<<" !IsClassT(flag="<<IsClassT<T>::Yes<<")"<<std::endl;
-	}
-}
 
-template<typename T>
-void checkT(T& a)
-{  //检查T是否是类类型：以函数调用实参方式传递类型
-	check<T>();
-}
+using namespace std;
 
 class MyClass
-{ //类类型
+{
 };
 
 struct MyStruct
-{ //类类型
-};
+{
+}my_struct;
 
 union MyUnion
-{ //类类型
+{
 };
 
-void myfunc()
-{ //非类类型
+void MyFunc()
+{
 }
 
-enum E{ e1 }e; //非类类型
+enum MyEnum
+{ 
+	Enum
+}
+my_enum;
 
 int main()
 {
-	std::cout<<"int: ";
-	check<int>(); //非类类型
+	cout << "int: " << IsClass< int >() << endl; //非类类型
 	
-	std::cout<<"MyClass: ";
-	check<MyClass>(); //类类型
+	cout << "MyClass: " << IsClass<MyClass>() << endl; //类类型
+
+	cout << "my_struct: " << IsClassT( my_struct ) << endl; //类类型
 	
-	std::cout<<"MyStruct: ";
-	MyStruct s;
-	checkT(s); //类类型
+	cout << "MyUnion: " << IsClass<MyUnion>() << endl; //类类型
+
+	cout << "my_enum: " << IsClassT( my_enum ) << endl; //非类类型 只能传实例
 	
-	std::cout<<"MyUnion: ";
-	check<MyUnion>(); //类类型
-	
-	std::cout<<"enum: ";
-	checkT(e); //非类类型
-	
-	std::cout<<"myfunc():";
-	checkT(myfunc); //非类类型
+	cout << "MyFunc():" << IsClassT( MyFunc ) << endl; //非类类型
 	
 	return 0;
 }
