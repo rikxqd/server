@@ -13,3 +13,4 @@ fi
 find . -iname \*.[ch] -exec grep $LINE -n --color -H $1 \{\} \;
 find . -iname \*.cpp -exec grep $LINE -n --color -H $1 \{\} \;
 find . -iname \*.h -exec grep $LINE -n --color -H $1 \{\} \;
+find . -iname \*.cc -exec grep $LINE -n --color -H $1 \{\} \;

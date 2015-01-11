@@ -1,6 +1,9 @@
 #ifndef _PUBLIC_H_
 #define _PUBLIC_H_
 
+#include <iostream>
+#include <string>
+
 #include "define/integer.h"
 
 using namespace std;

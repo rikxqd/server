@@ -12,6 +12,8 @@ add_executable(client client/client.cpp)
 add_executable(thread thread/thread.cpp)
 add_executable(template template/template.cpp)
 add_executable(typeoptest template/typeoptest.cpp)
+add_executable(log log/log.cpp)
+add_executable(kmp kmp/kmp.cpp)
 
 # 添加链接库
 target_link_libraries(server base $ENV{WS_PATH}/third/tinyxml/libxml.a)
