@@ -3,31 +3,38 @@
 
 #include "public.h"
 
-enum ELogLevel
-{
-	LOG_FATAL,
-	LOG_ERROR,
-	LOG_WARNING,
-	LOG_INFO,
-	LOG_DEBUG,
-};
 
-class Logger
+class Log
 {
+	enum ELogLevel
+	{
+		LOG_FATAL,
+		LOG_ERROR,
+		LOG_WARNING,
+		LOG_INFO,
+		LOG_DEBUG,
+		LOG_ALL,
+	};
 public:
-	Logger(){}
-	~Logger(){}
+	Log();
+	explicit Log( const char* name, uint8 level = LOG_ALL );
+	~Log();
 
 	const char* Name() const;
 	void Name( const char* name );
+	
+	uint8 Level() const;
+	void Level( uint8 level );
 
-	void Debug( const char* Format, ... );
-	void Info( const char* Format, ... );
-	void Warning( const char* Format, ... );
-	void Error( const char* Format, ... );
+	void Debug( const char* desc, ... );
+	void Info( const char* desc, ... );
+	void Warning( const char* desc, ... );
+	void Error( const char* desc, ... );
+	void Fatal( const char* desc, ... );
 
 private:
-	string m_name;
+	string		m_name;
+	ELogLevel	m_level;
 };
 
 #endif//_LOG_H_

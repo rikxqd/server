@@ -18,4 +18,5 @@ add_executable(kmp kmp/kmp.cpp)
 # 添加链接库
 target_link_libraries(server base $ENV{WS_PATH}/third/tinyxml/libxml.a)
 target_link_libraries(client base)
+target_link_libraries(log base)
 target_link_libraries(thread pthread base)

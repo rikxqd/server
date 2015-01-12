@@ -46,4 +46,4 @@ pthread_t Run( Thread* thread )
       return tid;
 }
 
-}
+}/* namespace IThread end */
