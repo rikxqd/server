@@ -5,6 +5,8 @@
 
 #define BUF_SIZE 2048
 
+#define WORD_COLOR( n ) 
+
 #define WHITE( buffer )		std::cout << "\x1b[30m" << "[" << m_name << "]:" << buffer << "\033[0m" << std::endl
 #define RED( buffer )		std::cout << "\x1b[31m" << "[" << m_name << "]:" << buffer << "\033[0m" << std::endl
 #define GREEN( buffer )		std::cout << "\x1b[32m" << "[" << m_name << "]:" << buffer << "\033[0m" << std::endl
