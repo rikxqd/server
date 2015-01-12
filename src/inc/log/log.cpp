@@ -14,12 +14,13 @@
 
 #define VA_BUFFER( buffer )  \
 	va_list list;	\
-	va_start( list, desc );	\
-	int res = vsnprintf( (buffer), sizeof(buffer), desc, list );	\
+	va_start( list, pattern );	\
+	int res = vsnprintf( (buffer), sizeof(buffer), pattern, list );	\
 	va_end( list );
 
 Log::Log()
-	: m_level( LOG_ALL )
+	: m_name( "" )
+	, m_level( LOG_ALL )
 {
 }
 
@@ -53,7 +54,7 @@ void Log::Level( uint8 level )
 	m_level = (ELogLevel)level;
 }
 
-void Log::Debug( const char* desc, ... )
+void Log::Debug( const char* pattern, ... )
 {
 	if ( LOG_DEBUG > m_level )
 		return;
@@ -65,7 +66,7 @@ void Log::Debug( const char* desc, ... )
 	BLUE( buffer );
 }
 
-void Log::Info( const char* desc, ... )
+void Log::Info( const char* pattern, ... )
 {
 	if ( LOG_INFO > m_level )
 		return;
@@ -77,7 +78,7 @@ void Log::Info( const char* desc, ... )
 	GREEN( buffer );
 }
 
-void Log::Warning( const char* desc, ... )
+void Log::Warning( const char* pattern, ... )
 {
 	if ( LOG_WARNING > m_level )
 		return;
@@ -89,7 +90,7 @@ void Log::Warning( const char* desc, ... )
 	YELLOW( buffer );
 }
 
-void Log::Error( const char* desc, ... )
+void Log::Error( const char* pattern, ... )
 {
 	if ( LOG_ERROR > m_level )
 		return;
@@ -101,7 +102,7 @@ void Log::Error( const char* desc, ... )
 	RED( buffer );
 }
 
-void Log::Fatal( const char* desc, ... )
+void Log::Fatal( const char* pattern, ... )
 {
 	if ( LOG_FATAL > m_level )
 		return;

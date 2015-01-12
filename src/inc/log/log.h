@@ -26,11 +26,11 @@ public:
 	uint8 Level() const;
 	void Level( uint8 level );
 
-	void Debug( const char* desc, ... );
-	void Info( const char* desc, ... );
-	void Warning( const char* desc, ... );
-	void Error( const char* desc, ... );
-	void Fatal( const char* desc, ... );
+	void Debug( const char* pattern, ... ) __attribute__( ( format( printf, 2, 3 ) ) );
+	void Info( const char* pattern, ... ) __attribute__( ( format( printf, 2, 3 ) ) );
+	void Warning( const char* pattern, ... ) __attribute__( ( format( printf, 2, 3 ) ) );
+	void Error( const char* pattern, ... ) __attribute__( ( format( printf, 2, 3 ) ) );
+	void Fatal( const char* pattern, ... ) __attribute__( ( format( printf, 2, 3 ) ) );
 
 private:
 	string		m_name;
