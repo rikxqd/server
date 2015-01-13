@@ -3,19 +3,26 @@
 
 #pragma once
 
-template<typename T>
+template< typename T >
 class Singleton
 {
 public:
-	static T&	Instance( void ) {return m_pIntance;}
+	static T&	Instance() 
+	{ 
+		if ( !m_intance )
+			m_intance = new T;
+		return *m_intance;
+	}
 
 protected:
-	Singleton( void ){}
-	~Singleton( void ){}
-	static T m_pIntance;
+	Singleton(){}
+	~Singleton(){}
+	
+private:
+	static T* m_intance;
 };
 
-template<typename T>
-T Singleton<T>::m_pIntance;
+template< typename T >
+T* Singleton< T >::m_intance = new T;
 
 #endif//_SINGLETON_H_

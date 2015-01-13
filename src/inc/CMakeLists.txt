@@ -13,6 +13,7 @@ set(LIBBASE_SRC
 	net/address.cpp
 	thread/thread.cpp
 	thread/thread_pool.cpp
+	thread/thread_worker.cpp
 	log/log.cpp
 	)
 set(LIBFRAME_SRC 
