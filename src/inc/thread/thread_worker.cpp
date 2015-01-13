@@ -33,3 +33,29 @@ pthread_t& ThreadWorker::Key()
 {
     return m_t_tid;
 }
+pthread_cond_t& ThreadWorker::ThreadCond()
+{
+	return m_t_cond;
+}
+pthread_mutex_t& ThreadWorker::ThreadMutex()
+{
+	return m_t_mutex;
+}
+
+ThreadPool* ThreadWorker::Owner()
+{
+	return m_owner;
+}
+
+void ThreadWorker::Jion( WorkerFunc func, ThreadParam* param )
+{
+	m_func = func;
+	m_param = param;
+}
+
+void ThreadWorker::Start()
+{
+	m_busy = true;
+	WorkerFunc( m_param );
+	m_busy = false;
+}

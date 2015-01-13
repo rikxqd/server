@@ -11,6 +11,8 @@
 
 class ThreadPool
 {
+	friend void* PoolMainThreadFunc( void* param );
+	friend void* PoolThreadFunc( void* param );
 public:
 	ThreadPool();
 	explicit ThreadPool( uint32 min, uint32 max );
@@ -18,15 +20,21 @@ public:
 
 	bool Init();
 	
-	bool Run() const;
+	bool Running() const;
 	
-	void Destroy();
+	void Recovery();
+
+	bool Jion( WorkerFunc func, ThreadParam* param );
+
+protected:
+	void Working( ThreadWorker* worker );
+	void Done( ThreadWorker* worker );
 
 private:
 	pthread_t		m_t_tid;
 	pthread_mutex_t	m_t_mutex;
 	
-	bool	m_run;
+	bool	m_running;
 	uint32	m_min_count;
 	uint32	m_cur_count;
 	uint32	m_max_count;

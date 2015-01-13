@@ -26,6 +26,14 @@ public:
 	bool Busy() const;
 	
 	pthread_t& Key();
+	pthread_cond_t& ThreadCond();
+	pthread_mutex_t& ThreadMutex();
+
+	ThreadPool* Owner();
+
+	void Jion( WorkerFunc func, ThreadParam* param );
+
+	void Start();
 	
 private:
 	pthread_t		m_t_tid;
