@@ -9,11 +9,11 @@
 # 设置变量
 set(LIBBASE_SRC 
 	net/warp_socket.cpp 
-	process/process.cpp
 	net/address.cpp
-	thread/thread.cpp
+	process/process.cpp
 	thread/thread_pool.cpp
 	thread/thread_worker.cpp
+	thread/thread_job.cpp
 	log/log.cpp
 	)
 set(LIBFRAME_SRC 

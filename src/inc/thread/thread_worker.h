@@ -1,19 +1,13 @@
 #ifndef _THREAD_WORKER_H_
 #define _THREAD_WORKER_H_
 
-#include "singleton/singleton.h"
 #include "public.h"
+#include "singleton/singleton.h"
+#include "thread/thread_job.h"
 
 
 class ThreadPool;
-
-struct ThreadParam 
-{
-	void *ret; //call in, that is arguments
-	void *arg; //call out, that is return value
-};
-typedef void (*WorkerFunc)( ThreadParam* job );
-
+class ThreadJob;
 
 class ThreadWorker
 {
@@ -21,17 +15,15 @@ public:
 	ThreadWorker();
 	~ThreadWorker();
 	
-	void Init( ThreadPool* pool );
+	bool Init( ThreadPool* pool );
 	
 	bool Busy() const;
 	
-	pthread_t& Key();
 	pthread_cond_t& ThreadCond();
-	pthread_mutex_t& ThreadMutex();
 
 	ThreadPool* Owner();
 
-	void Jion( WorkerFunc func, ThreadParam* param );
+	void Jion( ThreadJob* job );
 
 	void Start();
 	
@@ -42,9 +34,7 @@ private:
 	
 	bool			m_busy;
 	
-	WorkerFunc		m_func;
-	ThreadParam*	m_param;
-	
+	ThreadJob*		m_job;
 	ThreadPool*		m_owner;
 };
 

@@ -1,16 +1,17 @@
 #include "thread_pool.h"
+
 #include <unistd.h>
+
+#include "thread/thread_worker.h"
 
 
 void* PoolMainThreadFunc( void* param );
-void* PoolThreadFunc( void* param );
-
 
 ThreadPool::ThreadPool()
     : m_running( false )
     , m_min_count( 2 )
     , m_cur_count( 2 )
-    , m_max_count( 8 )
+    , m_max_count( 2 )
 {
 }
 
@@ -43,11 +44,11 @@ bool ThreadPool::Init()
     for ( uint32 i = 0 ; i < m_cur_count ; ++i )
     {
         ThreadWorker* worker = new ThreadWorker();
-        worker->Init( this );
-        
-        ret = pthread_create( &worker->Key(), NULL, PoolThreadFunc, worker );
-        if ( 0 == ret )
+        if ( worker->Init( this ) )
+        {
             m_workers.push_back( worker );
+            m_idles.push( worker );
+        }
         else
             DELETE_VALUE( worker );
     }
@@ -65,20 +66,44 @@ void ThreadPool::Recovery()
     
 }
 
-bool ThreadPool::Jion( WorkerFunc func, ThreadParam* param )
+void ThreadPool::Jion( ThreadJob* job )
 {
-	ThreadWorker* worker = m_idles.front();
-	worker->Jion( func, param );
+    m_waitting_jobs.push( job );
+    Dispath();
+}
+
+void ThreadPool::Jion( JobHandle handle, JobParam* param )
+{
+    ThreadJob job;
+    job.Set( handle, param );
+    m_waitting_jobs.push( &job );
+    Dispath();
+}
+
+bool ThreadPool::Dispath()
+{
+    if ( m_idles.empty() || m_waitting_jobs.empty() )
+        return false;
+        
+    ThreadWorker* worker = m_idles.front();
+    m_idles.pop();
+
+    ThreadJob* job = m_waitting_jobs.front();
+    m_waitting_jobs.pop();
+    
+    worker->Jion( job );
+    
+    if ( !worker->Busy() )
+	    pthread_cond_signal( &worker->ThreadCond() );
+	    
 	return true;
 }
 
-void ThreadPool::Working( ThreadWorker* worker )
-{
-	m_idles.pop();
-}
-void ThreadPool::Done( ThreadWorker* worker )
+bool ThreadPool::Done( ThreadWorker* worker )
 {
 	m_idles.push( worker );
+	return Dispath();
+	//cout << "done" << m_idles.size() << endl;
 }
 
 void* PoolMainThreadFunc( void* param )
@@ -96,23 +121,4 @@ void* PoolMainThreadFunc( void* param )
 	pool->Recovery();
     
     return NULL;
-}
-
-void* PoolThreadFunc( void* param )
-{
-    ThreadWorker* worker = static_cast< ThreadWorker* >( param );
-    if ( !worker )
-        return NULL;
-     
-	ThreadPool* pool = worker->Owner();
-	while ( pool->Running() )
-	{
-		pthread_mutex_lock( &worker->ThreadMutex() );  
-		pthread_cond_wait( &worker->ThreadCond(), &worker->ThreadMutex() );  
-		pthread_mutex_unlock( &worker->ThreadMutex() );
-
-		pool->Working( worker );
-		worker->Start();
-		pool->Done( worker );
-	}
 }

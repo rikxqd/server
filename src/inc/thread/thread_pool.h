@@ -6,13 +6,15 @@
 
 #include "public.h"
 #include "singleton/singleton.h"
-#include "thread/thread_worker.h"
+#include "thread_job.h"
 
+
+class ThreadWorker;
+class ThreadJob;
 
 class ThreadPool
 {
-	friend void* PoolMainThreadFunc( void* param );
-	friend void* PoolThreadFunc( void* param );
+	friend class ThreadWorker;
 public:
 	ThreadPool();
 	explicit ThreadPool( uint32 min, uint32 max );
@@ -24,11 +26,12 @@ public:
 	
 	void Recovery();
 
-	bool Jion( WorkerFunc func, ThreadParam* param );
+	void Jion( ThreadJob* job );
+	void Jion( JobHandle handle, JobParam* param );
 
 protected:
-	void Working( ThreadWorker* worker );
-	void Done( ThreadWorker* worker );
+	bool Dispath();
+	bool Done( ThreadWorker* worker );
 
 private:
 	pthread_t		m_t_tid;
@@ -41,6 +44,7 @@ private:
 
 	std::vector< ThreadWorker* >	m_workers;
 	std::queue< ThreadWorker* >		m_idles;
+	std::queue< ThreadJob* >		m_waitting_jobs;
 };
 
 #endif//_THREAD_POOL_H_
