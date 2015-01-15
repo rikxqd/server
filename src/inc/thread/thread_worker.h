@@ -3,14 +3,15 @@
 
 #include "public.h"
 #include "singleton/singleton.h"
-#include "thread/thread_job.h"
+#include "thread/thread_task.h"
 
 
 class ThreadPool;
-class ThreadJob;
+class ThreadTask;
 
 class ThreadWorker
 {
+	friend void* PoolThreadFunc( void* param );
 public:
 	ThreadWorker();
 	~ThreadWorker();
@@ -23,8 +24,9 @@ public:
 
 	ThreadPool* Owner();
 
-	void Jion( ThreadJob* job );
+	void Jion( ThreadTask& task );
 
+protected:
 	void Start();
 	
 private:
@@ -34,7 +36,7 @@ private:
 	
 	bool			m_busy;
 	
-	ThreadJob*		m_job;
+	ThreadTask		m_task;
 	ThreadPool*		m_owner;
 };
 

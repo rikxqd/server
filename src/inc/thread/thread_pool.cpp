@@ -66,32 +66,24 @@ void ThreadPool::Recovery()
     
 }
 
-void ThreadPool::Jion( ThreadJob* job )
+void ThreadPool::Jion( TaskHandle handle, TaskParam* param )
 {
-    m_waitting_jobs.push( job );
-    Dispath();
-}
-
-void ThreadPool::Jion( JobHandle handle, JobParam* param )
-{
-    ThreadJob job;
-    job.Set( handle, param );
-    m_waitting_jobs.push( &job );
+    ThreadTask task( handle, param );
+    m_waitting_tasks.push( task );
     Dispath();
 }
 
 bool ThreadPool::Dispath()
 {
-    if ( m_idles.empty() || m_waitting_jobs.empty() )
+    if ( m_idles.empty() || m_waitting_tasks.empty() )
         return false;
         
     ThreadWorker* worker = m_idles.front();
     m_idles.pop();
 
-    ThreadJob* job = m_waitting_jobs.front();
-    m_waitting_jobs.pop();
-    
-    worker->Jion( job );
+    ThreadTask task = m_waitting_tasks.front();
+    m_waitting_tasks.pop();
+    worker->Jion( task );
     
     if ( !worker->Busy() )
 	    pthread_cond_signal( &worker->ThreadCond() );
@@ -101,9 +93,13 @@ bool ThreadPool::Dispath()
 
 bool ThreadPool::Done( ThreadWorker* worker )
 {
+    pthread_mutex_lock( &m_t_mutex );
+    
 	m_idles.push( worker );
-	return Dispath();
-	//cout << "done" << m_idles.size() << endl;
+	bool flag = Dispath();
+	
+	pthread_mutex_unlock( &m_t_mutex );
+	return flag;
 }
 
 void* PoolMainThreadFunc( void* param )

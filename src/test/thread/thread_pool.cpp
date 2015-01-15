@@ -5,15 +5,18 @@
 
 #include "public.h"
 #include "thread/thread_pool.h"
-#include "thread/thread_job.h"
+#include "thread/thread_task.h"
 
 
-void Func( JobParam *job )
+void Func( TaskParam *task )
 {
-	int idx = *(int *)job->m_in_param;  
+	int idx = *(int *)task->m_in_param;  
 	printf( "Begin: thread %d\n", idx );  
 	sleep( 3 );  
-	printf( "End:   thread %d\n", idx );  
+	printf( "End:   thread %d\n", idx );
+	int* ret = (int*)malloc( sizeof(int) );
+	*ret = idx;
+	task->m_out_param = ret;
 } 
 
 int main( int argc, char* argv[] )
@@ -22,7 +25,7 @@ int main( int argc, char* argv[] )
 	pool.Init();
 	sleep( 1 );
 
-	JobParam params[5];  
+	TaskParam params[15];  
 	int i, *idx;  
 
 	for( i = 0 ; i < 5 ; ++i )
@@ -30,21 +33,15 @@ int main( int argc, char* argv[] )
 		idx = (int*)malloc( sizeof(int) );  
 		*idx = i;  
 		params[i].m_in_param = idx;
-		ThreadJob job;
-		job.Set( Func, params + i );
-		pool.Jion( &job );  
-		usleep( 400000 );  
+		pool.Jion( Func, params + i );  
 	}
 	
 	for( i = 0 ; i < 5 ; ++i )
 	{  
 		idx = (int*)malloc( sizeof(int) );  
-		*idx = i + 5;  
-		params[i].m_in_param = idx;
-		ThreadJob job;
-		job.Set( Func, params + i );
-		pool.Jion( &job );  
-		usleep( 400000 );  
+		*idx = i + 20;  
+		params[i + 5].m_in_param = idx;
+		pool.Jion( Func, params + i + 5 );  
 	}
 	
 	sleep( 6 );
@@ -52,17 +49,20 @@ int main( int argc, char* argv[] )
 	for( i = 0 ; i < 5 ; ++i )
 	{  
 		idx = (int*)malloc( sizeof(int) );  
-		*idx = i + 10;  
-		params[i].m_in_param = idx;
-		ThreadJob job;
-		job.Set( Func, params + i );
-		pool.Jion( &job );  
-		usleep( 400000 );  
+		*idx = i + 50;  
+		params[i + 10].m_in_param = idx;
+		pool.Jion( Func, params + i + 10 );  
 	}
 	
 	sleep( 6 );
+	
+	for ( i = 0 ; i < 15 ; ++i )
+	{
+		int idx = *(int *)params[i].m_out_param;
+		printf( "out param : %d, %d\n", i, idx );
+	}
 
-	printf( "All jobs done!\n" );  
+	printf( "All tasks done!\n" );  
 
 	return 0;
 }

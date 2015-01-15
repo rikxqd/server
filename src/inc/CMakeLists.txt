@@ -13,7 +13,7 @@ set(LIBBASE_SRC
 	process/process.cpp
 	thread/thread_pool.cpp
 	thread/thread_worker.cpp
-	thread/thread_job.cpp
+	thread/thread_task.cpp
 	log/log.cpp
 	)
 set(LIBFRAME_SRC 
