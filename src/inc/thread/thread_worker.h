@@ -24,7 +24,7 @@ public:
 
 	ThreadPool* Owner();
 
-	void Jion( ThreadTask& task );
+	void Join( ThreadTask& task );
 
 protected:
 	void Start();

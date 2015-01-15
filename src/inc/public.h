@@ -29,5 +29,4 @@ private:
 #define DELETE_ARRAY(_ptr)	\
 	if((_ptr)) { delete[] (_ptr); (_ptr) = NULL; };
 
-
 #endif//_PUBLIC_H_

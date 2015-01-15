@@ -3,20 +3,18 @@
 #include <unistd.h>
 #include <string.h>
 
-#include "log/log.h"
 #include "process/process.h"
+#include "global.h"
 
 using namespace std;
 
 int main()
 {
-    Log log( "test" );
-    
-    log.Debug( "Debug" );
-    log.Info( "Info" );
-    log.Warning( "Warning" );
-    log.Error( "Error" );
-    log.Fatal( "Fatal" );
+    DEBUG( "Debug %s", "Debug" );
+    g_log.Info( "Info" );
+    g_log.Warning( "Warning" );
+    g_log.Error( "Error" );
+    g_log.Fatal( "Fatal" );
     
     int ret;
 	char proc_name[256] = {0};

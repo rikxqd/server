@@ -33,7 +33,7 @@ int main( int argc, char* argv[] )
 		idx = (int*)malloc( sizeof(int) );  
 		*idx = i;  
 		params[i].m_in_param = idx;
-		pool.Jion( Func, params + i );  
+		pool.Join( Func, params + i );  
 	}
 	
 	for( i = 0 ; i < 5 ; ++i )
@@ -41,7 +41,7 @@ int main( int argc, char* argv[] )
 		idx = (int*)malloc( sizeof(int) );  
 		*idx = i + 20;  
 		params[i + 5].m_in_param = idx;
-		pool.Jion( Func, params + i + 5 );  
+		pool.Join( Func, params + i + 5 );  
 	}
 	
 	sleep( 6 );
@@ -51,7 +51,7 @@ int main( int argc, char* argv[] )
 		idx = (int*)malloc( sizeof(int) );  
 		*idx = i + 50;  
 		params[i + 10].m_in_param = idx;
-		pool.Jion( Func, params + i + 10 );  
+		pool.Join( Func, params + i + 10 );  
 	}
 	
 	sleep( 6 );

@@ -63,10 +63,10 @@ bool ThreadPool::Running() const
 
 void ThreadPool::Recovery()
 {
-    
+
 }
 
-void ThreadPool::Jion( TaskHandle handle, TaskParam* param )
+void ThreadPool::Join( TaskHandle handle, TaskParam* param )
 {
     ThreadTask task( handle, param );
     m_waitting_tasks.push( task );
@@ -83,7 +83,7 @@ bool ThreadPool::Dispath()
 
     ThreadTask task = m_waitting_tasks.front();
     m_waitting_tasks.pop();
-    worker->Jion( task );
+    worker->Join( task );
     
     if ( !worker->Busy() )
 	    pthread_cond_signal( &worker->ThreadCond() );

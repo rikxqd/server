@@ -26,7 +26,7 @@ public:
 	
 	void Recovery();
 
-	void Jion( TaskHandle handle, TaskParam* param );
+	void Join( TaskHandle handle, TaskParam* param );
 
 protected:
 	bool Dispath();

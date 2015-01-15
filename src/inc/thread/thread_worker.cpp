@@ -39,7 +39,7 @@ ThreadPool* ThreadWorker::Owner()
 	return m_owner;
 }
 
-void ThreadWorker::Jion( ThreadTask& task )
+void ThreadWorker::Join( ThreadTask& task )
 {
 	m_task = task;
 }
