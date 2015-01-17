@@ -4,7 +4,7 @@
 #include "public.h"
 
 
-template< int size >
+template< int32 size >
 class FixedBuffer : public NonCopyable
 {
 public:
@@ -12,6 +12,15 @@ public:
     ~FixedBuffer();
     
     const char* Data() const;
+    
+    char* Current();
+    
+    int32 Length() const;
+    int32 Avail() const;
+    
+    void Append( const char* buf, size_t len );
+    
+    void Reset();
 
 protected:
     const char* End() const; 
