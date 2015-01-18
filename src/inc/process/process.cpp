@@ -28,8 +28,7 @@ int32 ProcName( char* name, uint32 size )
 	if ( 0 > count  || BUF_SIZE <= count )
 		return -1;
 
-	int32 i = count - 1;
-	for( ; 0 <= i ; i-- )
+	for( int32 i = count - 1 ; 0 <= i ; --i )
 	{
 		if( '/' == path[i] )//筛选出进程名
 		{

@@ -16,7 +16,8 @@ set(LIBBASE_SRC
 	thread/thread_task.cpp
 	log/log.cpp
 	global.cpp
-	buffer/buffer.cpp
+	stream/stream.cpp
+	string/str_fun.cpp
 	)
 set(LIBFRAME_SRC 
 	frame/net.cpp

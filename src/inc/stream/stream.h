@@ -1,6 +1,8 @@
 #ifndef _STREAM_H_
 #define _STREAM_H_
 
+#include "buffer/fixed_buffer.h"
+
 
 #define MAX_SIZE 4000
 

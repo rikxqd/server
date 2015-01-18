@@ -1,6 +1,9 @@
 #ifndef _BUFFER_H_
 #define _BUFFER_H_
 
+#include <string.h>
+#include <stdlib.h>
+
 #include "public.h"
 
 
@@ -29,5 +32,7 @@ private:
     char    m_data[size];
     char*   m_curr;
 };
+
+#include "fixed_buffer.inl"
 
 #endif//_BUFFER_H_

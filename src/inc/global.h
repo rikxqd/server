@@ -6,6 +6,8 @@
 
 extern Log g_log;
 
-#define DEBUG( buffer, ... ) cout << __FILE__ << ":" << __LINE__;g_log.Debug( buffer, ##__VA_ARGS__ )
+#define DEBUG( buffer, ... )	\
+	cout << (strrchr( __FILE__, '/' ) + 1) << ":" << __LINE__;	\
+	g_log.Debug( buffer, ##__VA_ARGS__ )
 
 #endif//_GLOBAL_H_

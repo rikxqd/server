@@ -15,6 +15,7 @@ add_executable(typeoptest template/typeoptest.cpp)
 add_executable(log log/log.cpp)
 add_executable(kmp kmp/kmp.cpp)
 add_executable(thread_pool thread/thread_pool.cpp)
+add_executable(split str/split.cpp)
 
 # 添加链接库
 target_link_libraries(server base $ENV{WS_PATH}/third/tinyxml/libxml.a)
@@ -22,3 +23,4 @@ target_link_libraries(client base)
 target_link_libraries(log base)
 target_link_libraries(mutilparam base)
 target_link_libraries(thread_pool pthread base)
+target_link_libraries(split base)

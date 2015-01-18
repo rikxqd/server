@@ -1,6 +1,6 @@
 #include "address.h"
 
-#include <strings.h>
+#include <string.h>
 #include <assert.h>
 #include <arpa/inet.h>
 #include <stdio.h>
@@ -11,12 +11,12 @@
 
 Address::Address()
 {
-	::bzero( &m_addr, sizeof(m_addr) );
+	::memset( &m_addr, 0x00, sizeof(m_addr) );
 }
 
 Address::Address( uint16 port )
 {
-	::bzero( &m_addr, sizeof(m_addr) );
+	::memset( &m_addr, 0x00, sizeof(m_addr) );
 	m_addr.sin_family = AF_INET;
 	m_addr.sin_addr.s_addr = htobe32( INADDR_ANY );
 	m_addr.sin_port = htobe16( port );
@@ -24,7 +24,7 @@ Address::Address( uint16 port )
 
 Address::Address( string& ip, uint16 port )
 {
-	::bzero( &m_addr, sizeof(m_addr) );
+	::memset( &m_addr, 0x00, sizeof(m_addr) );
 	m_addr.sin_family = AF_INET;
 	m_addr.sin_port = htobe16( port );
 	int32 res = ::inet_pton( AF_INET, ip.c_str(), &m_addr.sin_addr );
@@ -34,7 +34,7 @@ Address::Address( string& ip, uint16 port )
 
 Address::Address( uint32 ip, uint16 port )
 {
-	::bzero( &m_addr, sizeof(m_addr) );
+	::memset( &m_addr, 0x00, sizeof(m_addr) );
 }
 
 static __thread char t_buf[64 * 1024] = {0};
@@ -45,14 +45,14 @@ Address::Address( string& host )
 	string h_port = host.substr( index + 1, host.length() );
 	string h_name = host.substr( 0, index );	
 	
-	::bzero( &m_addr, sizeof(m_addr) );
+	::memset( &m_addr, 0x00, sizeof(m_addr) );
 	m_addr.sin_family = AF_INET;
 	m_addr.sin_port = htobe16( atoi( h_port.c_str() ) );
 		
 	hostent hent;
 	hostent* he = NULL;
   	int herrno = 0;
-  	bzero( &hent, sizeof(hent) );
+  	::memset( &hent, 0x00, sizeof(hent) );
 	int res = gethostbyname_r( h_name.c_str(), &hent, t_buf, sizeof(t_buf), &he, &herrno );
 	if ( 0 == res && NULL != he )
 	{
