@@ -5,12 +5,14 @@
 
 #define BUF_SIZE 2048
 
-#define WHITE( buffer )		std::cout << "\x1b[30m" << "[" << m_name << "]:" << buffer << "\033[0m" << std::endl
-#define RED( buffer )		std::cout << "\x1b[31m" << "[" << m_name << "]:" << buffer << "\033[0m" << std::endl
-#define GREEN( buffer )		std::cout << "\x1b[32m" << "[" << m_name << "]:" << buffer << "\033[0m" << std::endl
-#define YELLOW( buffer )	std::cout << "\x1b[33m" << "[" << m_name << "]:" << buffer << "\033[0m" << std::endl
-#define BLUE( buffer )		std::cout << "\x1b[34m" << "[" << m_name << "]:" << buffer << "\033[0m" << std::endl
-#define RED_WHITE( buffer )	std::cout << "\x1b[41;30m" << "[" << m_name << "]:" << buffer << "\033[0m" << std::endl
+#define ENDL		"\033[0m" << std::endl
+
+#define WHITE		std::cout << "\x1b[40;30m" 
+#define RED			std::cout << "\x1b[40;31m"
+#define GREEN		std::cout << "\x1b[40;32m"
+#define YELLOW		std::cout << "\x1b[40;33m"
+#define BLUE		std::cout << "\x1b[40;34m"
+#define RED_WHITE	std::cout << "\x1b[41;30m"
 
 #define VA_BUFFER( buffer )  \
 	va_list list;	\
@@ -63,7 +65,7 @@ void Log::Debug( const char* pattern, ... )
 
 	VA_BUFFER( buffer )
 	
-	BLUE( buffer );
+	BLUE << "[" << m_name << "]:" << buffer << ENDL;
 }
 
 void Log::Info( const char* pattern, ... )
@@ -75,7 +77,7 @@ void Log::Info( const char* pattern, ... )
 
 	VA_BUFFER( buffer )
 	
-	GREEN( buffer );
+	GREEN << "[" << m_name << "]:" << buffer << ENDL;
 }
 
 void Log::Warning( const char* pattern, ... )
@@ -87,7 +89,7 @@ void Log::Warning( const char* pattern, ... )
 
 	VA_BUFFER( buffer )
 	
-	YELLOW( buffer );
+	YELLOW << "[" << m_name << "]:" << buffer << ENDL;
 }
 
 void Log::Error( const char* pattern, ... )
@@ -99,7 +101,7 @@ void Log::Error( const char* pattern, ... )
 
 	VA_BUFFER( buffer )
 	
-	RED( buffer );
+	RED << "[" << m_name << "]:" << buffer << ENDL;
 }
 
 void Log::Fatal( const char* pattern, ... )
@@ -111,5 +113,5 @@ void Log::Fatal( const char* pattern, ... )
 
 	VA_BUFFER( buffer )
 	
-	RED_WHITE( buffer );
+	RED_WHITE << "[" << m_name << "]:" << buffer << ENDL;
 }
