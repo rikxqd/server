@@ -7,17 +7,8 @@
 #endif(NOT LS_RVALUE)
 
 # 设置变量
-set(LIBBASE_SRC 
-	net/warp_socket.cpp 
-	net/address.cpp
-	process/process.cpp
-	thread/thread_pool.cpp
-	thread/thread_worker.cpp
-	thread/thread_task.cpp
-	log/log.cpp
-	global.cpp
-	stream/stream.cpp
-	string/str_fun.cpp
+set(LIBFRAME_SRC 
+	net/net.cpp
 	)
 #aux_source_directory(process LIBBASE_SRC)
 #aux_source_directory(net LIBBASE_SRC)
@@ -29,6 +20,5 @@ set(LIBBASE_SRC
 include_directories(${PROJECT_SOURCE_DIR}/src/inc)
 
 # 添加动态库编译目标文件及其依赖文件
-add_library(base SHARED ${LIBBASE_SRC})
-target_link_libraries(base pthread)
+add_library(frame SHARED ${LIBFRAME_SRC})
 # 静态库 add_library(base STATIC ${LIBBASE_SRC})
