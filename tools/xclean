@@ -2,7 +2,7 @@
 
 if [ 0 = $# ]
 then
-	rm -r ${WS_PATH}/build/*
+	rm -rf ${WS_PATH}/build/*
 	cd ${WS_PATH}/third/tinyxml
 	make clean
 	cd -

@@ -7,7 +7,6 @@
 
 
 extern Log g_log;
-extern LogStream g_stream;
 
 #define DEBUG( buffer, ... )	\
 	g_log.Pattern( __FILE__, __LINE__, Log::LOG_DEBUG, buffer, ##__VA_ARGS__ )

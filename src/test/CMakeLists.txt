@@ -19,7 +19,7 @@ add_executable(log log/log.cpp)
 add_executable(stream stream/stream.cpp)
 
 # 添加链接库
-#target_link_libraries(server base $ENV{WS_PATH}/third/tinyxml/libxml.a)
+#target_link_libraries(server base xml)
 #target_link_libraries(client base)
 target_link_libraries(log base)
 #target_link_libraries(mutilparam base)

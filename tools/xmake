@@ -9,11 +9,8 @@ if [ 0 == $# ]; then
 	cd $MakePath
 	cmake ..
 	cd -
-	cd ${WS_PATH}/third/tinyxml/
-	make
-	cd -
 elif [ 1 == $# ]; then
 	cd $MakePath
-        make $1
-        cd -
+	make $1
+	cd -
 fi
