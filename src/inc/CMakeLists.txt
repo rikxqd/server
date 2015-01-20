@@ -16,6 +16,7 @@ set(LIBBASE_SRC
 	thread/thread_task.cpp
 	log/log.cpp
 	log/source_file.cpp
+	log/log_stream.cpp
 	global.cpp
 	stream/stream.cpp
 	string/str_fun.cpp

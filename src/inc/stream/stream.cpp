@@ -1,5 +1,8 @@
 #include "stream.h"
 
+#include <fstream>
+
+
 Stream::Stream()
 {
 }
@@ -27,7 +30,7 @@ Stream& Stream::operator << ( uint16 v )
 Stream& Stream::operator << ( int32 v )
 {
 	char buf[16] = {0};
-	int l = snprintf( buf, sizeof(buf), "%d", v );
+	int32 l = snprintf( buf, sizeof(buf), "%d", v );
 	m_buffer.Append( buf,  l );
 	return *this;
 }
@@ -35,7 +38,7 @@ Stream& Stream::operator << ( int32 v )
 Stream& Stream::operator << ( uint32 v )
 {
 	char buf[16] = {0};
-	int l = snprintf( buf, sizeof(buf), "%u", v );
+	int32 l = snprintf( buf, sizeof(buf), "%u", v );
 	m_buffer.Append( buf,  l );
 	return *this;
 }
@@ -43,7 +46,7 @@ Stream& Stream::operator << ( uint32 v )
 Stream& Stream::operator << ( int64 v )
 {
 	char buf[32] = {0};
-	int l = snprintf( buf, sizeof(buf), "%lld", v );
+	int32 l = snprintf( buf, sizeof(buf), "%lld", v );
 	m_buffer.Append( buf,  l );
 	return *this;
 }
@@ -51,7 +54,7 @@ Stream& Stream::operator << ( int64 v )
 Stream& Stream::operator << ( uint64 v )
 {
 	char buf[32] = {0};
-	int l = snprintf( buf, sizeof(buf), "%llu", v );
+	int32 l = snprintf( buf, sizeof(buf), "%llu", v );
 	m_buffer.Append( buf,  l );
 	return *this;
 }
@@ -59,7 +62,7 @@ Stream& Stream::operator << ( uint64 v )
 Stream& Stream::operator << ( const void* v )
 {
 	char buf[32] = {0};
-	int l = snprintf( buf, sizeof(buf), "%p", v );
+	int32 l = snprintf( buf, sizeof(buf), "%p", v );
 	m_buffer.Append( buf,  l );
 	return *this;
 }
@@ -67,7 +70,7 @@ Stream& Stream::operator << ( const void* v )
 Stream& Stream::operator << ( float v )
 {
 	char buf[16] = {0};
-	int l = snprintf( buf, sizeof(buf), "%.8g", v );
+	int32 l = snprintf( buf, sizeof(buf), "%.8g", v );
 	m_buffer.Append( buf,  l );
 	return *this;
 }
@@ -75,7 +78,7 @@ Stream& Stream::operator << ( float v )
 Stream& Stream::operator << ( double v )
 {
 	char buf[32] = {0};
-	int l = snprintf( buf, sizeof(buf), "%.16g", v );
+	int32 l = snprintf( buf, sizeof(buf), "%.16g", v );
 	m_buffer.Append( buf,  l );
 	return *this;
 }
@@ -106,17 +109,34 @@ Stream& Stream::operator << ( const std::string& v )
 	return *this;
 }
 
+std::ostream& operator << ( std::ostream& r, Stream& s )
+{
+	r << s.Buf().Data();
+	return r;
+}
+
+std::ofstream& operator << ( std::ofstream& r, Stream& s )
+{
+	r << s.Buf().Data();
+	return r;
+}
+
 const Stream::Buffer& Stream::Buf() const
 {
 	return m_buffer;
 }
 
-void Stream::Append(const char* v, int l) 
+const int32 Stream::Size() const
+{
+	return Buf().Length();
+}
+
+void Stream::Append(const char* v, int32 l) 
 {
 	m_buffer.Append( v, l );
 }
 
-void Stream::ResetBuffer()
+void Stream::Reset()
 {
 	m_buffer.Reset();
 }

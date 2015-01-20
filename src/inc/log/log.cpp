@@ -2,16 +2,18 @@
 
 #include <stdarg.h>
 
+#include "stream/stream.h"
+
 
 #define BUF_SIZE 2048
 
-#define ENDL		"\033[0m" << std::endl
+#define ENDL			"\033[0m" << std::endl
 
-#define WHITE		std::cout << "\x1b[40;30m" 
+#define WHITE			std::cout << "\x1b[40;30m" 
 #define RED			std::cout << "\x1b[40;31m"
-#define GREEN		std::cout << "\x1b[40;32m"
+#define GREEN			std::cout << "\x1b[40;32m"
 #define YELLOW		std::cout << "\x1b[40;33m"
-#define BLUE		std::cout << "\x1b[40;34m"
+#define BLUE			std::cout << "\x1b[40;34m"
 #define RED_WHITE	std::cout << "\x1b[41;30m"
 
 #define VA_BUFFER( buffer )  \
@@ -20,16 +22,12 @@
 	int res = vsnprintf( (buffer), sizeof(buffer), pattern, list );	\
 	va_end( list );
 
-Log::Log()
-	: m_name( "" )
-	, m_level( LOG_ALL )
+Log::Log( const char* name, uint8 level, Stream& stream )
+	: m_name( name )
+	, m_level( (ELogLevel)level )
+	, m_stream( stream )
 {
-}
 
-Log::Log( const char* name, uint8 level )
-{
-	Name( name );
-	Level( (ELogLevel)level );
 }
 	
 Log::~Log()
@@ -54,6 +52,20 @@ uint8 Log::Level() const
 void Log::Level( uint8 level )
 {
 	m_level = (ELogLevel)level;
+}
+
+void Log::Pattern( SourceFile file, uint32 line, uint8 level, const char* pattern, ... )
+{
+	if ( level > m_level )
+		return;
+
+	char buffer[BUF_SIZE] = {0};
+
+	VA_BUFFER( buffer )
+
+	m_stream << "[" << m_name << "] " << file.Name() << ':' << line << " " << buffer << "\n";
+
+	m_stream.Flush();
 }
 
 void Log::Debug( const char* pattern, ... )

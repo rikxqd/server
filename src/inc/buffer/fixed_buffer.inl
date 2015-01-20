@@ -54,6 +54,7 @@ template< int32 size >
 void FixedBuffer< size >::Reset()
 {
 	m_curr = m_data;
+	memset( m_data, 0x00, sizeof(m_data) );
 }
 
 template< int32 size >

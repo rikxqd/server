@@ -7,12 +7,11 @@
 class SourceFile
 {
 public:
-	explicit SourceFile( const char* name );
+	SourceFile( const char* name );
 	~SourceFile();
 
-	friend std::ostream& operator << ( std::ostream& r, SourceFile& s );
-
 	const char* Name() const;
+	const int32 Size() const;
 
 private:
 	const char*	m_name;

@@ -2,6 +2,7 @@
 #define _STREAM_H_
 
 #include "buffer/fixed_buffer.h"
+#include "log/source_file.h"
 
 
 #define MAX_SIZE 4000
@@ -28,9 +29,15 @@ public:
 	Stream& operator << ( const unsigned char* v );
 	Stream& operator << ( const std::string& v );
 
+	friend std::ostream& operator << ( std::ostream& r, Stream& s );
+	friend std::ofstream& operator << ( std::ofstream& r, Stream& s );
+
 	const Buffer& Buf() const;
+	const int32 Size() const;
 	void Append( const char* v, int32 l );
-	void ResetBuffer();
+	void Reset();
+
+	virtual void Flush() = 0;
     
 private:
 	Buffer m_buffer;

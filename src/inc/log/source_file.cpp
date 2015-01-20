@@ -19,13 +19,12 @@ SourceFile::~SourceFile()
 
 }
 
-std::ostream& operator << ( std::ostream& r, SourceFile& s )
-{
-	r << s.Name();
-	return r;
-}
-
 const char* SourceFile::Name() const
 {
 	return m_name;
+}
+
+const int32 SourceFile::Size() const
+{
+	return m_size;
 }
