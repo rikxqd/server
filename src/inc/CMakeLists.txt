@@ -20,6 +20,7 @@ set(LIBBASE_SRC
 	global.cpp
 	stream/stream.cpp
 	string/str_fun.cpp
+	time/time.cpp
 	)
 #aux_source_directory(process LIBBASE_SRC)
 #aux_source_directory(net LIBBASE_SRC)

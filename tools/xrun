@@ -3,5 +3,5 @@
 if [ 1 == $# ]; then
 	cd ${WS_PATH}/build/bin
 	./$1
-	cd -
+	cd - >> ${WS_PATH}/build/log.txt
 fi

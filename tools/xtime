@@ -6,4 +6,5 @@ then
 elif [ 1 == $# ]
 then
 	date -d"@$1"
+	#ntpdate cn.pool.ntp.org
 fi
