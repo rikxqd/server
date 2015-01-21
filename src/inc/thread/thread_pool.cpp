@@ -36,7 +36,7 @@ bool ThreadPool::Init()
     m_workers.clear();
     
     pthread_mutex_init( &m_t_mutex, NULL );
-    m_running = true;
+ 
     int32 ret = pthread_create( &m_t_tid, NULL, PoolMainThreadFunc, this );
     if ( 0 != ret )
         return false;
@@ -45,10 +45,7 @@ bool ThreadPool::Init()
     {
         ThreadWorker* worker = new ThreadWorker();
         if ( worker->Init( this ) )
-        {
             m_workers.push_back( worker );
-            m_idles.push( worker );
-        }
         else
             DELETE_VALUE( worker );
     }
@@ -73,48 +70,52 @@ void ThreadPool::Join( TaskHandle handle, TaskParam* param )
     Dispath();
 }
 
-bool ThreadPool::Dispath()
+ThreadWorker* ThreadPool::Dispath()
 {
     if ( m_idles.empty() || m_waitting_tasks.empty() )
-        return false;
-        
-    ThreadWorker* worker = m_idles.front();
-    m_idles.pop();
+        return NULL;
+    
+	pthread_mutex_lock( &m_t_mutex );
+	ThreadWorker* worker = m_idles.front();
+	m_idles.pop();
 
-    ThreadTask task = m_waitting_tasks.front();
-    m_waitting_tasks.pop();
+	ThreadTask task = m_waitting_tasks.front();
+	m_waitting_tasks.pop();
+	pthread_mutex_unlock( &m_t_mutex );
+
     worker->Join( task );
     
     if ( !worker->Busy() )
 	    pthread_cond_signal( &worker->ThreadCond() );
 	    
-	return true;
+	return worker;
 }
 
-bool ThreadPool::Done( ThreadWorker* worker )
+ThreadWorker* ThreadPool::Done( ThreadWorker* worker )
 {
-    pthread_mutex_lock( &m_t_mutex );
-    
-	m_idles.push( worker );
-	bool flag = Dispath();
+	{
+		pthread_mutex_lock( &m_t_mutex );
+		m_idles.push( worker );
+		pthread_mutex_unlock( &m_t_mutex );
+	}
 	
-	pthread_mutex_unlock( &m_t_mutex );
-	return flag;
+	return Dispath();
 }
 
 void* PoolMainThreadFunc( void* param )
 {
-    ThreadPool* pool = static_cast< ThreadPool* >( param );
-    if ( !pool )
-        return NULL;
+	ThreadPool* pool = static_cast< ThreadPool* >( param );
+	if ( !pool )
+		return NULL;
     
-    while ( pool->Running() )
-    {
+	pool->m_running = true;
+	while ( pool->Running() )
+	{
 
-        sleep( 3 );
-    }
+		sleep( 3 );
+	}
 
 	pool->Recovery();
     
-    return NULL;
+	return NULL;
 }

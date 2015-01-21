@@ -15,6 +15,7 @@ class ThreadTask;
 class ThreadPool
 {
 	friend class ThreadWorker;
+	friend void* PoolMainThreadFunc( void* param );
 public:
 	ThreadPool();
 	explicit ThreadPool( uint32 min, uint32 max );
@@ -29,9 +30,9 @@ public:
 	void Join( TaskHandle handle, TaskParam* param );
 
 protected:
-	bool Dispath();
+	ThreadWorker* Dispath();
 	
-	bool Done( ThreadWorker* worker );
+	ThreadWorker* Done( ThreadWorker* worker );
 
 private:
 	pthread_t		m_t_tid;

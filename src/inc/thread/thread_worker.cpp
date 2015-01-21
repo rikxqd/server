@@ -6,7 +6,7 @@
 void* PoolThreadFunc( void* param );
 
 ThreadWorker::ThreadWorker()
-    : m_busy( false )
+    : m_busy( true )
 	, m_owner( NULL )
 {
 }
@@ -21,7 +21,7 @@ bool ThreadWorker::Init( ThreadPool* pool )
     pthread_cond_init( &m_t_cond, NULL );
     pthread_mutex_init( &m_t_mutex, NULL );
     
-    return (0 == pthread_create( &m_t_tid, NULL, PoolThreadFunc, this ));
+    return (0 == pthread_create( &m_t_tid, NULL, ::PoolThreadFunc, this ));
 }
 
 bool ThreadWorker::Busy() const
@@ -56,7 +56,7 @@ void ThreadWorker::Start()
 	m_busy = true;
 	m_task.Do();
 	
-	m_busy = m_owner->Done( this );
+	m_busy = (this == m_owner->Done( this ));
 }
 
 void* PoolThreadFunc( void* param )
