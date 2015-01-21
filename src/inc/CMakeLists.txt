@@ -19,8 +19,9 @@ set(LIBBASE_SRC
 	log/log_stream.cpp
 	global.cpp
 	stream/stream.cpp
-	string/str_fun.cpp
+	str/str_func.cpp
 	time/time.cpp
+	time/time_func.cpp
 	)
 #aux_source_directory(process LIBBASE_SRC)
 #aux_source_directory(net LIBBASE_SRC)

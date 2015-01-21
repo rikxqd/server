@@ -1,25 +1,24 @@
 #include <stdio.h>
 
 #include "time/time.h"
+#include "time/time_func.h"
 
 
 int main( int argc, char* argv[] )
 {
 	Time t;
 	printf( "%4d-%02d-%02d %02d:%02d:%02d\n", t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute(), t.Second() );
-	printf( "%d\n", t.Seconds() );
-	printf( "%ld\n\n", time( 0 ) );
-	t.Abjust( t.Seconds() );
 
+	printf( "%lld\n", t.Seconds() );
 
-	for ( uint32 i = 0 ; i < 3 ; ++i )
-	{
-		Time::SleepMsec( 6 * 1000 );
-		t.Refresh();
-		printf( "%4d-%02d-%02d %02d:%02d:%02d\n", t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute(), t.Second() );
-		printf( "%d\n", t.Seconds() );
-		printf( "%ld\n\n", time( 0 ) );
-	}
+	printf( "zone:%d\n", t.Zone() );
+
+	printf( "zone second:%d\n", t.ZoneSecond() );
+
+	printf( "cup clock:%lld\n", t.CpuClock() );
+
+	int64 time = TimeFunc::ToSecond( 2015, 1, 1, 0, 0, 0 );
+	printf( "2015-1-1 00:00:00 : %lld", time );
 
 	return 0;
 }

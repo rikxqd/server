@@ -29,4 +29,8 @@ private:
 #define DELETE_ARRAY(_ptr)	\
 	if((_ptr)) { delete[] (_ptr); (_ptr) = NULL; };
 
+#ifdef WIN32
+#define snprintf sprintf_s
+#endif
+
 #endif//_PUBLIC_H_

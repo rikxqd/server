@@ -9,14 +9,14 @@
 
 
 Time::Time()
-	: m_is_cumulation( 0 )
-	, m_cumulation( false )
+	: m_is_cumulation( false )
+	, m_cumulation( 0 )
 {
-	m_time = 0;
+	m_utc_time = 0;
 	CasheTime();
 	m_zone_second = m_hour * 3600 + m_minute * 60 + m_second;
 
-	m_time = static_cast< int32 >( time( 0 ) );
+	m_utc_time = static_cast< int64 >( time( 0 ) );
 	CasheClock();
 	CasheTime();
 }
@@ -37,11 +37,11 @@ void Time::SleepMsec( int64 msec )
 
 void Time::Refresh()
 {
-	int64 pass = m_pass;
+	int64 cpu_clock = m_cpu_clock;
 	CasheClock();
 
 #if WIN32
-	if ( m_pass < pass )
+	if ( m_cpu_clock < cpu_clock )
 	{
 		std::cout << "Time Cycle." << std::endl;
 		return;
@@ -50,66 +50,95 @@ void Time::Refresh()
 
 	if ( m_is_cumulation )
 	{
-		std::cout << m_pass - pass << std::endl;
-		m_cumulation += (m_pass - pass);
-		int32 sec = static_cast< int32 >( m_cumulation / 1000 );
+		m_cumulation += m_cpu_clock - cpu_clock;
+		int64 sec = static_cast< int64 >( m_cumulation / 1000 );
 		if ( sec )
 		{
-			m_time += sec;
+			m_utc_time += sec;
 			m_cumulation = m_cumulation % 1000;
 			CasheTime();
 		}
 	}
 }
 
-int32 Time::Year()
+int32 Time::Year() const
 {
 	return m_year;
 }	
 
-int32 Time::Month() 
+int32 Time::Month() const
 {
 	return m_month;
 }
-int32 Time::Day() 
+
+int32 Time::Day() const
 {
 	return m_day;
 }	
-int32 Time::Hour() 
+
+int32 Time::Hour() const
 {
 	return m_hour;
 }
-int32 Time::Minute() 
+
+int32 Time::Minute() const
 {
 	return m_minute;
 }
-int32 Time::Second() 
+
+int32 Time::Second() const
 {
 	return m_second;
 }
-int32 Time::WeekDay()
+
+int64 Time::CpuClock() const
+{
+	return m_cpu_clock;
+}
+
+int32 Time::WeekDay() const
 {
 	return m_wday;
 }
-int32 Time::YeayDay() 
+
+int32 Time::YeayDay() const
 {
 	return m_yday;
 }
-int32 Time::Seconds() 
+
+int64 Time::Seconds() const
 {
-	return m_time;
-}
-int32 Time::Minutes() 
-{
-	return m_time / 60;
+	return m_utc_time;
 }
 
-void Time::Abjust( int32 time )
+int32 Time::Minutes() const
+{
+	return m_utc_time / 60;
+}
+
+int32 Time::Days() const
+{
+	return (m_utc_time + m_zone_second) / (24 * 3600);
+}
+
+int8 Time::Zone() const
+{
+	return m_zone_second / 3600;
+}
+
+int32 Time::ZoneSecond() const
+{
+	return m_zone_second;
+}
+
+void Time::Abjust( int64 time )
 {
 	if (time)
 	{
-		m_time = time;
+		m_utc_time = time;
 		m_is_cumulation = true;
+		CasheClock();
+		CasheTime();
 	}
 	else
 		m_is_cumulation = false;
@@ -118,24 +147,24 @@ void Time::Abjust( int32 time )
 void Time::CasheClock()
 {
 #ifdef WIN32
-	m_pass = static_cast< int64 >( clock() );
+	m_cpu_clock = static_cast< int64 >( clock() );
 #elif UNIX
 	timespec ts;
 	clock_gettime( CLOCK_MONOTONIC, &ts );
-	m_pass = ts.tv_sec * 1000 + ts.tv_nsec / 1000000;
+	m_cpu_clock = ts.tv_sec * 1000 + ts.tv_nsec / 1000000;
 #endif
 }
 
 void Time::CasheTime()
 {
-	time_t time = static_cast< time_t >( m_time );
+	time_t time = static_cast< time_t >( m_utc_time );
 	tm* local = localtime( &time );
-	this->m_year	= local->tm_year + 1900;
-	this->m_month	= local->tm_mon + 1;
+	this->m_year		= local->tm_year + 1900;
+	this->m_month		= local->tm_mon + 1;
 	this->m_day		= local->tm_mday;
-	this->m_hour	= local->tm_hour;
+	this->m_hour		= local->tm_hour;
 	this->m_minute	= local->tm_min;
 	this->m_second	= local->tm_sec;
-	this->m_wday	= local->tm_wday;
-	this->m_yday	= local->tm_yday;
+	this->m_wday		= local->tm_wday;
+	this->m_yday		= local->tm_yday;
 }
