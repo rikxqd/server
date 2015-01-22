@@ -54,8 +54,8 @@ private:
 
 	int32	m_zone_second;	//时区
 
-	bool	m_is_cumulation;	//是否需要累加
-	int64	m_cumulation;		//用于累加毫秒的累加器
+	bool	m_is_tick;			//是否需要累加
+	int64	m_tick_cache;		//用于累加毫秒的累加器
 };
 
 #endif//_TIME_H_

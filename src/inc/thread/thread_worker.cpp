@@ -1,6 +1,7 @@
 #include "thread_worker.h"
 
 #include "thread_pool.h"
+#include "global.h"
 
 
 void* PoolThreadFunc( void* param );
@@ -27,6 +28,11 @@ bool ThreadWorker::Init( ThreadPool* pool )
 bool ThreadWorker::Busy() const
 {
     return m_busy;
+}
+
+pthread_t& ThreadWorker::Key()
+{
+	return m_t_tid;
 }
 
 pthread_cond_t& ThreadWorker::ThreadCond()
@@ -64,6 +70,8 @@ void* PoolThreadFunc( void* param )
     ThreadWorker* worker = static_cast< ThreadWorker* >( param );
     if ( !worker )
         return NULL;
+
+    g_log.Debug( "Start Worker %lu",  worker->Key() );
 
 	while ( worker->Owner()->Running() )
 	{

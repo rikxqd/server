@@ -22,17 +22,21 @@ public:
 	~ThreadPool();
 
 	bool Init();
+
+	void Stop();
 	
 	bool Running() const;
-	
-	void Recovery();
 
-	void Join( TaskHandle handle, TaskParam* param );
+	void Join( TaskHandle handle, void* param );
+
+	bool TaskEmpty() const;
 
 protected:
 	ThreadWorker* Dispath();
 	
 	ThreadWorker* Done( ThreadWorker* worker );
+
+	void Recovery();
 
 private:
 	pthread_t		m_t_tid;

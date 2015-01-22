@@ -7,7 +7,7 @@
 
 class Stream;
 
-class Log
+class Log : public NonCopyable
 {
 public:
 	enum ELogLevel
@@ -29,7 +29,7 @@ public:
 	uint8 Level() const;
 	void Level( uint8 level );
 
-	void Pattern( SourceFile file, uint32 line, uint8 level, const char* pattern, ... ) __attribute__( ( format( printf, 5, 6 ) ) );
+	void Pattern( SourceFile file, ELogLevel level, const char* pattern, ... ) __attribute__( ( format( printf, 4, 5 ) ) );
 
 	void Debug( const char* pattern, ... ) __attribute__( ( format( printf, 2, 3 ) ) );
 	void Info( const char* pattern, ... ) __attribute__( ( format( printf, 2, 3 ) ) );

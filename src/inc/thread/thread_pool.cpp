@@ -3,6 +3,7 @@
 #include <unistd.h>
 
 #include "thread/thread_worker.h"
+#include "global.h"
 
 
 void* PoolMainThreadFunc( void* param );
@@ -53,21 +54,28 @@ bool ThreadPool::Init()
     return true;
 }
 
+void ThreadPool::Stop()
+{
+	m_running = false;
+	pthread_join( m_t_tid, NULL );
+	g_log.Debug( "Stop Master" );
+}
+
 bool ThreadPool::Running() const
 {
     return m_running;
 }
 
-void ThreadPool::Recovery()
-{
-
-}
-
-void ThreadPool::Join( TaskHandle handle, TaskParam* param )
+void ThreadPool::Join( TaskHandle handle, void* param )
 {
     ThreadTask task( handle, param );
     m_waitting_tasks.push( task );
     Dispath();
+}
+
+bool ThreadPool::TaskEmpty() const
+{
+	return m_idles.empty();
 }
 
 ThreadWorker* ThreadPool::Dispath()
@@ -100,6 +108,15 @@ ThreadWorker* ThreadPool::Done( ThreadWorker* worker )
 	}
 	
 	return Dispath();
+}
+
+void ThreadPool::Recovery()
+{
+	for ( auto worker : m_workers )
+	{
+		pthread_join( worker->Key(), NULL );
+		g_log.Debug( "Stop Worker %lu",  worker->Key() );
+	}
 }
 
 void* PoolMainThreadFunc( void* param )

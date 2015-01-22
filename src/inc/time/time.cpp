@@ -9,8 +9,8 @@
 
 
 Time::Time()
-	: m_is_cumulation( false )
-	, m_cumulation( 0 )
+	: m_is_tick( false )
+	, m_tick_cache( 0 )
 {
 	m_utc_time = 0;
 	CasheTime();
@@ -48,14 +48,14 @@ void Time::Refresh()
 	}
 #endif
 
-	if ( m_is_cumulation )
+	if ( m_is_tick )
 	{
-		m_cumulation += m_cpu_clock - cpu_clock;
-		int64 sec = static_cast< int64 >( m_cumulation / 1000 );
+		m_tick_cache += m_cpu_clock - cpu_clock;
+		int64 sec = static_cast< int64 >( m_tick_cache / 1000 );
 		if ( sec )
 		{
 			m_utc_time += sec;
-			m_cumulation = m_cumulation % 1000;
+			m_tick_cache = m_tick_cache % 1000;
 			CasheTime();
 		}
 	}
@@ -136,12 +136,12 @@ void Time::Abjust( int64 time )
 	if (time)
 	{
 		m_utc_time = time;
-		m_is_cumulation = true;
+		m_is_tick = true;
 		CasheClock();
 		CasheTime();
 	}
 	else
-		m_is_cumulation = false;
+		m_is_tick = false;
 }
 
 void Time::CasheClock()

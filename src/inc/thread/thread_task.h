@@ -2,35 +2,25 @@
 #define _THREAD_TASK_H_
 
 
-class TaskParam 
-{
-public:
-    TaskParam();
-    ~TaskParam();
-    
-	void* m_in_param; 
-	void* m_out_param;
-};
-
-typedef void (*TaskHandle)( TaskParam* task );
+typedef void (*TaskHandle)( void* task );
 
 class ThreadTask
 {
     friend class ThreadWorker;
 public:
     ThreadTask();
-    ThreadTask( TaskHandle handle, TaskParam* param );
+    ThreadTask( TaskHandle handle, void* param );
     ~ThreadTask();
     
     void Set( TaskHandle handle );
-    void Set( TaskParam* param );
+    void Set( void* param );
 
 protected:
     void Do();
 
 private:
     TaskHandle   m_handle;
-    TaskParam*   m_param;
+    void*			m_param;
 };
 
 #endif//_THREAD_TASK_H_

@@ -4,8 +4,9 @@
 #include <iostream>
 
 
-SourceFile::SourceFile( const char* name )
+SourceFile::SourceFile( const char* name, int32 line )
 	: m_name( name )
+	, m_line( line )
 {
 	const char* sub = strrchr( name, '/' );
 	if ( sub )
@@ -22,6 +23,11 @@ SourceFile::~SourceFile()
 const char* SourceFile::Name() const
 {
 	return m_name;
+}
+
+const int32 SourceFile::Line() const
+{
+	return m_line;
 }
 
 const int32 SourceFile::Size() const

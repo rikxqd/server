@@ -3,19 +3,9 @@
 #include "public.h"
 
 
-void DefualtTaskFunc( TaskParam* param )
+void DefualtTaskFunc( void* param )
 {
     cout << "this is the defualt task func !" << endl;
-}
-
-TaskParam::TaskParam()
-    : m_in_param( NULL )
-	, m_out_param( NULL )
-{
-}
-
-TaskParam::~TaskParam()
-{
 }
 
 ThreadTask::ThreadTask()
@@ -24,7 +14,7 @@ ThreadTask::ThreadTask()
 {
 }
 
-ThreadTask::ThreadTask( TaskHandle handle, TaskParam* param )
+ThreadTask::ThreadTask( TaskHandle handle, void* param )
     : m_handle( handle )
     , m_param( param )
 {
@@ -39,7 +29,7 @@ void ThreadTask::Set( TaskHandle handle )
     m_handle = handle;
 }
 
-void ThreadTask::Set( TaskParam* param )
+void ThreadTask::Set( void* param )
 {
     m_param = param;
 }

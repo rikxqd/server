@@ -17,4 +17,11 @@ int64 ToSecond( int32 year, int32 month, int32 day, int32 hour, int32 minute, in
 	return static_cast< int64 >( mktime ( &tm_temp ) );
 }
 
+string AsString( Time& t )
+{
+	char buffer[BUF_MIN] = {0};
+	snprintf( buffer, sizeof(buffer), "%4d-%02d-%02d %02d:%02d:%02d", t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute(), t.Second() );
+	return std::move( buffer );
+}
+
 }/* end of TimeFunc */

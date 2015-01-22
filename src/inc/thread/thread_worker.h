@@ -19,6 +19,8 @@ public:
 	bool Init( ThreadPool* pool );
 	
 	bool Busy() const;
+
+	pthread_t& Key();
 	
 	pthread_cond_t& ThreadCond();
 

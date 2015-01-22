@@ -11,7 +11,9 @@ using namespace std;
 
 int main()
 {
-    DEBUG( " Debug:%s", " a");
+    DEBUG( " this is test debug : %s", "testing" );
+
+    g_log.Debug( "Debug" );
     g_log.Info( "Info" );
     g_log.Warning( "Warning" );
     g_log.Error( "Error" );

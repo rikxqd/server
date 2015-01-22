@@ -2,12 +2,10 @@
 
 #include <stdarg.h>
 
+#include "global.h"
 #include "stream/stream.h"
+#include "time/time_func.h"
 
-
-#define BUF_SIZE 2048
-
-#define ENDL			"\033[0m" << std::endl
 
 #define WHITE			std::cout << "\x1b[40;30m" 
 #define RED			std::cout << "\x1b[40;31m"
@@ -16,11 +14,15 @@
 #define BLUE			std::cout << "\x1b[40;34m"
 #define RED_WHITE	std::cout << "\x1b[41;30m"
 
+#define ENDL			"\033[0m" << std::endl
+
 #define VA_BUFFER( buffer )  \
 	va_list list;	\
 	va_start( list, pattern );	\
 	int res = vsnprintf( (buffer), sizeof(buffer), pattern, list );	\
 	va_end( list );
+
+static char s_level_name[Log::LOG_ALL][8] = { "Fatal", "Error", "Warn", "Info", "Debug" };
 
 Log::Log( const char* name, uint8 level, Stream& stream )
 	: m_name( name )
@@ -54,16 +56,21 @@ void Log::Level( uint8 level )
 	m_level = (ELogLevel)level;
 }
 
-void Log::Pattern( SourceFile file, uint32 line, uint8 level, const char* pattern, ... )
+void Log::Pattern( SourceFile file, ELogLevel level, const char* pattern, ... )
 {
 	if ( level > m_level )
 		return;
 
-	char buffer[BUF_SIZE] = {0};
+	char buffer[BUF_MED] = {0};
 
 	VA_BUFFER( buffer )
 
-	m_stream << "[" << m_name << "] " << file.Name() << ':' << line << " " << buffer << "\n";
+	m_stream 
+	<< "[" << TimeFunc::AsString( g_time ) << "][" 
+	<< m_name << "][" 
+	<< s_level_name[level] << "][" 
+	<< file.Name() << ':' << file.Line()  << "]"
+	<< " " << buffer << "\n";
 
 	m_stream.Flush();
 }
@@ -73,11 +80,11 @@ void Log::Debug( const char* pattern, ... )
 	if ( LOG_DEBUG > m_level )
 		return;
 		
-	char buffer[BUF_SIZE] = {0};
+	char buffer[BUF_MED] = {0};
 
 	VA_BUFFER( buffer )
 	
-	BLUE << "[" << m_name << "]:" << buffer << ENDL;
+	GREEN << buffer << ENDL;
 }
 
 void Log::Info( const char* pattern, ... )
@@ -85,11 +92,11 @@ void Log::Info( const char* pattern, ... )
 	if ( LOG_INFO > m_level )
 		return;
 	
-	char buffer[BUF_SIZE] = {0};
+	char buffer[BUF_MED] = {0};
 
 	VA_BUFFER( buffer )
 	
-	GREEN << "[" << m_name << "]:" << buffer << ENDL;
+	GREEN << buffer << ENDL;
 }
 
 void Log::Warning( const char* pattern, ... )
@@ -97,11 +104,11 @@ void Log::Warning( const char* pattern, ... )
 	if ( LOG_WARNING > m_level )
 		return;
 		
-	char buffer[BUF_SIZE] = {0};
+	char buffer[BUF_MED] = {0};
 
 	VA_BUFFER( buffer )
 	
-	YELLOW << "[" << m_name << "]:" << buffer << ENDL;
+	YELLOW << buffer << ENDL;
 }
 
 void Log::Error( const char* pattern, ... )
@@ -109,11 +116,11 @@ void Log::Error( const char* pattern, ... )
 	if ( LOG_ERROR > m_level )
 		return;
 		
-	char buffer[BUF_SIZE] = {0};
+	char buffer[BUF_MED] = {0};
 
 	VA_BUFFER( buffer )
 	
-	RED << "[" << m_name << "]:" << buffer << ENDL;
+	RED << buffer << ENDL;
 }
 
 void Log::Fatal( const char* pattern, ... )
@@ -121,9 +128,9 @@ void Log::Fatal( const char* pattern, ... )
 	if ( LOG_FATAL > m_level )
 		return;
 		
-	char buffer[BUF_SIZE] = {0};
+	char buffer[BUF_MED] = {0};
 
 	VA_BUFFER( buffer )
 	
-	RED_WHITE << "[" << m_name << "]:" << buffer << ENDL;
+	RED_WHITE << buffer << ENDL;
 }

@@ -8,40 +8,32 @@
 #include "thread/thread_task.h"
 
 
-void Func( TaskParam *task )
+void Func( void *param )
 {
-	int idx = *(int *)task->m_in_param;  
+	int idx = *(int *)param;  
 	printf( "Begin: thread %d\n", idx );  
 	sleep( 3 );  
 	printf( "End:   thread %d\n", idx );
-	int* ret = (int*)malloc( sizeof(int) );
-	*ret = idx;
-	task->m_out_param = ret;
 } 
 
 int main( int argc, char* argv[] )
 {
 	ThreadPool pool( 5, 10 );
 	pool.Init();
-	sleep( 1 );
 
-	TaskParam params[15];  
 	int i, *idx;  
-
 	for( i = 0 ; i < 5 ; ++i )
 	{  
 		idx = (int*)malloc( sizeof(int) );  
 		*idx = i;  
-		params[i].m_in_param = idx;
-		pool.Join( Func, params + i );  
+		pool.Join( Func, idx );  
 	}
 	
 	for( i = 0 ; i < 5 ; ++i )
 	{  
 		idx = (int*)malloc( sizeof(int) );  
 		*idx = i + 20;  
-		params[i + 5].m_in_param = idx;
-		pool.Join( Func, params + i + 5 );  
+		pool.Join( Func, idx );  
 	}
 	
 	sleep( 6 );
@@ -50,17 +42,9 @@ int main( int argc, char* argv[] )
 	{  
 		idx = (int*)malloc( sizeof(int) );  
 		*idx = i + 50;  
-		params[i + 10].m_in_param = idx;
-		pool.Join( Func, params + i + 10 );  
+		pool.Join( Func, idx );  
 	}
-	
-	sleep( 6 );
-	
-	for ( i = 0 ; i < 15 ; ++i )
-	{
-		int idx = *(int *)params[i].m_out_param;
-		printf( "out param : %d, %d\n", i, idx );
-	}
+	pool.Stop();
 
 	printf( "All tasks done!\n" );  
 

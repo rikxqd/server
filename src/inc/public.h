@@ -33,4 +33,8 @@ private:
 #define snprintf sprintf_s
 #endif
 
+#define BUF_MIN	(1 << 5)
+#define BUF_MED	(1 << 10)
+#define BUF_MAX	(1 << 20)
+
 #endif//_PUBLIC_H_

@@ -1,5 +1,10 @@
 #include "global.h"
 
-LogStream g_stream;
+#include "log/log_stream.h"
 
-Log g_log( "base", Log::LOG_ALL, g_stream );
+
+LogStream g_log_stream;
+
+Log g_log( "base", Log::LOG_ALL, g_log_stream );
+
+Time g_time;
