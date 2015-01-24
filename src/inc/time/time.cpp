@@ -131,6 +131,13 @@ int32 Time::ZoneSecond() const
 	return m_zone_second;
 }
 
+string Time::AsString() const
+{
+	char buffer[BUF_MIN] = {0};
+	snprintf( buffer, sizeof(buffer), "%4d-%02d-%02d %02d:%02d:%02d", m_year, m_month, m_day, m_hour, m_minute, m_second );
+	return std::move( buffer );
+}
+
 void Time::Abjust( int64 time )
 {
 	if (time)

@@ -8,7 +8,7 @@
 
 # 设置变量
 set(LIBBASE_SRC 
-	net/warp_socket.cpp 
+	net/sock_func.cpp 
 	net/address.cpp
 	process/process.cpp
 	thread/thread_pool.cpp

@@ -1,9 +1,12 @@
-#include "warp_socket.h"
+#include "sock_func.h"
 #include <sys/socket.h>
 #include <iostream>
 #include <stdlib.h>
 #include <errno.h>
 
+
+namespace SockFunc
+{
 
 SOCKFD Socket( int32 domain, int32 type, int32 protocol )
 {
@@ -63,6 +66,8 @@ SOCKFD Accept( int32 sockfd, sockaddr* sa, socklen_t* len )
 	}
 	return csock;
 }
+
+}/* end of SockFunc */
 
 /*
 void Getpeername(int32 fd, sockaddr *sa, socklen_t *salenptr)

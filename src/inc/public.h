@@ -6,6 +6,7 @@
 
 #include "define/integer.h"
 
+
 using namespace std;
 
 // 最大值，最小值
@@ -16,7 +17,7 @@ using namespace std;
 class NonCopyable  
 {  
 protected:  
-      NonCopyable() {}  
+      NonCopyable() {}
       ~NonCopyable() {}  
 private:
       NonCopyable( const NonCopyable& );  

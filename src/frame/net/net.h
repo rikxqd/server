@@ -1,7 +1,7 @@
 #ifndef _NET_H_
 #define _NET_H_
 
-#include "net/warp_socket.h"
+#include "net/sock_func.h"
 
 
 class Net

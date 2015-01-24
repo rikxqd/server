@@ -66,7 +66,7 @@ void Log::Pattern( SourceFile file, ELogLevel level, const char* pattern, ... )
 	VA_BUFFER( buffer )
 
 	m_stream 
-	<< "[" << TimeFunc::AsString( g_time ) << "][" 
+	<< "[" << g_time.AsString() << "][" 
 	<< m_name << "][" 
 	<< s_level_name[level] << "][" 
 	<< file.Name() << ':' << file.Line()  << "]"

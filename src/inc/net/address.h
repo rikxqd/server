@@ -9,13 +9,13 @@
 class Address
 {
 public:
-      Address();
+	Address();
 	explicit Address( uint16 port );
 	Address( string& ip, uint16 port );
 	Address( uint32 ip, uint16 port );
 	Address( string& host );
       
-	~Address();
+~Address();
       
 public:
 	uint16 Port() const;
@@ -27,6 +27,7 @@ public:
 	const sockaddr_in& SockAddr() const;
 
 	string String() const;
+
 private:
 	sockaddr_in m_addr;
 };
