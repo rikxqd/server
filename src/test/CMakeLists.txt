@@ -18,6 +18,7 @@ include_directories(${PROJECT_SOURCE_DIR}/third/tinyxml)
 #add_executable(split str/split.cpp)
 #add_executable(stream stream/stream.cpp)
 add_executable(time time/time.cpp)
+add_executable(timer time/timer.cpp)
 add_executable(math math/math.cpp)
  
 
@@ -31,4 +32,5 @@ add_executable(math math/math.cpp)
 #target_link_libraries(split base)
 #target_link_libraries(stream base)
 target_link_libraries(time base)
+target_link_libraries(timer base)
 target_link_libraries(math base)

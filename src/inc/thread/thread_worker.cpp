@@ -54,7 +54,7 @@ void ThreadWorker::Start()
 {	
 	if ( !m_busy )
 	{
-		pthread_mutex_lock( &m_t_mutex );  
+		pthread_mutex_lock( &m_t_mutex );
 		pthread_cond_wait( &m_t_cond, &m_t_mutex );  
 		pthread_mutex_unlock( &m_t_mutex );
 	}
@@ -77,6 +77,8 @@ void* PoolThreadFunc( void* param )
 	{
 		worker->Start();
 	}
+
+	g_log.Debug( "Stop Worker %lu",  worker->Key() );
 	
 	return NULL;
 }

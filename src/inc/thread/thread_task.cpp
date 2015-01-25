@@ -5,7 +5,7 @@
 
 void DefualtTaskFunc( void* param )
 {
-    cout << "this is the defualt task func !" << endl;
+    cout << "this is the defualt task func !" << pthread_self() << endl;
 }
 
 ThreadTask::ThreadTask()

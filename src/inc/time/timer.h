@@ -7,6 +7,7 @@
 class Timer : NonCopyable
 {
 	typedef void (*Handle)( Timer* owner, void* param );
+	friend class TimerManager;
 public:
 	enum ETimerType
 	{

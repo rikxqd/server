@@ -1,6 +1,7 @@
 #include "timer.h"
 
 #include "time/timer_manager.h"
+#include "global.h"
 
 
 Timer::Timer( uint32 interval, Handle handle, void* param, ETimerType type )
@@ -21,6 +22,7 @@ Timer::~Timer()
 
 void Timer::Start()
 {
+	g_log.Debug( "Timer::Start() timer : %p", this );
 	TimerManager::Instance().AddTimer( this );
 }
 

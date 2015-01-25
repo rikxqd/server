@@ -18,8 +18,8 @@ class TimerManager : public Singleton< TimerManager >
 public:
 	~TimerManager();
 
-	 bool AddTimer( Timer* timer );
-	 bool RemoveTimer( Timer* timer );
+	 void AddTimer( Timer* timer );
+	 void RemoveTimer( Timer* timer );
 
 	 void Start();
 	 void Stop();

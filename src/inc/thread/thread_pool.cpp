@@ -24,8 +24,6 @@ ThreadPool::ThreadPool( uint32 min, uint32 max )
     m_min_count = min;
     m_cur_count = min;
     m_max_count = max;
-
-	Init();
 }
 
 ThreadPool::~ThreadPool()
@@ -43,6 +41,8 @@ bool ThreadPool::Init()
     int32 ret = pthread_create( &m_t_tid, NULL, PoolMainThreadFunc, this );
     if ( 0 != ret )
         return false;
+
+	m_running = true;
     
     for ( uint32 i = 0 ; i < m_cur_count ; ++i )
     {
@@ -88,7 +88,7 @@ ThreadWorker* ThreadPool::Dispath()
 	pthread_mutex_lock( &m_t_mutex );
 	ThreadWorker* worker = m_idles.front();
 	m_idles.pop();
-
+	
 	ThreadTask task = m_waitting_tasks.front();
 	m_waitting_tasks.pop();
 	pthread_mutex_unlock( &m_t_mutex );
@@ -127,7 +127,6 @@ void* PoolMainThreadFunc( void* param )
 	if ( !pool )
 		return NULL;
     
-	pool->m_running = true;
 	while ( pool->Running() )
 	{
 
