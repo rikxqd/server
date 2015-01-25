@@ -1,8 +1,11 @@
 #include "sock_func.h"
+
 #include <sys/socket.h>
 #include <iostream>
 #include <stdlib.h>
 #include <errno.h>
+
+#include "global.h"
 
 
 namespace SockFunc
@@ -12,7 +15,7 @@ SOCKFD Socket( int32 domain, int32 type, int32 protocol )
 {
 	SOCKFD ssock = socket( domain, type, protocol );
 	if ( 0 > ssock )
-		cout << "create socket fail " << endl;
+		FATAL( "create socket fail " );
 	return ssock;
 }
 
@@ -20,7 +23,7 @@ int32 Connect( int32 sockfd, const sockaddr* addr, socklen_t addrlen )
 {
 	int32 res = connect( sockfd, addr, addrlen );
 	if ( 0 > res )
-		cout << "connect fail " << endl;
+		FATAL( "connect fail " );
 	return res;
 }
 
@@ -28,7 +31,7 @@ int32 Bind( int32 sockfd, const sockaddr* sa, socklen_t salen )
 {
 	int32 res = bind( sockfd, sa, salen );
 	if ( 0 > res )
-		cout << "bind fail " << endl;
+		FATAL( "bind fail " );
 	return res;
 }
 
@@ -39,7 +42,7 @@ int32 Listen( int32 sockfd, int32 backlog )
 		backlog = atoi(env);
 	int32 res = listen( sockfd, backlog );
 	if ( 0 > res )
-		cout << "listen fail " << endl;
+		FATAL( "listen fail " );
 	return res;
 }
 
@@ -57,10 +60,10 @@ SOCKFD Accept( int32 sockfd, sockaddr* sa, socklen_t* len )
 #else
 		if ( ECONNABORTED == errno )
 #endif
-			cout << "accept again " << endl;
+			FATAL( "accept again " );
 		else
 		{
-			cout << "accept fail " << endl;
+			FATAL( "accept fail " );
 			break;
 		}
 	}

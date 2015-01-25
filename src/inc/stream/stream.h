@@ -1,7 +1,7 @@
 #ifndef _STREAM_H_
 #define _STREAM_H_
 
-#include "buffer/fixed_buffer.h"
+#include "buffer/buffer.h"
 #include "log/source_file.h"
 
 
@@ -9,7 +9,7 @@
 
 class Stream
 {
-	typedef FixedBuffer< MAX_SIZE > Buffer;
+	typedef Buffer< MAX_SIZE > SBuffer;
 public:
 	Stream();
 	~Stream();
@@ -32,7 +32,7 @@ public:
 	friend std::ostream& operator << ( std::ostream& r, Stream& s );
 	friend std::ofstream& operator << ( std::ofstream& r, Stream& s );
 
-	const Buffer& Buf() const;
+	const SBuffer& Buf() const;
 	const int32 Size() const;
 	void Append( const char* v, int32 l );
 	void Reset();
@@ -40,7 +40,7 @@ public:
 	virtual void Flush() = 0;
     
 private:
-	Buffer m_buffer;
+	SBuffer m_buffer;
 };
 
 #endif//_STREAM_H_

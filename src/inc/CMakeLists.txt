@@ -22,6 +22,9 @@ set(LIBBASE_SRC
 	str/str_func.cpp
 	time/time.cpp
 	time/time_func.cpp
+	time/timer.cpp
+	time/timer_manager.cpp
+	utility/math.cpp
 	)
 #aux_source_directory(process LIBBASE_SRC)
 #aux_source_directory(net LIBBASE_SRC)
@@ -33,6 +36,6 @@ set(LIBBASE_SRC
 include_directories(${PROJECT_SOURCE_DIR}/src/inc)
 
 # 添加动态库编译目标文件及其依赖文件
-add_library(base SHARED ${LIBBASE_SRC})
+#add_library(base SHARED ${LIBBASE_SRC})
+add_library(base STATIC ${LIBBASE_SRC})
 target_link_libraries(base pthread)
-# 静态库 add_library(base STATIC ${LIBBASE_SRC})

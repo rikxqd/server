@@ -4,10 +4,12 @@
 #include "log/log.h"
 #include "log/source_file.h"
 #include "time/time.h"
+#include "thread/thread_pool.h"
 
 
-extern Log		g_log;
-extern Time		g_time;
+extern Log			g_log;
+extern Time			g_time;
+extern ThreadPool	g_thread_pool;
 
 #define DEBUG( buffer, ... )	\
 	g_log.Pattern( {__FILE__, __LINE__}, Log::LOG_DEBUG, buffer, ##__VA_ARGS__ )

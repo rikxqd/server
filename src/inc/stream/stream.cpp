@@ -121,7 +121,7 @@ std::ofstream& operator << ( std::ofstream& r, Stream& s )
 	return r;
 }
 
-const Stream::Buffer& Stream::Buf() const
+const Stream::SBuffer& Stream::Buf() const
 {
 	return m_buffer;
 }

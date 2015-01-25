@@ -24,6 +24,8 @@ ThreadPool::ThreadPool( uint32 min, uint32 max )
     m_min_count = min;
     m_cur_count = min;
     m_max_count = max;
+
+	Init();
 }
 
 ThreadPool::~ThreadPool()
