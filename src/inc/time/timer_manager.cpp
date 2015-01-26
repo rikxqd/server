@@ -35,7 +35,6 @@ void TimerManager::RemoveTimer( Timer* timer )
 
 void TimerManager::Start()
 {
-	Time::SleepMsec( 2000 );
 	g_thread_pool.Join( TimerManagerFunc, this );
 }
 
@@ -65,7 +64,7 @@ void TimerManager::Tick()
 			else if( Timer::TIMER_CIRCLE == timer->m_type )   
 				timer->m_counter = timer->m_interval;
 			else
-				FATAL( "timer type is fatal ! type:%d", timer->m_type );
+				g_log.Fatal( "timer type is fatal ! type:%d", timer->m_type );
 		} 
 	}
 }

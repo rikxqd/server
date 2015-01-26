@@ -71,14 +71,10 @@ void* PoolThreadFunc( void* param )
     if ( !worker )
         return NULL;
 
-    g_log.Debug( "Start Worker %lu",  worker->Key() );
-
 	while ( worker->Owner()->Running() )
 	{
 		worker->Start();
 	}
-
-	g_log.Debug( "Stop Worker %lu",  worker->Key() );
 	
 	return NULL;
 }

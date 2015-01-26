@@ -1,36 +1,31 @@
 #include "thread_pool.h"
 
 #include <unistd.h>
+#include <sys/syscall.h>
 
 #include "thread/thread_worker.h"
 #include "global.h"
 
 
-void* PoolMainThreadFunc( void* param );
+void* PoolMasterThreadFunc( void* param );
 
 ThreadPool::ThreadPool()
     : m_running( false )
-    , m_min_count( 2 )
-    , m_cur_count( 2 )
-    , m_max_count( 2 )
+    , m_count( 2 )
 {
 }
 
-ThreadPool::ThreadPool( uint32 min, uint32 max )
+ThreadPool::ThreadPool( uint32 count )
+	: m_running( false )
+	, m_count( count )
 {
-    if ( min > max )
-        min = max;
-    
-    m_min_count = min;
-    m_cur_count = min;
-    m_max_count = max;
 }
 
 ThreadPool::~ThreadPool()
 {
 }
 
-bool ThreadPool::Init()
+void ThreadPool::Start()
 {
     for ( auto worker : m_workers )
         DELETE_VALUE( worker );
@@ -38,13 +33,16 @@ bool ThreadPool::Init()
     
     pthread_mutex_init( &m_t_mutex, NULL );
  
-    int32 ret = pthread_create( &m_t_tid, NULL, PoolMainThreadFunc, this );
+    int32 ret = pthread_create( &m_t_tid, NULL, PoolMasterThreadFunc, this );
     if ( 0 != ret )
-        return false;
-
-	m_running = true;
+	{
+        g_log.Fatal( "Master fatal" );
+		return;
+	}
     
-    for ( uint32 i = 0 ; i < m_cur_count ; ++i )
+	m_running = true;
+
+    for ( uint32 i = 0 ; i < m_count ; ++i )
     {
         ThreadWorker* worker = new ThreadWorker();
         if ( worker->Init( this ) )
@@ -52,32 +50,33 @@ bool ThreadPool::Init()
         else
             DELETE_VALUE( worker );
     }
-    
-    return true;
+
+	while ( m_workers.size() != m_idles.size() ) {}
 }
 
 void ThreadPool::Stop()
 {
-	m_running = false;
-	pthread_join( m_t_tid, NULL );
-	g_log.Debug( "Stop Master" );
+	if ( m_running )
+	{
+		m_running = false;
+		pthread_join( m_t_tid, NULL );
+		g_log.Info( "Stop ThreadPool" );
+	}
 }
 
 bool ThreadPool::Running() const
 {
-    return m_running;
+    return (m_running || !m_waitting_tasks.empty());
 }
 
 void ThreadPool::Join( TaskHandle handle, void* param )
 {
+	if ( !m_running )
+		return;
+
     ThreadTask task( handle, param );
     m_waitting_tasks.push( task );
     Dispath();
-}
-
-bool ThreadPool::TaskEmpty() const
-{
-	return m_idles.empty();
 }
 
 ThreadWorker* ThreadPool::Dispath()
@@ -114,14 +113,15 @@ ThreadWorker* ThreadPool::Done( ThreadWorker* worker )
 
 void ThreadPool::Recovery()
 {
+	g_log.Info( "Recovery ThreadPool" );
 	for ( auto worker : m_workers )
 	{
 		pthread_join( worker->Key(), NULL );
-		g_log.Debug( "Stop Worker %lu",  worker->Key() );
+		g_log.Debug( "Stop Worker %d", static_cast<pid_t>(::syscall(SYS_gettid)) );
 	}
 }
 
-void* PoolMainThreadFunc( void* param )
+void* PoolMasterThreadFunc( void* param )
 {
 	ThreadPool* pool = static_cast< ThreadPool* >( param );
 	if ( !pool )
@@ -130,7 +130,7 @@ void* PoolMainThreadFunc( void* param )
 	while ( pool->Running() )
 	{
 
-		sleep( 3 );
+		Time::SleepMsec( 2 * 1000 );
 	}
 
 	pool->Recovery();

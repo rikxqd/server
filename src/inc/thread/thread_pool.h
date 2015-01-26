@@ -15,21 +15,19 @@ class ThreadTask;
 class ThreadPool
 {
 	friend class ThreadWorker;
-	friend void* PoolMainThreadFunc( void* param );
+	friend void* PoolMasterThreadFunc( void* param );
 public:
 	ThreadPool();
-	explicit ThreadPool( uint32 min, uint32 max );
+	explicit ThreadPool( uint32 count );
 	~ThreadPool();
 
-	bool Init();
+	void Start();
 
 	void Stop();
 	
 	bool Running() const;
 
 	void Join( TaskHandle handle, void* param );
-
-	bool TaskEmpty() const;
 
 protected:
 	ThreadWorker* Dispath();
@@ -43,9 +41,7 @@ private:
 	pthread_mutex_t	m_t_mutex;
 	
 	bool	m_running;
-	uint32	m_min_count;
-	uint32	m_cur_count;
-	uint32	m_max_count;
+	uint32	m_count;
 
 	std::vector< ThreadWorker* >	m_workers;
 	std::queue< ThreadWorker* >		m_idles;
