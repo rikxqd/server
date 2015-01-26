@@ -54,7 +54,6 @@ void TimerManager::Tick()
 		(timer->m_counter < m_delay) ? (timer->m_counter = 0) : (timer->m_counter -= m_delay);
 		if ( 0 == timer->m_counter )
 		{
-			g_log.Debug( "TimerManager::Tick() timer : %p", timer );
 			if ( timer->m_handle )  
 				timer->m_handle(timer,timer->m_param);  
 
@@ -76,8 +75,6 @@ void TimerManagerFunc( void *param )
 	TimerManager* mgr = static_cast< TimerManager* >( param );
 	if ( !mgr )
 		return;
-
-	g_log.Debug( "Start TimerManagerFunc" );
 
 	mgr->m_start = true;
 	while ( mgr->m_start )
