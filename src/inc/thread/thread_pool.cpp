@@ -1,7 +1,6 @@
 #include "thread_pool.h"
 
 #include <unistd.h>
-#include <sys/syscall.h>
 
 #include "thread/thread_worker.h"
 #include "global.h"
@@ -115,10 +114,7 @@ void ThreadPool::Recovery()
 {
 	g_log.Info( "Recovery ThreadPool" );
 	for ( auto worker : m_workers )
-	{
 		pthread_join( worker->Key(), NULL );
-		g_log.Debug( "Stop Worker %d", static_cast<pid_t>(::syscall(SYS_gettid)) );
-	}
 }
 
 void* PoolMasterThreadFunc( void* param )

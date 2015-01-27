@@ -1,14 +1,14 @@
 #include "thread_task.h"
 
-#include <sys/syscall.h>
 #include <unistd.h>
 
-#include "public.h"
+#include "process/process.h"
+#include "global.h"
 
 
 void DefualtTaskFunc( void* param )
 {
-    cout << "this is the defualt task func !" << static_cast<pid_t>(::syscall(SYS_gettid)) << endl;
+    g_log.Info( "%d: this is the defualt task func !", ProcFunc::ProcId() );
 }
 
 ThreadTask::ThreadTask()

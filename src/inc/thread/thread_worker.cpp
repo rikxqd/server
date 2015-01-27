@@ -1,6 +1,7 @@
 #include "thread_worker.h"
 
-#include "thread_pool.h"
+#include "thread/thread_pool.h"
+#include "process/process.h"
 #include "global.h"
 
 
@@ -67,14 +68,18 @@ void ThreadWorker::Start()
 
 void* PoolThreadFunc( void* param )
 {
-    ThreadWorker* worker = static_cast< ThreadWorker* >( param );
-    if ( !worker )
-        return NULL;
+	ThreadWorker* worker = static_cast< ThreadWorker* >( param );
+	if ( !worker )
+		return NULL;
 
-	while ( worker->Owner()->Running() )
+	g_log.Debug( "Start Worker %d", ProcFunc::ProcId() );
+
+	while ( worker->Owner()->Running() || worker->Busy() )
 	{
 		worker->Start();
 	}
+
+	g_log.Debug( "Stop Worker %d", ProcFunc::ProcId() );
 	
 	return NULL;
 }

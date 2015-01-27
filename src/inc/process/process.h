@@ -5,9 +5,15 @@
 
 #include "public.h"
 
+namespace ProcFunc
+{
 
 pid_t Fork(void);
 
-int32 ProcName( char* name, uint32 size );
+string ProcName();
+
+pid_t ProcId();
+
+}/* end of ProcFunc */
 
 #endif//_PROCESS_H_
