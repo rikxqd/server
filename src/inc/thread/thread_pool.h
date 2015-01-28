@@ -12,10 +12,11 @@
 class ThreadWorker;
 class ThreadTask;
 
-class ThreadPool
+class ThreadPool : public Singleton< ThreadPool >
 {
 	friend class ThreadWorker;
 	friend void* PoolMasterThreadFunc( void* param );
+	friend class Singleton< ThreadPool >;
 public:
 	ThreadPool();
 	explicit ThreadPool( uint32 count );

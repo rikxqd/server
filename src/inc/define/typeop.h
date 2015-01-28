@@ -44,12 +44,12 @@ template< typename T >
 class TypeOp< T& > 
 { 
 public:
-	typedef T&							ArgT; //调用时的参数类型：有限定符&
-	typedef typename TypeOp<T>::BareT	BareT;
-	typedef T const						ConstT;
-	typedef T&							RefT;
+	typedef T&									ArgT; //调用时的参数类型：有限定符&
+	typedef typename TypeOp<T>::BareT		BareT;
+	typedef T const								ConstT;
+	typedef T&									RefT;
 	typedef typename TypeOp<T>::BareT&	RefBareT;
-	typedef T const&					RefConstT;
+	typedef T const&							RefConstT;
 };
 
 //针对void的全局特化，因为指向void的引用或const类型不允许

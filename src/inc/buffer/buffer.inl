@@ -14,7 +14,6 @@ Buffer< size >::Buffer()
 template< uint32 size >
 Buffer< size >::~Buffer()
 {
-
 }
 
 template< uint32 size >

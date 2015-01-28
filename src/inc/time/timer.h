@@ -11,18 +11,18 @@ class Timer : NonCopyable
 public:
 	enum ETimerType
 	{
-		TIMER_ONCE		= 0, //一次型
-		TIMER_CIRCLE	= 1, //循环型
+		TIMER_TYPE_ONCE		= 0, //一次型
+		TIMER_TYPE_CIRCLE	= 1, //循环型
 	};
 
 	enum ETimerStatus
 	{
-		TIMER_IDLE		= 0, //start前以及手动调用stop后的状态
-		TIMER_ALIVE		= 1, //在manager的list里时候的状态
-		TIMER_TIMEOUT	= 2, //超时后被移除的状态，循环型的没有
+		TIMER_STATUS_IDLE		= 0, //start前以及手动调用stop后的状态
+		TIMER_STATUS_ALIVE		= 1, //在manager的list里时候的状态
+		TIMER_STATUS_TIMEOUT	= 2, //超时后被移除的状态，循环型的没有
 	};
 
-	explicit Timer( uint32 interval, Handle handle, void* param, ETimerType type = TIMER_ONCE );
+	explicit Timer( uint32 interval, Handle handle, void* param = NULL, ETimerType type = TIMER_TYPE_ONCE );
 	~Timer();
 
 	void Start();

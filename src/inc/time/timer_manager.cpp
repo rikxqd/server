@@ -2,7 +2,7 @@
 
 #include "global.h"
 #include "time/timer.h"
-
+#include "thread/thread_pool.h"
 
 void TimerManagerFunc( void *param );
 
@@ -20,6 +20,7 @@ TimerManager::~TimerManager()
 void TimerManager::AddTimer( Timer* timer )
 {
 	m_list.push_back( timer );
+	timer->m_status = Timer::TIMER_STATUS_ALIVE;
 }
 
 void TimerManager::RemoveTimer( Timer* timer )
@@ -35,7 +36,7 @@ void TimerManager::RemoveTimer( Timer* timer )
 
 void TimerManager::Start()
 {
-	g_thread_pool.Join( TimerManagerFunc, this );
+	ThreadPool::Instance().Join( TimerManagerFunc, this );
 }
 
 void TimerManager::Stop()
@@ -56,12 +57,12 @@ void TimerManager::Tick()
 			if ( timer->m_handle )  
 				timer->m_handle(timer,timer->m_param);  
 
-			if ( Timer::TIMER_ONCE == timer->m_type )  
+			if ( Timer::TIMER_TYPE_ONCE == timer->m_type )  
 			{  
 				m_list.erase( temp );  
-				timer->m_status = Timer::TIMER_TIMEOUT;  
+				timer->m_status = Timer::TIMER_STATUS_TIMEOUT;  
 			}  
-			else if( Timer::TIMER_CIRCLE == timer->m_type )   
+			else if( Timer::TIMER_TYPE_CIRCLE == timer->m_type )   
 				timer->m_counter = timer->m_interval;
 			else
 				g_log.Fatal( "timer type is fatal ! type:%d", timer->m_type );

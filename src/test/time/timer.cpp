@@ -2,6 +2,7 @@
 
 #include "time/timer.h"
 #include "time/timer_manager.h"
+#include "thread/thread_pool.h"
 #include "time/time.h"
 #include "global.h"
 
@@ -12,15 +13,15 @@ void func( Timer* timer, void* param )
 
 int main( int argc, char* argv[] )
 {
-	g_thread_pool.Start();
+	ThreadPool::Instance().Start();
 	TimerManager::Instance().Start();
 
 	int param[4] = {1,2,3,4};
 
-	Timer* a = new Timer( 1000, func, param, Timer::TIMER_CIRCLE );  
-	Timer* a1 = new Timer( 2000, func, param+1, Timer::TIMER_ONCE );  
-	Timer* a2 = new Timer( 3000, func, param+2, Timer::TIMER_CIRCLE );  
-	Timer* a3 = new Timer( 1000, func, param+3, Timer::TIMER_ONCE );  
+	Timer* a = new Timer( 1000, func, param, Timer::TIMER_TYPE_CIRCLE );  
+	Timer* a1 = new Timer( 2000, func, param+1, Timer::TIMER_TYPE_ONCE );  
+	Timer* a2 = new Timer( 3000, func, param+2, Timer::TIMER_TYPE_CIRCLE );  
+	Timer* a3 = new Timer( 1000, func, param+3, Timer::TIMER_TYPE_ONCE );  
 
 	a->Start();
 	a1->Start();

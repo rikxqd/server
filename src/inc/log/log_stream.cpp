@@ -15,7 +15,7 @@ LogStream::~LogStream()
 
 void LogStream::Flush()
 {
-	ofstream file( "aa", ios::app );
+	static ofstream file( "aa", ios::app );
 	if ( file )
 	{
 		file << *this;

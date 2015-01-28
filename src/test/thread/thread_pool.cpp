@@ -20,14 +20,14 @@ void Func( void *param )
 
 int main( int argc, char* argv[] )
 {
-	g_thread_pool.Start();
+	ThreadPool::Instance().Start();
 
 	int i, *idx;  
 	for( i = 0 ; i < 10 ; ++i )
 	{
 		idx = (int*)malloc( sizeof(int) );  
 		*idx = i;  
-		g_thread_pool.Join( Func, idx );  
+		ThreadPool::Instance().Join( Func, idx );  
 	}
 
 	sleep( 20 );
@@ -36,10 +36,10 @@ int main( int argc, char* argv[] )
 	{
 		idx = (int*)malloc( sizeof(int) );  
 		*idx = i + 600;  
-		g_thread_pool.Join( Func, idx );  
+		ThreadPool::Instance().Join( Func, idx );  
 	}
 
-	g_thread_pool.Stop();
+	ThreadPool::Instance().Stop();
 
 	g_log.Debug( "All tasks done!\n" );
 
