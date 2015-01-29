@@ -38,14 +38,14 @@ protected:
 	void Recovery();
 
 private:
-	pthread_t		m_t_tid;
+	pthread_t			m_t_tid;
 	pthread_mutex_t	m_t_mutex;
 	
 	bool	m_running;
 	uint32	m_count;
 
 	std::vector< ThreadWorker* >	m_workers;
-	std::queue< ThreadWorker* >		m_idles;
+	std::queue< ThreadWorker* >	m_idles;
 	std::queue< ThreadTask >		m_waitting_tasks;
 };
 
