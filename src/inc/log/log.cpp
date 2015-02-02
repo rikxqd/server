@@ -29,7 +29,6 @@ Log::Log( const char* name, uint8 level, Stream& stream )
 	, m_level( (ELogLevel)level )
 	, m_stream( stream )
 {
-
 }
 	
 Log::~Log()
