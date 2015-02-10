@@ -25,6 +25,7 @@ set(LIBBASE_SRC
 	time/timer.cpp
 	time/timer_manager.cpp
 	utility/math.cpp
+	epoll/epoll.cpp
 	)
 #aux_source_directory(process LIBBASE_SRC)
 #aux_source_directory(net LIBBASE_SRC)
