@@ -36,7 +36,8 @@ void TimerManager::RemoveTimer( Timer* timer )
 
 void TimerManager::Start()
 {
-	ThreadPool::Instance().Join( TimerManagerFunc, this );
+
+	ThreadPool::Instance().Join( this );
 }
 
 void TimerManager::Stop()
@@ -70,16 +71,12 @@ void TimerManager::Tick()
 	}
 }
 
-void TimerManagerFunc( void *param )
+void TimerManager::Do()
 {
-	TimerManager* mgr = static_cast< TimerManager* >( param );
-	if ( !mgr )
-		return;
-
-	mgr->m_start = true;
-	while ( mgr->m_start )
+	m_start = true;
+	while ( m_start )
 	{
-		Time::SleepMsec( mgr->m_delay );
-		mgr->Tick();
+		Time::SleepMsec( m_delay );
+		Tick();
 	}
 }

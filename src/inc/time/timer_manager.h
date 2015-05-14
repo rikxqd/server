@@ -4,12 +4,13 @@
 #include <list>
 
 #include "singleton/singleton.h"
+#include "thread/thread_task.h"
 #include "public.h"
 
 
 class Timer;
 
-class TimerManager : public Singleton< TimerManager >
+class TimerManager : public ThreadTask, public Singleton< TimerManager >
 {
 	friend class Singleton< TimerManager >;
 	friend void TimerManagerFunc( void *param );
@@ -26,6 +27,8 @@ public:
 
 protected:
 	void Tick();
+
+	virtual void Do();
 
 private:
 	bool				m_start;

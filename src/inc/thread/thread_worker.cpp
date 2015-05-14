@@ -46,7 +46,7 @@ ThreadPool* ThreadWorker::Owner()
 	return m_owner;
 }
 
-void ThreadWorker::Join( ThreadTask& task )
+void ThreadWorker::Join( ThreadTask* task )
 {
 	m_task = task;
 }
@@ -61,9 +61,11 @@ void ThreadWorker::Start()
 	}
 
 	m_busy = true;
-	m_task.Do();
+
+	if ( m_task )
+		m_task->Do();
 	
-	m_busy = (this == m_owner->Done( this ));
+	m_busy = m_owner->Done( this );
 }
 
 void* PoolThreadFunc( void* param )

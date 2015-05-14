@@ -5,38 +5,48 @@
 #include <stdlib.h>
 
 #include "global.h"
+#include "public.h"
 #include "thread/thread_pool.h"
 #include "thread/thread_task.h"
 #include "process/process.h"
 
 
-void Func( void *param )
+class TestThread : public ThreadTask
 {
-	int idx = *(int *)param;  
-	g_log.Debug( "%d: Begin: \t thread --- %d\n",  ProcFunc::ProcId(), idx );  
-	sleep( rand() % 10 + 1 );  
-	g_log.Debug( "%d: End: \t thread --- %d\n", ProcFunc::ProcId(), idx );
-} 
+public:
+	TestThread( int32 param )
+		: m_param( param )
+	{
+	}
+	~TestThread(){}
+
+	virtual void Do()
+	{
+		g_log.Debug( "%d: Begin: \t thread --- %d\n", ProcFunc::ProcId(), m_param );
+		g_log.Debug( "%d: End: \t thread --- %d\n", ProcFunc::ProcId(), m_param );
+	}
+
+private:
+	int32 m_param;
+};
 
 int main( int argc, char* argv[] )
 {
 	ThreadPool::Instance().Start();
 
-	int i, *idx;  
+	int32 i;  
 	for( i = 0 ; i < 10 ; ++i )
 	{
-		idx = (int*)malloc( sizeof(int) );  
-		*idx = i;  
-		ThreadPool::Instance().Join( Func, idx );  
+		TestThread* thread = new TestThread( i ); 
+		ThreadPool::Instance().Join( thread );  
 	}
 
 	sleep( 20 );
 
 	for( i = 0 ; i < 600 ; ++i )
 	{
-		idx = (int*)malloc( sizeof(int) );  
-		*idx = i + 600;  
-		ThreadPool::Instance().Join( Func, idx );  
+		TestThread* thread = new TestThread( i + 600 );
+		ThreadPool::Instance().Join( thread );  
 	}
 
 	ThreadPool::Instance().Stop();
