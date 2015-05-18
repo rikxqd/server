@@ -29,9 +29,9 @@ Time::~Time()
 void Time::SleepMsec( int64 msec )
 {
 #ifdef WIN32
-	Sleep( msec );
+	::Sleep( msec );
 #elif UNIX
-	usleep( msec * 1000 );
+	::usleep( msec * 1000 );
 #endif
 }
 

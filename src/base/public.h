@@ -31,14 +31,22 @@ private:
 #define DELETE_ARRAY(_ptr)	\
 	if((_ptr)) { delete[] (_ptr); (_ptr) = NULL; };
 
+// 字符串格式化
 #ifdef WIN32
 #define snprintf sprintf_s
 #endif
 
-#define SharedPtr tr1::shared_ptr
-
+// BUFFER大小
 #define BUF_MIN	(1 << 5)
 #define BUF_MED	(1 << 10)
 #define BUF_MAX	(1 << 20)
+
+// 锁
+#ifdef WIN32
+
+#elif UNIX
+	#include <unistd.h>
+	typedef pthread_mutex_t ThreadMutex;
+#endif
 
 #endif//_PUBLIC_H_

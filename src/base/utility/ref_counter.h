@@ -1,30 +1,28 @@
 #ifndef _REF_COUNT_H_
 #define _REF_COUNT_H_
 
-#include <stdio.h>
+#include <assert.h>
 
 
-class RefCount 
+class RefCounter 
 {
 public:
 	inline void IncRef() const
 	{
 		++m_ref_count;
-		printf( "count %d\n", m_ref_count );
 	}
 
 	inline void DecRef() const
 	{
 		int curr = --m_ref_count;
-		printf( "count %d\n", m_ref_count );
-		//assert( 0 <= curr && " 0 > m_ref_count" );
+		assert( 0 <= curr && " 0 > m_ref_count" );
 		if ( 0 >= curr )
 			OnRefOver();
 	}
 
 	virtual void OnRefOver() const
 	{
-		delete const_cast<RefCount*>( this );
+		delete const_cast<RefCounter*>( this );
 	}
 
 	void Count( int n )
@@ -38,14 +36,14 @@ public:
 	}
 
 protected:
-	RefCount() 
+	RefCounter() 
 		: m_ref_count( 0 ) 
 	{
 	}
 
-	virtual ~RefCount() 
+	virtual ~RefCounter() 
 	{ 
-		//assert( 0 == m_ref_count && "0 != m_ref_count!" ); 
+		assert( 0 == m_ref_count && "0 != m_ref_count!" ); 
 	}
 
 protected:

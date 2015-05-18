@@ -2,7 +2,7 @@
 #define _SMART_PTR_H_
 
 #include "public.h"
-#include "memory/ref_count.h"
+#include "utility/ref_counter.h"
 
 /*
 template<class T>
@@ -18,7 +18,7 @@ inline void DecRefCount(const T& obj)
 };*/
 
 template<class T>
-class ConstSmartPtr
+class ConstSharePtr
 {
 public:
 	enum REF_TAG 
@@ -27,21 +27,21 @@ public:
 		NEW_REF,
 	};
 	
-	ConstSmartPtr( const T* obj = NULL, REF_TAG tag = ConstSmartPtr::NEW_REF )
+	ConstSharePtr( const T* obj = NULL, REF_TAG tag = ConstSharePtr::NEW_REF )
 		: m_obj( obj )
 	{
-		if( obj && tag == ConstSmartPtr::NEW_REF )
+		if( obj && tag == ConstSharePtr::NEW_REF )
 			m_obj->IncRef();
 	}
 
-	ConstSmartPtr( const ConstSmartPtr<T>& obj )
+	ConstSharePtr( const ConstSharePtr<T>& obj )
 	{
 		m_obj = obj.Get();
 		if ( m_obj ) 
 			m_obj->IncRef();
 	}
 
-	~ConstSmartPtr()
+	~ConstSharePtr()
 	{
 		if ( m_obj )
 			m_obj->DecRef();
@@ -67,7 +67,7 @@ public:
 		return m_obj;
 	}
 
-	ConstSmartPtr<T>& operator=( const ConstSmartPtr<T>& right )
+	ConstSharePtr<T>& operator=( const ConstSharePtr<T>& right )
 	{
 		if ( m_obj != right.Get() )
 		{
@@ -98,35 +98,36 @@ public:
 	 *	These functions return whether or not the input objects refer to the same
 	 *	object.
 	 */
-	friend bool operator==( const ConstSmartPtr<T>& A, const ConstSmartPtr<T>& B )
+	friend bool operator==( const ConstSharePtr<T>& A, const ConstSharePtr<T>& B )
 	{
 		return A.m_obj == B.m_obj;
 	}
 
-	friend bool operator==( const ConstSmartPtr<T>& A, const T* B )
+	friend bool operator==( const ConstSharePtr<T>& A, const T* B )
 	{
 		return A.m_obj == B;
 	}
 
-	friend bool operator==( const T* A, const ConstSmartPtr<T>& B )
+	friend bool operator==( const T* A, const ConstSharePtr<T>& B )
 	{
 		return A == B.m_obj;
 	}
+
 	/**
 	 *	These functions return not or whether the input objects refer to the same
 	 *	object.
 	 */
-	friend bool operator!=( const ConstSmartPtr<T>& A, const ConstSmartPtr<T>& B )
+	friend bool operator!=( const ConstSharePtr<T>& A, const ConstSharePtr<T>& B )
 	{
 		return A.m_obj != B.m_obj;
 	}
 
-	friend bool operator!=( const ConstSmartPtr<T>& A, const T* B )
+	friend bool operator!=( const ConstSharePtr<T>& A, const T* B )
 	{
 		return A.m_obj != B;
 	}
 
-	friend bool operator!=( const T* A, const ConstSmartPtr<T>& B )
+	friend bool operator!=( const T* A, const ConstSharePtr<T>& B )
 	{
 		return A != B.m_obj;
 	}
@@ -135,17 +136,17 @@ public:
 	 *	These functions give an ordering on smart pointers so that they can be
 	 *	placed in sorted containers.
 	 */
-	friend bool operator<( const ConstSmartPtr<T>& A, const ConstSmartPtr<T>& B )
+	friend bool operator<( const ConstSharePtr<T>& A, const ConstSharePtr<T>& B )
 	{
 		return A.m_obj < B.m_obj;
 	}
 
-	friend bool operator<( const ConstSmartPtr<T>& A, const T* B )
+	friend bool operator<( const ConstSharePtr<T>& A, const T* B )
 	{
 		return A.m_obj < B;
 	}
 
-	friend bool operator<( const T* A, const ConstSmartPtr<T>& B )
+	friend bool operator<( const T* A, const ConstSharePtr<T>& B )
 	{
 		return A < B.m_obj;
 	}
@@ -154,17 +155,17 @@ public:
 	 *	These functions give an ordering on smart pointers so that they can be
 	 *	compared.
 	 */
-	friend bool operator>( const ConstSmartPtr<T>& A, const ConstSmartPtr<T>& B )
+	friend bool operator>( const ConstSharePtr<T>& A, const ConstSharePtr<T>& B )
 	{
 		return A.m_obj > B.m_obj;
 	}
 
-	friend bool operator>( const ConstSmartPtr<T>& A, const T* B )
+	friend bool operator>( const ConstSharePtr<T>& A, const T* B )
 	{
 		return A.m_obj > B;
 	}
 
-	friend bool operator>( const T* A, const ConstSmartPtr<T>& B )
+	friend bool operator>( const T* A, const ConstSharePtr<T>& B )
 	{
 		return A > B.m_obj;
 	}
@@ -172,45 +173,45 @@ public:
 	/**
 	 *	This method returns whether or not this pointers points to anything.
 	 */
-	typedef const T * ConstSmartPtr<T>::*unspecified_bool_type;
+	typedef const T * ConstSharePtr<T>::*unspecified_bool_type;
 	operator unspecified_bool_type() const
 	{
-		return NULL == m_obj ? NULL : &ConstSmartPtr<T>::m_obj;
+		return NULL == m_obj ? NULL : &ConstSharePtr<T>::m_obj;
 	}
 protected:
 	const T* m_obj;
 };
 
 template <class T>
-class SmartPtr : public ConstSmartPtr<T>
+class SharePtr : public ConstSharePtr<T>
 {
 public:
-	typedef ConstSmartPtr<T> ConstProxy;
+	typedef ConstSharePtr<T> ConstProxy;
 		
-	SmartPtr( T* obj = NULL, typename ConstProxy::REF_TAG tag = ConstProxy::NEW_REF )
+	SharePtr( T* obj = NULL, typename ConstProxy::REF_TAG tag = ConstProxy::NEW_REF )
 		: ConstProxy( obj, tag )
 	{
 	}
 	
-	SmartPtr( const SmartPtr<T>& P ) 
+	SharePtr( const SharePtr<T>& P ) 
 		: ConstProxy( P )
 	{
 	}
 
 	template<class DerivedType>
-	SmartPtr( ConstSmartPtr<DerivedType>& dt ) :
+	SharePtr( ConstSharePtr<DerivedType>& dt ) :
 		ConstProxy( dt.Get() )
 	{
 	}
 
-	SmartPtr<T>& operator=( const SmartPtr<T>& P )
+	SharePtr<T>& operator=( const SharePtr<T>& P )
 	{
 		ConstProxy::operator=(P);
 		return *this;
 	}
 
 	template<class DerivedType>
-	SmartPtr<T>& operator=( ConstSmartPtr<DerivedType>& dt )
+	SharePtr<T>& operator=( ConstSharePtr<DerivedType>& dt )
 	{
 		ConstProxy::operator=(dt.Get());
 		return *this;

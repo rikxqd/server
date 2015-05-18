@@ -6,6 +6,7 @@
 
 #include "public.h"
 #include "singleton/singleton.h"
+#include "thread/thread_task.h"
 
 
 class ThreadWorker;
@@ -27,7 +28,7 @@ public:
 	
 	bool Running() const;
 
-	void Join( ThreadTask* task );
+	void Join( ThreadTaskPtr task );
 
 protected:
 	void Dispath();
@@ -37,15 +38,15 @@ protected:
 	void Recovery();
 
 private:
-	pthread_t			m_t_tid;
-	pthread_mutex_t	m_t_mutex;
+	pthread_t						m_t_tid;
+	ThreadMutex						m_t_mutex;
 	
-	bool	m_running;
+	volatile mutable bool			m_running;
 	uint32	m_count;
 
 	std::vector< ThreadWorker* >	m_workers;
 	std::queue< ThreadWorker* >		m_idles;
-	std::queue< ThreadTask* >		m_waitting_tasks;
+	std::queue< ThreadTaskPtr >		m_waitting_tasks;
 };
 
 #endif//_THREAD_POOL_H_

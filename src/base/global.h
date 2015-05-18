@@ -6,7 +6,7 @@
 #include "time/time.h"
 
 
-extern Log			g_log;
+extern Log		g_log;
 extern Time		g_time;
 
 #define DEBUG( buffer, ... )	\
@@ -23,6 +23,5 @@ extern Time		g_time;
 
 #define FATAL( buffer, ... )	\
 	g_log.Pattern( {__FILE__, __LINE__}, Log::LOG_FATAL, buffer, ##__VA_ARGS__ )
-
 
 #endif//_GLOBAL_H_

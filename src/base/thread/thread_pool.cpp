@@ -13,7 +13,7 @@ void* PoolMasterThreadFunc( void* param );
 
 ThreadPool::ThreadPool()
     : m_running( false )
-    , m_count( 10 )
+    , m_count( 2 )
 {
 }
 
@@ -71,7 +71,7 @@ bool ThreadPool::Running() const
     return (m_running || !m_waitting_tasks.empty());
 }
 
-void ThreadPool::Join( ThreadTask* task )
+void ThreadPool::Join( ThreadTaskPtr task )
 {
 	if ( !m_running )
 		return;
@@ -85,31 +85,39 @@ void ThreadPool::Dispath()
     if ( m_idles.empty() || m_waitting_tasks.empty() )
         return;
     
-	pthread_mutex_lock( &m_t_mutex );
-	ThreadWorker* worker = m_idles.front();
-	m_idles.pop();
 	
-	ThreadTask* task = m_waitting_tasks.front();
-	m_waitting_tasks.pop();
-	pthread_mutex_unlock( &m_t_mutex );
+	ThreadWorker* worker = NULL;
+	ThreadTaskPtr task;
 
-    worker->Join( task );
-    
-    if ( !worker->Busy() )
-	    pthread_cond_signal( &worker->ThreadCond() );
+	{
+		GuardLock lock( m_t_mutex );
+		worker = m_idles.front();
+		m_idles.pop();
+
+		task = m_waitting_tasks.front();
+		m_waitting_tasks.pop();
+	}
+
+	if ( worker )
+	{
+		worker->Join( task );
+
+		if ( !worker->Busy() )
+			pthread_cond_signal( &worker->ThreadCond() );
+	}
 }
 
 bool ThreadPool::Done( ThreadWorker* worker )
 {
 	if ( m_waitting_tasks.empty() )
 	{
-		ThreadLock lock( m_t_mutex );
+		GuardLock lock( m_t_mutex );
 		m_idles.push( worker );
 		return false;
 	}
 
-	ThreadLock lock( m_t_mutex );
-	ThreadTask* task = m_waitting_tasks.front();
+	GuardLock lock( m_t_mutex );
+	ThreadTaskPtr task = m_waitting_tasks.front();
 	m_waitting_tasks.pop();
 	worker->Join( task );
 	

@@ -1,8 +1,8 @@
 #include <stdio.h>
-#include "memory/smart_ptr.h"
+#include "utility/share_ptr.h"
 
 
-class A : public RefCount
+class A : public RefCounter
 {
 public:
 	A()
@@ -18,11 +18,11 @@ private:
 	int a;
 };
 
-typedef SmartPtr<A> APtr;
+typedef SharePtr<A> APtr;
 
 int main( int argc, char* argv[] )
 {
-	APtr a( new A() );
+	APtr a = new A();
 	printf("11111111111111111111\n");
 	APtr b = a;
 	printf("22222222222222222222\n");
