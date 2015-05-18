@@ -13,7 +13,6 @@ set(LIBBASE_SRC
 	process/process.cpp
 	thread/thread_pool.cpp
 	thread/thread_worker.cpp
-	thread/thread_task.cpp
 	log/log.cpp
 	log/source_file.cpp
 	log/log_stream.cpp
@@ -25,6 +24,7 @@ set(LIBBASE_SRC
 	time/timer.cpp
 	time/timer_manager.cpp
 	utility/math.cpp
+	epoll/epoll.cpp
 	)
 #aux_source_directory(process LIBBASE_SRC)
 #aux_source_directory(net LIBBASE_SRC)
@@ -33,7 +33,7 @@ set(LIBBASE_SRC
 #set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
 
 # 设置包含目录
-include_directories(${PROJECT_SOURCE_DIR}/src/inc)
+include_directories(${PROJECT_SOURCE_DIR}/src/base)
 
 # 添加动态库编译目标文件及其依赖文件
 #add_library(base SHARED ${LIBBASE_SRC})

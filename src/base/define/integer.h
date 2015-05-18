@@ -3,7 +3,6 @@
 
 #pragma once
 
-
 #ifdef WIN32
 	typedef signed char			int8;
 	typedef signed short			int16;

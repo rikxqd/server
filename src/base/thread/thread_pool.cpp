@@ -3,14 +3,17 @@
 #include <unistd.h>
 
 #include "thread/thread_worker.h"
+#include "thread/thread_task.h"
+#include "thread/thread_lock.h"
 #include "global.h"
 
 
 void* PoolMasterThreadFunc( void* param );
 
+
 ThreadPool::ThreadPool()
     : m_running( false )
-    , m_count( 2 )
+    , m_count( 10 )
 {
 }
 
@@ -68,26 +71,25 @@ bool ThreadPool::Running() const
     return (m_running || !m_waitting_tasks.empty());
 }
 
-void ThreadPool::Join( TaskHandle handle, void* param )
+void ThreadPool::Join( ThreadTask* task )
 {
 	if ( !m_running )
 		return;
 
-    ThreadTask task( handle, param );
     m_waitting_tasks.push( task );
     Dispath();
 }
 
-ThreadWorker* ThreadPool::Dispath()
+void ThreadPool::Dispath()
 {
     if ( m_idles.empty() || m_waitting_tasks.empty() )
-        return NULL;
+        return;
     
 	pthread_mutex_lock( &m_t_mutex );
 	ThreadWorker* worker = m_idles.front();
 	m_idles.pop();
 	
-	ThreadTask task = m_waitting_tasks.front();
+	ThreadTask* task = m_waitting_tasks.front();
 	m_waitting_tasks.pop();
 	pthread_mutex_unlock( &m_t_mutex );
 
@@ -95,19 +97,23 @@ ThreadWorker* ThreadPool::Dispath()
     
     if ( !worker->Busy() )
 	    pthread_cond_signal( &worker->ThreadCond() );
-	    
-	return worker;
 }
 
-ThreadWorker* ThreadPool::Done( ThreadWorker* worker )
+bool ThreadPool::Done( ThreadWorker* worker )
 {
+	if ( m_waitting_tasks.empty() )
 	{
-		pthread_mutex_lock( &m_t_mutex );
+		ThreadLock lock( m_t_mutex );
 		m_idles.push( worker );
-		pthread_mutex_unlock( &m_t_mutex );
+		return false;
 	}
+
+	ThreadLock lock( m_t_mutex );
+	ThreadTask* task = m_waitting_tasks.front();
+	m_waitting_tasks.pop();
+	worker->Join( task );
 	
-	return Dispath();
+	return true;
 }
 
 void ThreadPool::Recovery()

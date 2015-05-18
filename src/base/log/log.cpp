@@ -7,14 +7,18 @@
 #include "time/time_func.h"
 
 
-#define WHITE			std::cout << "\x1b[40;30m" 
-#define RED			std::cout << "\x1b[40;31m"
-#define GREEN			std::cout << "\x1b[40;32m"
-#define YELLOW		std::cout << "\x1b[40;33m"
-#define BLUE			std::cout << "\x1b[40;34m"
-#define RED_WHITE	std::cout << "\x1b[41;30m"
+#ifdef WIN32
 
-#define ENDL			"\033[0m" << std::endl
+#elif UNIX
+	#define WHITE			std::cout << "\x1b[40;30m" 
+	#define RED			std::cout << "\x1b[40;31m"
+	#define GREEN			std::cout << "\x1b[40;32m"
+	#define YELLOW		std::cout << "\x1b[40;33m"
+	#define BLUE			std::cout << "\x1b[40;34m"
+	#define RED_WHITE	std::cout << "\x1b[41;30m"
+
+	#define ENDL			"\033[0m" << std::endl
+#endif
 
 #define VA_BUFFER( buffer )  \
 	va_list list;	\

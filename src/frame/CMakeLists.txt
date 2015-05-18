@@ -17,7 +17,7 @@ set(LIBFRAME_SRC
 #set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
 
 # 设置包含目录
-include_directories(${PROJECT_SOURCE_DIR}/src/inc)
+include_directories(${PROJECT_SOURCE_DIR}/src/base)
 
 # 添加动态库编译目标文件及其依赖文件
 add_library(frame SHARED ${LIBFRAME_SRC})

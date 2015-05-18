@@ -26,7 +26,7 @@ public:
 
 	ThreadPool* Owner();
 
-	void Join( ThreadTask& task );
+	void Join( ThreadTask* task );
 
 protected:
 	void Start();
@@ -38,7 +38,7 @@ private:
 	
 	bool			m_busy;
 	
-	ThreadTask		m_task;
+	ThreadTask*		m_task;
 	ThreadPool*		m_owner;
 };
 

@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <tr1/memory>
 
 #include "define/integer.h"
 
@@ -33,6 +34,8 @@ private:
 #ifdef WIN32
 #define snprintf sprintf_s
 #endif
+
+#define SharedPtr tr1::shared_ptr
 
 #define BUF_MIN	(1 << 5)
 #define BUF_MED	(1 << 10)

@@ -40,7 +40,7 @@ public:
 private:
 	string		m_name;
 	ELogLevel	m_level;
-	Stream&	m_stream;
+	Stream&		m_stream;
 };
 
 #endif//_LOG_H_
