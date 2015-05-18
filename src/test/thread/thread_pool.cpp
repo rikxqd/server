@@ -20,9 +20,10 @@ public:
 	}
 	~TestThread(){}
 
-	virtual void Do()
+	virtual void Process()
 	{
 		g_log.Debug( "%d: Begin: \t thread --- %d\n", ProcFunc::ProcId(), m_param );
+		sleep( 2 );
 		g_log.Debug( "%d: End: \t thread --- %d\n", ProcFunc::ProcId(), m_param );
 	}
 
