@@ -12,6 +12,8 @@
 #include "time/time.h"
 
 
+using namespace Thread;
+
 class TestThread : public ThreadTask
 {
 public:

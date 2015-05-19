@@ -36,7 +36,7 @@ void TimerManager::RemoveTimer( Timer* timer )
 
 void TimerManager::Start()
 {
-	ThreadPool::Instance().Join( this );
+	Thread::ThreadPool::Instance().Join( this );
 }
 
 void TimerManager::Stop()

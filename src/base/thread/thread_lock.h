@@ -4,20 +4,21 @@
 #include "public.h"
 
 
+namespace Thread
+{
+
 class GuardLock
 {
 public:
-	GuardLock( pthread_mutex_t& mutex )
-		: m_mutex( mutex )
-	{
-		pthread_mutex_lock( &m_mutex );
-	}
-	~GuardLock()
-	{
-		pthread_mutex_unlock( &m_mutex );
-	}
+	explicit GuardLock( ThreadMutex* mutex );
+	~GuardLock();
+
 private:
-	ThreadMutex&	m_mutex;
+	ThreadMutex*	m_mutex;
 };
+
+int32 MutexInit( ThreadMutex* mutex, const ThreadMutexAttr* attr = NULL );
+
+}// End of Thread
 
 #endif//_THREAD_LOCK_H_

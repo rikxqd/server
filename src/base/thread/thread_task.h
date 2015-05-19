@@ -5,6 +5,9 @@
 #include "utility/share_ptr.h"
 
 
+namespace Thread
+{
+
 class ThreadTask : public RefCounter
 {
 public:
@@ -15,5 +18,7 @@ public:
 };
 
 typedef SharePtr<ThreadTask> ThreadTaskPtr;
+
+}// End of Thread
 
 #endif//_THREAD_TASK_H_

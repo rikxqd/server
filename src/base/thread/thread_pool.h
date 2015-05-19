@@ -9,8 +9,10 @@
 #include "thread/thread_task.h"
 
 
+namespace Thread
+{
+
 class ThreadWorker;
-class ThreadTask;
 
 class ThreadPool : public Singleton< ThreadPool >
 {
@@ -38,15 +40,17 @@ protected:
 	void Recovery();
 
 private:
-	pthread_t						m_t_tid;
+	ThreadHandle						m_t_tid;
 	ThreadMutex						m_t_mutex;
 	
-	volatile mutable bool			m_running;
+	volatile mutable bool				m_running;
 	uint32	m_count;
 
-	std::vector< ThreadWorker* >	m_workers;
+	std::vector< ThreadWorker* >		m_workers;
 	std::queue< ThreadWorker* >		m_idles;
 	std::queue< ThreadTaskPtr >		m_waitting_tasks;
 };
+
+}// End of Thread
 
 #endif//_THREAD_POOL_H_

@@ -3,14 +3,14 @@
 
 #include <list>
 
+#include "public.h"
 #include "singleton/singleton.h"
 #include "thread/thread_task.h"
-#include "public.h"
 
 
 class Timer;
 
-class TimerManager : public ThreadTask, public Singleton< TimerManager >
+class TimerManager : public Thread::ThreadTask, public Singleton< TimerManager >
 {
 	friend class Singleton< TimerManager >;
 	TimerManager();
@@ -31,7 +31,7 @@ protected:
 private:
 	bool				m_start;
 	uint32				m_delay;
-	pthread_mutex_t		m_t_mutex;
+	ThreadMutex		m_t_mutex;
 	std::list< Timer* >	m_list;
 };
 

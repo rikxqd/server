@@ -5,11 +5,14 @@
 #include "thread/thread_worker.h"
 #include "thread/thread_task.h"
 #include "thread/thread_lock.h"
+#include "thread/thread_func.h"
 #include "global.h"
 
 
-void* PoolMasterThreadFunc( void* param );
+namespace Thread
+{
 
+void* PoolMasterThreadFunc( void* param );
 
 ThreadPool::ThreadPool()
     : m_running( false )
@@ -33,9 +36,9 @@ void ThreadPool::Start()
         DELETE_VALUE( worker );
     m_workers.clear();
     
-    pthread_mutex_init( &m_t_mutex, NULL );
+    MutexInit( &m_t_mutex );
  
-    int32 ret = pthread_create( &m_t_tid, NULL, PoolMasterThreadFunc, this );
+    int32 ret = Thread::API::ThreadCreate( &m_t_tid, NULL, PoolMasterThreadFunc, this );
     if ( 0 != ret )
 	{
         g_log.Fatal( "Master fatal" );
@@ -61,7 +64,7 @@ void ThreadPool::Stop()
 	if ( m_running )
 	{
 		m_running = false;
-		pthread_join( m_t_tid, NULL );
+		Thread::API::ThreadJoin( m_t_tid, NULL );
 		g_log.Info( "Stop ThreadPool" );
 	}
 }
@@ -90,7 +93,7 @@ void ThreadPool::Dispath()
 	ThreadTaskPtr task;
 
 	{
-		GuardLock lock( m_t_mutex );
+		GuardLock lock( &m_t_mutex );
 		worker = m_idles.front();
 		m_idles.pop();
 
@@ -103,7 +106,7 @@ void ThreadPool::Dispath()
 		worker->Join( task );
 
 		if ( !worker->Busy() )
-			pthread_cond_signal( &worker->ThreadCond() );
+			Thread::API::ThreadCondSignal( &worker->Condition() );
 	}
 }
 
@@ -111,12 +114,12 @@ bool ThreadPool::Done( ThreadWorker* worker )
 {
 	if ( m_waitting_tasks.empty() )
 	{
-		GuardLock lock( m_t_mutex );
+		GuardLock lock( &m_t_mutex );
 		m_idles.push( worker );
 		return false;
 	}
 
-	GuardLock lock( m_t_mutex );
+	GuardLock lock( &m_t_mutex );
 	ThreadTaskPtr task = m_waitting_tasks.front();
 	m_waitting_tasks.pop();
 	worker->Join( task );
@@ -128,7 +131,7 @@ void ThreadPool::Recovery()
 {
 	g_log.Info( "Recovery ThreadPool" );
 	for ( auto worker : m_workers )
-		pthread_join( worker->Key(), NULL );
+		Thread::API::ThreadJoin( worker->Key(), NULL );
 }
 
 void* PoolMasterThreadFunc( void* param )
@@ -147,3 +150,5 @@ void* PoolMasterThreadFunc( void* param )
     
 	return NULL;
 }
+
+}// End of Thread

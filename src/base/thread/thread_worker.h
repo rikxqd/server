@@ -6,6 +6,9 @@
 #include "thread/thread_task.h"
 
 
+namespace Thread
+{
+
 class ThreadPool;
 class ThreadTask;
 
@@ -20,9 +23,9 @@ public:
 	
 	bool Busy() const;
 
-	pthread_t& Key();
+	ThreadHandle& Key();
 	
-	pthread_cond_t& ThreadCond();
+	ThreadCond& Condition();
 
 	ThreadPool* Owner();
 
@@ -32,14 +35,16 @@ protected:
 	void Start();
 	
 private:
-	pthread_t		m_t_tid;
-	pthread_cond_t	m_t_cond;
-	pthread_mutex_t	m_t_mutex;
+	ThreadHandle			m_t_tid;
+	ThreadCond			m_t_cond;
+	ThreadMutex			m_t_mutex;
 	
-	bool			m_busy;
+	volatile mutable bool	m_busy;
 	
-	ThreadTaskPtr	m_task;
-	ThreadPool*		m_owner;
+	ThreadTaskPtr			m_task;
+	ThreadPool*			m_owner;
 };
+
+}// End of Thread
 
 #endif//_THREAD_WORKER_H_
