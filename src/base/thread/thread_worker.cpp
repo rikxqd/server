@@ -26,9 +26,9 @@ bool ThreadWorker::Init( ThreadPool* pool )
 {
     m_owner = pool;
     Thread::API::ThreadCondInit( &m_t_cond, NULL );
-    MutexInit( &m_t_mutex, NULL );
+    Thread::API::MutexInit( &m_t_mutex, NULL );
     
-    return (0 == Thread::API::ThreadCreate( &m_t_tid, NULL, PoolThreadFunc, this ));
+    return (0 == Thread::API::ThreadCreate( &m_handle, NULL, PoolThreadFunc, this ));
 }
 
 bool ThreadWorker::Busy() const
@@ -38,7 +38,7 @@ bool ThreadWorker::Busy() const
 
 ThreadHandle& ThreadWorker::Key()
 {
-	return m_t_tid;
+	return m_handle;
 }
 
 ThreadCond& ThreadWorker::Condition()
@@ -67,7 +67,10 @@ void ThreadWorker::Start()
 	m_busy = true;
 
 	if ( m_task )
+	{
 		m_task->Process();
+		m_task = NULL;
+	}
 	
 	m_busy = m_owner->Done( this );
 }

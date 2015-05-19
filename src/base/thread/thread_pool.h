@@ -14,11 +14,11 @@ namespace Thread
 
 class ThreadWorker;
 
-class ThreadPool : public Singleton< ThreadPool >
+class ThreadPool// : public Singleton< ThreadPool >
 {
 	friend class ThreadWorker;
 	friend void* PoolMasterThreadFunc( void* param );
-	friend class Singleton< ThreadPool >;
+	//friend class Singleton< ThreadPool >;
 public:
 	ThreadPool();
 	explicit ThreadPool( uint32 count );
@@ -40,13 +40,13 @@ protected:
 	void Recovery();
 
 private:
-	ThreadHandle						m_t_tid;
-	ThreadMutex						m_t_mutex;
+	ThreadHandle					m_handle;
+	ThreadMutex						m_lock;
 	
-	volatile mutable bool				m_running;
+	volatile mutable bool			m_running;
 	uint32	m_count;
 
-	std::vector< ThreadWorker* >		m_workers;
+	std::vector< ThreadWorker* >	m_workers;
 	std::queue< ThreadWorker* >		m_idles;
 	std::queue< ThreadTaskPtr >		m_waitting_tasks;
 };

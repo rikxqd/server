@@ -8,6 +8,9 @@
 #include "thread/thread_task.h"
 
 
+namespace Thread {
+	class ThreadPool;
+}
 class Timer;
 
 class TimerManager : public Thread::ThreadTask, public Singleton< TimerManager >
@@ -20,7 +23,7 @@ public:
 	 void AddTimer( Timer* timer );
 	 void RemoveTimer( Timer* timer );
 
-	 void Start();
+	 void Start( Thread::ThreadPool& pool );
 	 void Stop();
 
 protected:
@@ -31,7 +34,7 @@ protected:
 private:
 	bool				m_start;
 	uint32				m_delay;
-	ThreadMutex		m_t_mutex;
+	ThreadMutex			m_lock;
 	std::list< Timer* >	m_list;
 };
 

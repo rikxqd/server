@@ -12,7 +12,7 @@ namespace Thread
 class ThreadPool;
 class ThreadTask;
 
-class ThreadWorker
+class ThreadWorker : public RefCounter
 {
 	friend void* PoolThreadFunc( void* param );
 public:
@@ -35,15 +35,17 @@ protected:
 	void Start();
 	
 private:
-	ThreadHandle			m_t_tid;
-	ThreadCond			m_t_cond;
-	ThreadMutex			m_t_mutex;
+	ThreadHandle			m_handle;
+	ThreadCond				m_t_cond;
+	ThreadMutex				m_t_mutex;
 	
 	volatile mutable bool	m_busy;
 	
 	ThreadTaskPtr			m_task;
-	ThreadPool*			m_owner;
+	ThreadPool*				m_owner;
 };
+
+typedef SharePtr<ThreadWorker> ThreadWorkerPtr;
 
 }// End of Thread
 

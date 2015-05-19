@@ -18,16 +18,19 @@ ThreadPool::ThreadPool()
     : m_running( false )
     , m_count( 2 )
 {
+	Thread::API::MutexInit( &m_lock );
 }
 
 ThreadPool::ThreadPool( uint32 count )
 	: m_running( false )
 	, m_count( count )
 {
+	Thread::API::MutexInit( &m_lock );
 }
 
 ThreadPool::~ThreadPool()
 {
+	Stop();
 }
 
 void ThreadPool::Start()
@@ -35,15 +38,10 @@ void ThreadPool::Start()
     for ( auto worker : m_workers )
         DELETE_VALUE( worker );
     m_workers.clear();
-    
-    MutexInit( &m_t_mutex );
  
-    int32 ret = Thread::API::ThreadCreate( &m_t_tid, NULL, PoolMasterThreadFunc, this );
+    int32 ret = Thread::API::ThreadCreate( &m_handle, NULL, PoolMasterThreadFunc, this );
     if ( 0 != ret )
-	{
-        g_log.Fatal( "Master fatal" );
 		return;
-	}
     
 	m_running = true;
 
@@ -56,7 +54,8 @@ void ThreadPool::Start()
             DELETE_VALUE( worker );
     }
 
-	while ( m_workers.size() != m_idles.size() ) {}
+	for ( ; m_workers.size() != m_idles.size() ; ) 
+		Time::SleepMsec( 100 );
 }
 
 void ThreadPool::Stop()
@@ -64,7 +63,7 @@ void ThreadPool::Stop()
 	if ( m_running )
 	{
 		m_running = false;
-		Thread::API::ThreadJoin( m_t_tid, NULL );
+		Thread::API::ThreadJoin( m_handle, NULL );
 		g_log.Info( "Stop ThreadPool" );
 	}
 }
@@ -93,7 +92,7 @@ void ThreadPool::Dispath()
 	ThreadTaskPtr task;
 
 	{
-		GuardLock lock( &m_t_mutex );
+		GuardLock lock( &m_lock );
 		worker = m_idles.front();
 		m_idles.pop();
 
@@ -114,12 +113,12 @@ bool ThreadPool::Done( ThreadWorker* worker )
 {
 	if ( m_waitting_tasks.empty() )
 	{
-		GuardLock lock( &m_t_mutex );
+		GuardLock lock( &m_lock );
 		m_idles.push( worker );
 		return false;
 	}
 
-	GuardLock lock( &m_t_mutex );
+	GuardLock lock( &m_lock );
 	ThreadTaskPtr task = m_waitting_tasks.front();
 	m_waitting_tasks.pop();
 	worker->Join( task );
@@ -131,7 +130,17 @@ void ThreadPool::Recovery()
 {
 	g_log.Info( "Recovery ThreadPool" );
 	for ( auto worker : m_workers )
+	{
+		g_log.Info( "Recovery ...." );
+		if ( !worker->Busy() )
+			Thread::API::ThreadCondSignal( &worker->Condition() );
+
 		Thread::API::ThreadJoin( worker->Key(), NULL );
+	}
+
+	for ( auto worker : m_workers )
+		DELETE_VALUE( worker );
+	m_workers.clear();
 }
 
 void* PoolMasterThreadFunc( void* param )
@@ -142,8 +151,7 @@ void* PoolMasterThreadFunc( void* param )
     
 	while ( pool->Running() )
 	{
-
-		Time::SleepMsec( 2 * 1000 );
+		Time::SleepMsec( 200 );
 	}
 
 	pool->Recovery();

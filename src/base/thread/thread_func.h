@@ -15,6 +15,7 @@ namespace API
 	int32 ThreadCondInit( ThreadCond* cond, const ThreadCondAttr* attr );
 	void ThreadCondSignal( ThreadCond* cond );
 	void ThreadCondWait( ThreadCond* cond, ThreadMutex* mutex );
+	int32 MutexInit( ThreadMutex* mutex, const ThreadMutexAttr* attr = NULL );
 }
 
 }// End of Thread

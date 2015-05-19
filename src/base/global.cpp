@@ -6,3 +6,6 @@
 LogStream	g_log_stream;
 Log			g_log( "base", Log::LOG_ALL, g_log_stream );
 Time		g_time;
+int32		g_count = 0;
+int32		g_new = 0;
+int32		g_delete = 0;

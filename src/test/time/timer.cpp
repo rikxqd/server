@@ -14,8 +14,9 @@ void func( Timer* timer, void* param )
 
 int main( int argc, char* argv[] )
 {
-	Thread::ThreadPool::Instance().Start();
-	TimerManager::Instance().Start();
+	Thread::ThreadPool pool( 5 );
+	pool.Start();
+	TimerManager::Instance().Start( pool );
 
 	int param[4] = {1,2,3,4};
 

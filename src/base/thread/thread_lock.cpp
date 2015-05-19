@@ -17,11 +17,6 @@ namespace Thread
 	{
 		pthread_mutex_unlock( m_mutex );
 	}
-
-	int32 MutexInit( ThreadMutex* mutex, const ThreadMutexAttr* attr )
-	{
-		return pthread_mutex_init( mutex, attr );
-	}
 #endif
 
 }// End of Lock

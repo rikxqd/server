@@ -8,6 +8,9 @@
 
 extern Log		g_log;
 extern Time		g_time;
+extern int32	g_count;
+extern int32	g_new;
+extern int32	g_delete;
 
 #define DEBUG( buffer, ... )	\
 	g_log.Pattern( {__FILE__, __LINE__}, Log::LOG_DEBUG, buffer, ##__VA_ARGS__ )

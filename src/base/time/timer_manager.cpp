@@ -3,6 +3,8 @@
 #include "global.h"
 #include "time/timer.h"
 #include "thread/thread_pool.h"
+#include "thread/thread_lock.h"
+#include "thread/thread_func.h"
 
 void TimerManagerFunc( void *param );
 
@@ -10,7 +12,7 @@ TimerManager::TimerManager()
 	: m_start( false )
 	, m_delay( 1 )
 {
-	pthread_mutex_init( &m_t_mutex, NULL );
+	Thread::API::MutexInit( &m_lock, NULL );
 }
 
 TimerManager::~TimerManager()
@@ -19,6 +21,7 @@ TimerManager::~TimerManager()
 
 void TimerManager::AddTimer( Timer* timer )
 {
+	Thread::GuardLock lock( &m_lock );
 	m_list.push_back( timer );
 	timer->m_status = Timer::TIMER_STATUS_ALIVE;
 }
@@ -34,9 +37,12 @@ void TimerManager::RemoveTimer( Timer* timer )
 	}
 }
 
-void TimerManager::Start()
+void TimerManager::Start( Thread::ThreadPool& pool )
 {
-	Thread::ThreadPool::Instance().Join( this );
+	if ( pool.Running() )
+		pool.Join( this );
+	else
+		g_log.Error( "The ThreadPool do not running!\n" );
 }
 
 void TimerManager::Stop()
@@ -46,6 +52,7 @@ void TimerManager::Stop()
 
 void TimerManager::Tick()
 {
+	Thread::GuardLock lock( &m_lock );
 	for ( auto it = m_list.begin() ; it != m_list.end() ; )
 	{
 		auto temp = it++;
@@ -65,7 +72,7 @@ void TimerManager::Tick()
 			else if( Timer::TIMER_TYPE_CIRCLE == timer->m_type )   
 				timer->m_counter = timer->m_interval;
 			else
-				g_log.Fatal( "timer type is fatal ! type:%d", timer->m_type );
+				g_log.Fatal( "Timer type is fatal ! type:%d", timer->m_type );
 		} 
 	}
 }

@@ -1,9 +1,3 @@
-#include <iostream>
-#include <unistd.h>
-#include <stdio.h>
-#include <sys/syscall.h>
-#include <stdlib.h>
-
 #include "global.h"
 #include "public.h"
 #include "thread/thread_pool.h"
@@ -39,24 +33,27 @@ private:
 
 int main( int argc, char* argv[] )
 {
-	ThreadPool::Instance().Start();
+	ThreadPool pool( 4 );
+	pool.Start();
+	g_log.Debug( "[%d][%d][%d]\n", g_count, g_new, g_delete );
 
 	int32 i;  
 	for( i = 0 ; i < 10 ; ++i )
-		ThreadPool::Instance().Join( new TestThread( i ) );
+		pool.Join( new TestThread( i ) );
 
-	sleep( 20 );
+	Time::SleepMsec( 20 * 1000 );
+	g_log.Debug( "[%d][%d][%d]\n", g_count, g_new, g_delete );
 
 	for( i = 0 ; i < 20 ; ++i )
 	{
 		int32 r = rand() % 2000;
 		Time::SleepMsec( r );
-		ThreadPool::Instance().Join( new TestThread( i + 20, r ) );
+		pool.Join( new TestThread( i + 20, r ) );
 	}
 
-	ThreadPool::Instance().Stop();
-
-	g_log.Debug( "All tasks done!\n" );
+	g_log.Debug( "[%d][%d][%d]\n", g_count, g_new, g_delete );
+	pool.Stop();
+	g_log.Debug( "[%d][%d][%d]\n", g_count, g_new, g_delete );
 
 	return 0;
 }
