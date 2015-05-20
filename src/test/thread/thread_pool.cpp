@@ -21,9 +21,9 @@ public:
 	virtual void Process()
 	{
 		int32 r = rand() % 2000;
-		g_log.Debug( "%d: Begin: \t thread --- %d_%d, wait %d ms\n", ProcFunc::ProcId(), m_param, m_rand_num, r );
+		g_log.Debug( "%d: Begin: \t thread --- %d_%d, wait %d ms", ProcFunc::ProcId(), m_param, m_rand_num, r );
 		Time::SleepMsec( r );
-		g_log.Debug( "%d: End: \t thread --- %d\n", ProcFunc::ProcId(), m_param );
+		g_log.Debug( "%d: End: \t thread --- %d", ProcFunc::ProcId(), m_param );
 	}
 
 private:
@@ -33,27 +33,31 @@ private:
 
 int main( int argc, char* argv[] )
 {
-	ThreadPool pool( 4 );
-	pool.Start();
-	g_log.Debug( "[%d][%d][%d]\n", g_count, g_new, g_delete );
-
-	int32 i;  
-	for( i = 0 ; i < 10 ; ++i )
-		pool.Join( new TestThread( i ) );
-
-	Time::SleepMsec( 20 * 1000 );
-	g_log.Debug( "[%d][%d][%d]\n", g_count, g_new, g_delete );
-
-	for( i = 0 ; i < 20 ; ++i )
 	{
-		int32 r = rand() % 2000;
-		Time::SleepMsec( r );
-		pool.Join( new TestThread( i + 20, r ) );
+		ThreadPoolPtr pool = new ThreadPool( 4 );
+		pool->Start();
+		g_log.Debug( "[%d][%d][%d]", g_count, g_new, g_delete );
+
+		int32 i;  
+		for( i = 0 ; i < 10 ; ++i )
+			pool->Join( new TestThread( i ) );
+
+		Time::SleepMsec( 20 * 1000 );
+		g_log.Debug( "[%d][%d][%d]", g_count, g_new, g_delete );
+
+		for( i = 0 ; i < 20 ; ++i )
+		{
+			int32 r = rand() % 2000;
+			Time::SleepMsec( r );
+			pool->Join( new TestThread( i + 20, r ) );
+		}
+
+		g_log.Debug( "[%d][%d][%d]", g_count, g_new, g_delete );
+		pool->Stop();
+		g_log.Debug( "[%d][%d][%d]", g_count, g_new, g_delete );
 	}
 
-	g_log.Debug( "[%d][%d][%d]\n", g_count, g_new, g_delete );
-	pool.Stop();
-	g_log.Debug( "[%d][%d][%d]\n", g_count, g_new, g_delete );
+	g_log.Debug( "[%d][%d][%d]", g_count, g_new, g_delete );
 
 	return 0;
 }

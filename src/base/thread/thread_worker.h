@@ -2,8 +2,8 @@
 #define _THREAD_WORKER_H_
 
 #include "public.h"
-#include "singleton/singleton.h"
 #include "thread/thread_task.h"
+#include "utility/share_ptr.h"
 
 
 namespace Thread

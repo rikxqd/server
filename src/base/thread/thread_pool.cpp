@@ -2,8 +2,6 @@
 
 #include <unistd.h>
 
-#include "thread/thread_worker.h"
-#include "thread/thread_task.h"
 #include "thread/thread_lock.h"
 #include "thread/thread_func.h"
 #include "global.h"
@@ -35,8 +33,6 @@ ThreadPool::~ThreadPool()
 
 void ThreadPool::Start()
 {
-    for ( auto worker : m_workers )
-        DELETE_VALUE( worker );
     m_workers.clear();
  
     int32 ret = Thread::API::ThreadCreate( &m_handle, NULL, PoolMasterThreadFunc, this );
@@ -47,11 +43,9 @@ void ThreadPool::Start()
 
     for ( uint32 i = 0 ; i < m_count ; ++i )
     {
-        ThreadWorker* worker = new ThreadWorker();
+        ThreadWorkerPtr worker = new ThreadWorker();
         if ( worker->Init( this ) )
             m_workers.push_back( worker );
-        else
-            DELETE_VALUE( worker );
     }
 
 	for ( ; m_workers.size() != m_idles.size() ; ) 
@@ -64,7 +58,6 @@ void ThreadPool::Stop()
 	{
 		m_running = false;
 		Thread::API::ThreadJoin( m_handle, NULL );
-		g_log.Info( "Stop ThreadPool" );
 	}
 }
 
@@ -88,7 +81,7 @@ void ThreadPool::Dispath()
         return;
     
 	
-	ThreadWorker* worker = NULL;
+	ThreadWorkerPtr worker = NULL;
 	ThreadTaskPtr task;
 
 	{
@@ -109,7 +102,7 @@ void ThreadPool::Dispath()
 	}
 }
 
-bool ThreadPool::Done( ThreadWorker* worker )
+bool ThreadPool::Done( ThreadWorkerPtr worker )
 {
 	if ( m_waitting_tasks.empty() )
 	{
@@ -128,19 +121,15 @@ bool ThreadPool::Done( ThreadWorker* worker )
 
 void ThreadPool::Recovery()
 {
-	g_log.Info( "Recovery ThreadPool" );
 	for ( auto worker : m_workers )
 	{
-		g_log.Info( "Recovery ...." );
-		if ( !worker->Busy() )
-			Thread::API::ThreadCondSignal( &worker->Condition() );
-
+		Thread::API::ThreadCondSignal( &worker->Condition() );
 		Thread::API::ThreadJoin( worker->Key(), NULL );
 	}
 
-	for ( auto worker : m_workers )
-		DELETE_VALUE( worker );
 	m_workers.clear();
+	while ( !m_idles.empty() )
+		m_idles.pop();
 }
 
 void* PoolMasterThreadFunc( void* param )
@@ -150,9 +139,7 @@ void* PoolMasterThreadFunc( void* param )
 		return NULL;
     
 	while ( pool->Running() )
-	{
 		Time::SleepMsec( 200 );
-	}
 
 	pool->Recovery();
     
