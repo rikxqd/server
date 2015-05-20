@@ -37,10 +37,10 @@ void TimerManager::RemoveTimer( Timer* timer )
 	}
 }
 
-void TimerManager::Start( Thread::ThreadPool& pool )
+void TimerManager::Start( Thread::ThreadPoolPtr pool )
 {
-	if ( pool.Running() )
-		pool.Join( this );
+	if ( pool->Running() )
+		pool->Join( this );
 	else
 		g_log.Error( "The ThreadPool do not running!\n" );
 }

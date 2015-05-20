@@ -6,11 +6,9 @@
 #include "public.h"
 #include "singleton/singleton.h"
 #include "thread/thread_task.h"
+#include "thread/thread_pool.h"
 
 
-namespace Thread {
-	class ThreadPool;
-}
 class Timer;
 
 class TimerManager : public Thread::ThreadTask, public Singleton< TimerManager >
@@ -23,7 +21,7 @@ public:
 	 void AddTimer( Timer* timer );
 	 void RemoveTimer( Timer* timer );
 
-	 void Start( Thread::ThreadPool& pool );
+	 void Start( Thread::ThreadPoolPtr pool );
 	 void Stop();
 
 protected:

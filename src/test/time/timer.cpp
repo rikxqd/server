@@ -1,11 +1,11 @@
-
 #include <stdio.h>
 
+#include "global.h"
 #include "time/timer.h"
 #include "time/timer_manager.h"
 #include "thread/thread_pool.h"
 #include "time/time.h"
-#include "global.h"
+
 
 void func( Timer* timer, void* param )  
 {  
@@ -14,9 +14,10 @@ void func( Timer* timer, void* param )
 
 int main( int argc, char* argv[] )
 {
-	Thread::ThreadPool pool( 5 );
-	pool.Start();
+	Thread::ThreadPoolPtr pool = new Thread::ThreadPool( 5 );
+	pool->Start();
 	TimerManager::Instance().Start( pool );
+	g_log.Debug( "[%d][%d][%d]", g_count, g_new, g_delete );
 
 	int param[4] = {1,2,3,4};
 
@@ -29,6 +30,8 @@ int main( int argc, char* argv[] )
 	a1->Start();
 	a2->Start();
 	a3->Start();
+
+	g_log.Debug( "[%d][%d][%d]", g_count, g_new, g_delete );
 
 	Time::SleepMsec( 12 * 1000 );
 
