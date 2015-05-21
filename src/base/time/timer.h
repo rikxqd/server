@@ -2,11 +2,11 @@
 #define _TIMER_H_
 
 #include "public.h"
+#include "utility/share_ptr.h"
 
 
-class Timer : NonCopyable
+class Timer : public RefCounter
 {
-	typedef void (*Handle)( Timer* owner, void* param );
 	friend class TimerManager;
 public:
 	enum ETimerType
@@ -22,20 +22,22 @@ public:
 		TIMER_STATUS_TIMEOUT	= 2, //超时后被移除的状态，循环型的没有
 	};
 
-	explicit Timer( uint32 interval, Handle handle, void* param = NULL, ETimerType type = TIMER_TYPE_ONCE );
-	~Timer();
+	explicit Timer( uint32 interval, ETimerType type );
+	virtual ~Timer();
 
 	void Start();
 	void Stop();
 	void Reset( const uint32 interval );
+
+	virtual void TimeOut();
 
 private:
 	uint32			m_interval;
 	uint32			m_counter;
 	ETimerType		m_type;
 	ETimerStatus	m_status;
-	Handle			m_handle;
-	void*			m_param;
 };
+
+typedef SharePtr<Timer> TimerPtr;
 
 #endif//_TIMER_H_

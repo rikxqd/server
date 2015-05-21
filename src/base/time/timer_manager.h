@@ -7,6 +7,7 @@
 #include "singleton/singleton.h"
 #include "thread/thread_task.h"
 #include "thread/thread_pool.h"
+#include "time/timer.h"
 
 
 class Timer;
@@ -18,8 +19,8 @@ class TimerManager : public Thread::ThreadTask, public Singleton< TimerManager >
 public:
 	~TimerManager();
 
-	 void AddTimer( Timer* timer );
-	 void RemoveTimer( Timer* timer );
+	 void AddTimer( TimerPtr timer );
+	 void RemoveTimer( TimerPtr timer );
 
 	 void Start( Thread::ThreadPoolPtr pool );
 	 void Stop();
@@ -30,10 +31,10 @@ protected:
 	virtual void Process();
 
 private:
-	bool				m_start;
-	uint32				m_delay;
-	ThreadMutex			m_lock;
-	std::list< Timer* >	m_list;
+	volatile mutable bool	m_running;
+	uint32					m_delay;
+	ThreadMutex				m_lock;
+	std::list< TimerPtr >	m_list;
 };
 
 #endif//_TIMER_MANAGER_H_

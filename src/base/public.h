@@ -46,12 +46,20 @@ private:
 
 #elif UNIX
 	#include <unistd.h>
-	typedef pthread_mutex_t		ThreadMutex;
-	typedef pthread_mutexattr_t	ThreadMutexAttr;
-	typedef pthread_cond_t		ThreadCond;
+	typedef pthread_mutex_t			ThreadMutex;
+	typedef pthread_mutexattr_t		ThreadMutexAttr;
+	typedef pthread_cond_t			ThreadCond;
 	typedef pthread_condattr_t		ThreadCondAttr;
 	typedef pthread_t				ThreadHandle;
 	typedef pthread_attr_t			ThreadAttr;
+#endif
+
+// 网络
+#ifdef WIN32
+
+#elif UNIX
+	#include <netinet/in.h>
+	typedef sockaddr_in				SockAddress;
 #endif
 
 #endif//_PUBLIC_H_

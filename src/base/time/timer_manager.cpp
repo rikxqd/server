@@ -9,8 +9,8 @@
 void TimerManagerFunc( void *param );
 
 TimerManager::TimerManager()
-	: m_start( false )
-	, m_delay( 1 )
+	: m_running( false )
+	, m_delay( 100 )
 {
 	Thread::API::MutexInit( &m_lock, NULL );
 }
@@ -19,18 +19,19 @@ TimerManager::~TimerManager()
 {
 }
 
-void TimerManager::AddTimer( Timer* timer )
+void TimerManager::AddTimer( TimerPtr timer )
 {
 	Thread::GuardLock lock( &m_lock );
 	m_list.push_back( timer );
 	timer->m_status = Timer::TIMER_STATUS_ALIVE;
 }
 
-void TimerManager::RemoveTimer( Timer* timer )
+void TimerManager::RemoveTimer( TimerPtr timer )
 {
 	for ( auto it = m_list.begin() ; it != m_list.end() ; ++it )
 	{
-		if ( timer == *it )
+		TimerPtr timer = *it;
+		if ( timer == timer )
 			m_list.erase( it++ );
 		else
 			++it;
@@ -47,7 +48,7 @@ void TimerManager::Start( Thread::ThreadPoolPtr pool )
 
 void TimerManager::Stop()
 {
-	m_start = false;
+	m_running = false;
 }
 
 void TimerManager::Tick()
@@ -56,13 +57,12 @@ void TimerManager::Tick()
 	for ( auto it = m_list.begin() ; it != m_list.end() ; )
 	{
 		auto temp = it++;
-		Timer* timer = *temp;
+		TimerPtr timer = *temp;
 
 		(timer->m_counter < m_delay) ? (timer->m_counter = 0) : (timer->m_counter -= m_delay);
 		if ( 0 == timer->m_counter )
 		{
-			if ( timer->m_handle )  
-				timer->m_handle(timer,timer->m_param);  
+			timer->TimeOut();  
 
 			if ( Timer::TIMER_TYPE_ONCE == timer->m_type )  
 			{  
@@ -79,10 +79,11 @@ void TimerManager::Tick()
 
 void TimerManager::Process()
 {
-	m_start = true;
-	while ( m_start )
+	m_running = true;
+	while ( m_running )
 	{
 		Time::SleepMsec( m_delay );
 		Tick();
 	}
+	m_list.clear();
 }
