@@ -40,6 +40,9 @@ void TimerManager::RemoveTimer( TimerPtr timer )
 
 void TimerManager::Start( Thread::ThreadPoolPtr pool )
 {
+	if ( NULL == pool )
+		pool = g_pool;
+
 	if ( pool->Running() )
 		pool->Join( this );
 	else

@@ -4,7 +4,6 @@
 
 #include "global.h"
 #include "stream/stream.h"
-#include "time/time_func.h"
 
 
 #ifdef WIN32

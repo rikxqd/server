@@ -3,9 +3,13 @@
 
 #include <string>
 #include "public.h"
+#include "utility/share_ptr.h"
 
 
-class Address
+namespace Net
+{
+
+class Address : public RefCounter
 {
 public:
 	Address();
@@ -29,5 +33,9 @@ public:
 private:
 	SockAddress m_addr;
 };
+
+typedef SharePtr<Address> AddressPtr;
+
+}
 
 #endif//_ADDRESS_H_

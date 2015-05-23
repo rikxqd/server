@@ -8,7 +8,7 @@
 
 
 template< uint32 size >
-class Buffer : public NonCopyable
+class Buffer : NonCopyable
 {
 public:
     Buffer();

@@ -12,7 +12,7 @@
 
 class Timer;
 
-class TimerManager : public Thread::ThreadTask, public Singleton< TimerManager >
+class TimerManager : NonCopyable, public Thread::ThreadTask, public Singleton< TimerManager >
 {
 	friend class Singleton< TimerManager >;
 	TimerManager();
@@ -22,7 +22,7 @@ public:
 	 void AddTimer( TimerPtr timer );
 	 void RemoveTimer( TimerPtr timer );
 
-	 void Start( Thread::ThreadPoolPtr pool );
+	 void Start( Thread::ThreadPoolPtr pool = NULL );
 	 void Stop();
 
 protected:

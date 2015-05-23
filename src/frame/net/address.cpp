@@ -9,6 +9,9 @@
 #include <netdb.h>
 
 
+namespace Net
+{
+
 Address::Address()
 {
 	::memset( &m_addr, 0x00, sizeof(m_addr) );
@@ -101,4 +104,6 @@ string Address::String() const
 	char buf[32] = {0};
 	snprintf( buf, sizeof(buf), "%s:%u", IP().c_str(), Port() );
 	return buf;
+}
+
 }

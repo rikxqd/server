@@ -8,8 +8,6 @@
 
 # 设置变量
 set(LIBBASE_SRC 
-	net/sock_func.cpp 
-	net/address.cpp
 	process/process.cpp
 	thread/thread_pool.cpp
 	thread/thread_worker.cpp
@@ -20,13 +18,12 @@ set(LIBBASE_SRC
 	log/log_stream.cpp
 	global.cpp
 	stream/stream.cpp
-	str/str_func.cpp
 	time/time.cpp
-	time/time_func.cpp
 	time/timer.cpp
 	time/timer_manager.cpp
 	utility/math.cpp
 	utility/ref_counter.cpp
+	utility/common.cpp
 	epoll/epoll.cpp
 	)
 #aux_source_directory(process LIBBASE_SRC)

@@ -4,13 +4,16 @@
 #include "log/log.h"
 #include "log/source_file.h"
 #include "time/time.h"
+#include "thread/thread_pool.h"
 
 
-extern Log		g_log;
-extern Time		g_time;
-extern int32	g_count;
-extern int32	g_new;
-extern int32	g_delete;
+extern Log						g_log;
+extern Time						g_time;
+extern Thread::ThreadPoolPtr	g_pool;
+
+extern int32					g_count;
+extern int32					g_new;
+extern int32					g_delete;
 
 #define DEBUG( buffer, ... )	\
 	g_log.Pattern( {__FILE__, __LINE__}, Log::LOG_DEBUG, buffer, ##__VA_ARGS__ )

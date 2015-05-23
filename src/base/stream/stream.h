@@ -5,7 +5,7 @@
 #include "log/source_file.h"
 
 
-#define MAX_SIZE 4000
+#define MAX_SIZE 2 << 10
 
 class Stream
 {
