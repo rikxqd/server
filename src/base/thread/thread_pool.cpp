@@ -3,7 +3,7 @@
 #include <unistd.h>
 
 #include "thread/thread_lock.h"
-#include "thread/thread_func.h"
+#include "thread/thread_api.h"
 #include "global.h"
 
 

@@ -1,5 +1,5 @@
-#ifndef _THREAD_FUNC_H_
-#define _THREAD_FUNC_H_
+#ifndef _THREAD_API_H_
+#define _THREAD_API_H_
 
 #include "public.h"
 
@@ -16,8 +16,9 @@ namespace API
 	void ThreadCondSignal( ThreadCond* cond );
 	void ThreadCondWait( ThreadCond* cond, ThreadMutex* mutex );
 	int32 MutexInit( ThreadMutex* mutex, const ThreadMutexAttr* attr = NULL );
-}
 
-}// End of Thread
+}/* end of Thread::API */
 
-#endif//_THREAD_FUNC_H_
+}/* end of Thread */
+
+#endif//_THREAD_API_H_

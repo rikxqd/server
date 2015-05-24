@@ -59,7 +59,8 @@ private:
 
 #elif UNIX
 	#include <netinet/in.h>
-	typedef sockaddr_in				SockAddress;
+	typedef int32					SockFd;
+	typedef sockaddr_in				SockAddr;
 #endif
 
 #endif//_PUBLIC_H_

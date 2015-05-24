@@ -7,24 +7,29 @@
 #endif(NOT LS_RVALUE)
 
 # 设置变量
-set(LIBBASE_SRC 
+set(LIBBASE_SRC
+	global.cpp
 	process/process.cpp
 	thread/thread_pool.cpp
 	thread/thread_worker.cpp
 	thread/thread_lock.cpp
-	thread/thread_func.cpp
+	thread/thread_api.cpp
+	stream/stream.cpp
 	log/log.cpp
 	log/source_file.cpp
 	log/log_stream.cpp
-	global.cpp
-	stream/stream.cpp
 	time/time.cpp
 	time/timer.cpp
 	time/timer_manager.cpp
 	utility/math.cpp
 	utility/ref_counter.cpp
 	utility/common.cpp
-	epoll/epoll.cpp
+	net/network.cpp
+	net/net_api.cpp
+	net/endpoint.cpp
+	net/address.cpp
+	net/net_handle.cpp
+	net/server_app.cpp
 	)
 #aux_source_directory(process LIBBASE_SRC)
 #aux_source_directory(net LIBBASE_SRC)

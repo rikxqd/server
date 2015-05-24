@@ -1,4 +1,4 @@
-#include "sock_func.h"
+#include "net_api.h"
 
 #include <sys/socket.h>
 #include <iostream>
@@ -8,50 +8,63 @@
 #include "global.h"
 
 
-namespace SockFunc
+namespace Net
 {
 
-SOCKFD Socket( int32 domain, int32 type, int32 protocol )
+namespace API
 {
-	SOCKFD ssock = socket( domain, type, protocol );
+#ifdef WIN32
+	// TODO
+#elif UNIX
+SockFd Socket( int32 domain, int32 type, int32 protocol )
+{
+	SockFd ssock = ::socket( domain, type, protocol );
 	if ( 0 > ssock )
 		FATAL( "create socket fail " );
 	return ssock;
 }
 
-int32 Connect( int32 sockfd, const sockaddr* addr, socklen_t addrlen )
+int32 Connect( int32 sock, const sockaddr* addr, socklen_t addrlen )
 {
-	int32 res = connect( sockfd, addr, addrlen );
+	int32 res = ::connect( sock, addr, addrlen );
 	if ( 0 > res )
 		FATAL( "connect fail " );
 	return res;
 }
 
-int32 Bind( int32 sockfd, const sockaddr* sa, socklen_t salen )
+int32 Bind( int32 sock, const sockaddr* sa, socklen_t salen )
 {
-	int32 res = bind( sockfd, sa, salen );
+	int32 res = ::bind( sock, sa, salen );
 	if ( 0 > res )
 		FATAL( "bind fail " );
 	return res;
 }
 
-int32 Listen( int32 sockfd, int32 backlog )
+int32 Bind( int32 sock, const sockaddr_in* sa, socklen_t salen )
+{
+	int32 res = ::bind( sock, (const sockaddr*)sa, salen );
+	if ( 0 > res )
+		FATAL( "bind fail " );
+	return res;
+}
+
+int32 Listen( int32 sock, int32 backlog )
 {
 	const char* env = getenv("LISTENQ"); // 获取环境变量
 	if ( NULL != env )
-		backlog = atoi(env);
-	int32 res = listen( sockfd, backlog );
+		backlog = ::atoi(env);
+	int32 res = ::listen( sock, backlog );
 	if ( 0 > res )
 		FATAL( "listen fail " );
 	return res;
 }
 
-SOCKFD Accept( int32 sockfd, sockaddr* sa, socklen_t* len )
+SockFd Accept( int32 sock, sockaddr* sa, socklen_t* len )
 {
-	SOCKFD csock = 0;
+	SockFd csock = 0;
 	while ( true )
 	{
-		csock = accept( sockfd, sa, len );
+		csock = ::accept( sock, sa, len );
 		if ( 0 <= csock )
 			break;
 	      
@@ -70,7 +83,16 @@ SOCKFD Accept( int32 sockfd, sockaddr* sa, socklen_t* len )
 	return csock;
 }
 
-}/* end of SockFunc */
+void Close( int32 sock )
+{
+	::close( sock );
+}
+
+#endif
+
+}/* end of Net::API */
+
+}/* end of Net */
 
 /*
 void Getpeername(int32 fd, sockaddr *sa, socklen_t *salenptr)

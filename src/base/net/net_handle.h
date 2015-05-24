@@ -2,7 +2,8 @@
 #define _NET_HANDLE_H_
 
 #include "utility/share_ptr.h"
-#include "net/sock_func.h"
+#include "net/net_api.h"
+#include "net/address.h"
 
 
 namespace Net
@@ -11,13 +12,19 @@ namespace Net
 class NetHandle : public RefCounter
 {
 public:
-	NetHandle();
+	NetHandle( int32 domain, int32 type, int32 protocol );
 	~NetHandle();
 
-	void Init( int32 domain, int32 type, int32 protocol );
+	bool Init() const;
+
+	bool Bind( AddressPtr addr );
+
+	bool Listen( int32 backlog = 5 );
+
+	bool Close();
 
 private:
-	SOCKFD m_handle;
+	SockFd	m_handle;
 };
 
 typedef SharePtr<NetHandle> NetHandlePtr;

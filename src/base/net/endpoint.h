@@ -3,6 +3,7 @@
 
 #include "utility/share_ptr.h"
 #include "net/address.h"
+#include "net/net_handle.h"
 
 
 namespace Net
@@ -14,10 +15,11 @@ public:
 	Endpoint();
 	~Endpoint();
 
-	void Init( string ip, uint16 port );
+	bool Init( string ip, uint16 port );
 
 private:
-	AddressPtr	m_addr;
+	AddressPtr		m_addr;
+	NetHandlePtr	m_net_handle;
 };
 
 typedef SharePtr<Endpoint> EndpointPtr;

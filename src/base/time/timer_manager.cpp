@@ -4,7 +4,7 @@
 #include "time/timer.h"
 #include "thread/thread_pool.h"
 #include "thread/thread_lock.h"
-#include "thread/thread_func.h"
+#include "thread/thread_api.h"
 
 void TimerManagerFunc( void *param );
 

@@ -6,6 +6,7 @@ namespace Net
 
 Network::Network()
 {
+	m_endpoint = new Endpoint();
 }
 
 Network::~Network()
@@ -14,7 +15,6 @@ Network::~Network()
 
 void Network::Init( string ip, uint16 port )
 {
-	m_endpoint = new Endpoint();
 	m_endpoint->Init( ip, port );
 }
 

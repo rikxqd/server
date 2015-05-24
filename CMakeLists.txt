@@ -28,7 +28,6 @@ message("Build Type:" ${CMAKE_BUILD_TYPE} ${CMAKE_CXX_FLAGS})
 # 添加工程子目录
 add_subdirectory(third/tinyxml lib/xml)
 add_subdirectory(src/base lib/base)
-add_subdirectory(src/frame lib/frame)
 add_subdirectory(src/test bin)
 
 # 添加测试
