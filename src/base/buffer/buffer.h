@@ -4,7 +4,8 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "public.h"
+#include "define/integer.h"
+#include "utility/non_copyable.h"
 
 
 template< uint32 size >

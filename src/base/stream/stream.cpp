@@ -1,6 +1,7 @@
 #include "stream.h"
-
 #include <fstream>
+#include <stdarg.h>
+#include "global.h"
 
 
 Stream::Stream()
@@ -139,4 +140,14 @@ void Stream::Append(const char* v, int32 l)
 void Stream::Reset()
 {
 	m_buffer.Reset();
+}
+
+void Stream::Format( const char* pattern, ... )
+{
+	char buffer[BUF_MED] = {0};
+	va_list list;
+	va_start( list, pattern );
+	int res = vsnprintf( (buffer), sizeof(buffer), pattern, list );
+	va_end( list );
+	m_buffer.Append( buffer, strlen( buffer ) );
 }

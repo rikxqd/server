@@ -1,7 +1,7 @@
 #ifndef _SOURCE_FILE_H_
 #define _SOURCE_FILE_H_
 
-#include "public.h"
+#include "define/integer.h"
 
 
 class SourceFile

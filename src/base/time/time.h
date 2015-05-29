@@ -34,7 +34,7 @@ public:
 	int8 Zone() const;
 	int32 ZoneSecond() const;
 
-	string AsString() const;
+	std::string AsString() const;
 
 	void Abjust( int64 time = 0 );
 

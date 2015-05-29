@@ -3,27 +3,15 @@
 
 #include <iostream>
 #include <string>
-#include <tr1/memory>
 
 #include "define/integer.h"
+#include "utility/non_copyable.h"
+#include "log/log.h"
 
-
-using namespace std;
 
 // 最大值，最小值
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
-
-// 禁止拷贝
-class NonCopyable  
-{  
-protected:  
-      NonCopyable() {}
-      ~NonCopyable() {}  
-private:
-      NonCopyable( const NonCopyable& );  
-      const NonCopyable& operator=( const NonCopyable& );  
-};
 
 // 删除指针
 #define DELETE_VALUE(_ptr)	\
@@ -62,5 +50,17 @@ private:
 	typedef int32					SockFd;
 	typedef sockaddr_in				SockAddr;
 #endif
+
+// 日志
+#define DEBUG( buffer, ... )	\
+	Log::Instance().Pattern( {__FILE__, __LINE__}, Log::LOG_DEBUG, buffer, ##__VA_ARGS__ )
+#define INFO( buffer, ... )	\
+	Log::Instance().Pattern( {__FILE__, __LINE__}, Log::LOG_INFO, buffer, ##__VA_ARGS__ )
+#define WARN( buffer, ... )	\
+	Log::Instance().Pattern( {__FILE__, __LINE__}, Log::LOG_WARNING, buffer, ##__VA_ARGS__ )
+#define ERROR( buffer, ... )	\
+	Log::Instance().Pattern( {__FILE__, __LINE__}, Log::LOG_ERROR, buffer, ##__VA_ARGS__ )
+#define FATAL( buffer, ... )	\
+	Log::Instance().Pattern( {__FILE__, __LINE__}, Log::LOG_FATAL, buffer, ##__VA_ARGS__ )
 
 #endif//_PUBLIC_H_

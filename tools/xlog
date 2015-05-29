@@ -1,0 +1,3 @@
+#!/bin/bash
+
+tail --follow=name --retry ${WS_PATH}/build/bin/log --max-unchanged-stats=3 -n 40 -q

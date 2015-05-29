@@ -13,9 +13,21 @@ class Endpoint : public RefCounter
 {
 public:
 	Endpoint();
+	Endpoint( AddressPtr addr, NetHandlePtr net_handle );
 	~Endpoint();
 
-	bool Init( string ip, uint16 port );
+	bool Valid() const;
+
+	bool Init( std::string ip, uint16 port );
+
+	bool Bind();
+
+	bool Listen( int32 backlog = 5 );
+
+	SharePtr<Endpoint> Accept();
+
+	operator SockFd() const;
+	operator std::string() const;
 
 private:
 	AddressPtr		m_addr;

@@ -1,44 +1,31 @@
-#include <iostream>
-#include <stdlib.h>
-#include <stdio.h>
-
-#include "tinyxml.h"
+#include <signal.h>
 #include "public.h"
-#include "net/server_app.h"
+#include "xml.h"
+#include "time/timer_manager.h"
+#include "thread/thread_pool.h"
+#include "framework/server_app.h"
+#include "log/log_stream.h"
 
 
-#define SERVER_PORT 3000
-int32 port = 0;
-char ip[64] = "127.0.0.1";
-
-using namespace std;
-
-void Init()
+static void HandleSignal( int32 sigi )
 {
-	TiXmlDocument doc( "doc/config/test.xml" );
-	if ( !doc.LoadFile() )
-	{
-		cout << "xml load fail " << endl;
-		exit( -1 );
-	}
-
-	TiXmlElement* root = doc.RootElement();
-	TiXmlElement* first = root->FirstChildElement("server");
-	if ( first )
-	{
-		TiXmlElement* second = first->FirstChildElement("ip");
-		if ( second )
-			strcpy( ip, second->GetText() );
-
-		second = first->FirstChildElement("port");
-		if ( second )
-			port = atoi( second->GetText() );
-	}
+	Thread::ThreadPool::Instance().Stop();
 }
 
-int main( int argc, char* argv[] )
+int32 main( int32 argc, char* argv[] )
 {
+	if ( !XML::Load() )
+		exit(-1);
+
+	if ( SIG_ERR == ::signal( SIGINT, HandleSignal ) || SIG_ERR == ::signal( SIGTERM, HandleSignal ) )
+		exit(-1);
+
+	Log::Instance().Stream( new LogStream( XML::log_file ) );
+	Log::Instance().Name( XML::log_name );
+	Log::Instance().Level( XML::log_level );
+
+	Thread::ThreadPool::Instance().Start();
 	ServerAppPtr server = new ServerApp();
-	server->Init( argc, argv );
+	server->Init( XML::ip, XML::port );
 	server->Start();
 }

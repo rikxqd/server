@@ -1,7 +1,8 @@
 #ifndef _SMART_PTR_H_
 #define _SMART_PTR_H_
 
-#include "public.h"
+#include <iostream>
+#include "define/integer.h"
 #include "utility/ref_counter.h"
 
 /*

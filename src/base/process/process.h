@@ -5,15 +5,15 @@
 
 #include "public.h"
 
-namespace ProcFunc
+namespace Process
 {
 
-pid_t Fork(void);
+pid_t Fork();
 
-string ProcName();
+std::string ProcessName();
 
-pid_t ProcId();
+pid_t ProcessId();
 
-}/* end of ProcFunc */
+}/* end of Process */
 
 #endif//_PROCESS_H_

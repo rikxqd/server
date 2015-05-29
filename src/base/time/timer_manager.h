@@ -6,7 +6,6 @@
 #include "public.h"
 #include "singleton/singleton.h"
 #include "thread/thread_task.h"
-#include "thread/thread_pool.h"
 #include "time/timer.h"
 
 
@@ -22,7 +21,7 @@ public:
 	 void AddTimer( TimerPtr timer );
 	 void RemoveTimer( TimerPtr timer );
 
-	 void Start( Thread::ThreadPoolPtr pool = NULL );
+	 void Start();
 	 void Stop();
 
 protected:

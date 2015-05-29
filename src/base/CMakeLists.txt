@@ -29,7 +29,10 @@ set(LIBBASE_SRC
 	net/endpoint.cpp
 	net/address.cpp
 	net/net_handle.cpp
-	net/server_app.cpp
+	net/event_poller.cpp
+	net/select_poller.cpp
+	net/acceptor.cpp
+	framework/server_app.cpp
 	)
 #aux_source_directory(process LIBBASE_SRC)
 #aux_source_directory(net LIBBASE_SRC)

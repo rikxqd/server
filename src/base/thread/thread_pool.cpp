@@ -10,7 +10,7 @@
 namespace Thread
 {
 
-void* PoolMasterThreadFunc( void* param );
+void* MasterThreadPoolFunc( void* param );
 
 ThreadPool::ThreadPool()
     : m_running( false )
@@ -19,23 +19,22 @@ ThreadPool::ThreadPool()
 	Thread::API::MutexInit( &m_lock );
 }
 
-ThreadPool::ThreadPool( uint32 count )
-	: m_running( false )
-	, m_count( count )
-{
-	Thread::API::MutexInit( &m_lock );
-}
-
 ThreadPool::~ThreadPool()
 {
-	Stop();
 }
 
-void ThreadPool::Start()
+ThreadHandle ThreadPool::Key() const
+{
+	return m_handle;
+}
+
+void ThreadPool::Start( uint32 count )
 {
     m_workers.clear();
+	if ( m_count < count )
+		m_count = count;
  
-    int32 ret = Thread::API::ThreadCreate( &m_handle, NULL, PoolMasterThreadFunc, this );
+    int32 ret = Thread::API::ThreadCreate( &m_handle, NULL, MasterThreadPoolFunc, this );
     if ( 0 != ret )
 		return;
     
@@ -44,7 +43,7 @@ void ThreadPool::Start()
     for ( uint32 i = 0 ; i < m_count ; ++i )
     {
         ThreadWorkerPtr worker = new ThreadWorker();
-        if ( worker->Init( this ) )
+        if ( worker->Init() )
             m_workers.push_back( worker );
     }
 
@@ -132,7 +131,7 @@ void ThreadPool::Recovery()
 		m_idles.pop();
 }
 
-void* PoolMasterThreadFunc( void* param )
+void* MasterThreadPoolFunc( void* param )
 {
 	ThreadPool* pool = static_cast< ThreadPool* >( param );
 	if ( !pool )

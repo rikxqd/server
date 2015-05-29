@@ -2,7 +2,6 @@
 #define _SERVER_APP_H_
 
 #include "utility/share_ptr.h"
-#include "thread/thread_pool.h"
 #include "net/network.h"
 
 
@@ -12,12 +11,13 @@ public:
 	ServerApp();
 	~ServerApp();
 
-	void Init( int argc, char* argv[] );
+	bool Init( const char* ip, int32 port );
 
 	void Start();
 
+	void Stop();
+
 private:
-	Thread::ThreadPoolPtr	m_pool;
 	Net::NetworkPtr			m_network;
 };
 

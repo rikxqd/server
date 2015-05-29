@@ -1,10 +1,10 @@
 #include "net_api.h"
-
 #include <sys/socket.h>
 #include <iostream>
 #include <stdlib.h>
 #include <errno.h>
-
+#include <fcntl.h>
+#include <netinet/tcp.h>
 #include "global.h"
 
 
@@ -24,31 +24,28 @@ SockFd Socket( int32 domain, int32 type, int32 protocol )
 	return ssock;
 }
 
-int32 Connect( int32 sock, const sockaddr* addr, socklen_t addrlen )
+int32 Connect( SockFd sock, const sockaddr* addr, socklen_t len )
 {
-	int32 res = ::connect( sock, addr, addrlen );
+	int32 res = ::connect( sock, addr, len );
 	if ( 0 > res )
 		FATAL( "connect fail " );
 	return res;
 }
 
-int32 Bind( int32 sock, const sockaddr* sa, socklen_t salen )
+int32 Bind( SockFd sock, const sockaddr* sa, socklen_t len )
 {
-	int32 res = ::bind( sock, sa, salen );
+	int32 res = ::bind( sock, sa, len );
 	if ( 0 > res )
 		FATAL( "bind fail " );
 	return res;
 }
 
-int32 Bind( int32 sock, const sockaddr_in* sa, socklen_t salen )
+int32 Bind( SockFd sock, const sockaddr_in* sa, socklen_t len )
 {
-	int32 res = ::bind( sock, (const sockaddr*)sa, salen );
-	if ( 0 > res )
-		FATAL( "bind fail " );
-	return res;
+	return Bind( sock, (const sockaddr*)sa, len );
 }
 
-int32 Listen( int32 sock, int32 backlog )
+int32 Listen( SockFd sock, int32 backlog )
 {
 	const char* env = getenv("LISTENQ"); // 获取环境变量
 	if ( NULL != env )
@@ -59,7 +56,7 @@ int32 Listen( int32 sock, int32 backlog )
 	return res;
 }
 
-SockFd Accept( int32 sock, sockaddr* sa, socklen_t* len )
+SockFd Accept( SockFd sock, sockaddr* sa, socklen_t* len )
 {
 	SockFd csock = 0;
 	while ( true )
@@ -75,17 +72,36 @@ SockFd Accept( int32 sock, sockaddr* sa, socklen_t* len )
 #endif
 			FATAL( "accept again " );
 		else
-		{
-			FATAL( "accept fail " );
 			break;
-		}
 	}
 	return csock;
 }
 
-void Close( int32 sock )
+SockFd Accept( SockFd sock, sockaddr_in* sa, socklen_t* len )
 {
-	::close( sock );
+	return Accept( sock, (sockaddr*)sa, len );
+}
+
+int32 Fcntl( SockFd sock, bool non_blocking )
+{
+#ifdef WIN32
+	uint64 val = non_blocking ? 1 : 0;
+	return ::ioctlsocket( sock, FIONBIO, &val );
+#elif UNIX
+	int32 val = non_blocking ? O_NONBLOCK : 0;
+	return ::fcntl( sock, F_SETFL, val );
+#endif
+}
+
+int32 SetSockOpt( SockFd sock, bool no_delay )
+{
+	int32 arg = int32(no_delay);
+	return ::setsockopt( sock, IPPROTO_TCP, TCP_NODELAY, (char*)&arg, sizeof(int32) );
+}
+
+void Close( int32 fd )
+{
+	::close( fd );
 }
 
 #endif

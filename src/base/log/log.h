@@ -1,14 +1,16 @@
 #ifndef _LOG_H_
 #define _LOG_H_
 
-#include "public.h"
+#include "define/integer.h"
 #include "log/source_file.h"
+#include "singleton/singleton.h"
+#include "stream/stream.h"
 
 
-class Stream;
-
-class Log : public NonCopyable
+class Log : public Singleton<Log>
 {
+	friend class Singleton<Log>;
+	Log();
 public:
 	enum ELogLevel
 	{
@@ -19,8 +21,6 @@ public:
 		LOG_DEBUG,
 		LOG_ALL,
 	};
-
-	explicit Log( const char* name, uint8 level, Stream& stream );
 	~Log();
 
 	const char* Name() const;
@@ -28,6 +28,9 @@ public:
 	
 	uint8 Level() const;
 	void Level( uint8 level );
+
+	StreamPtr Stream() const;
+	void Stream( StreamPtr stream );
 
 	void Pattern( SourceFile file, ELogLevel level, const char* pattern, ... ) __attribute__( ( format( printf, 4, 5 ) ) );
 
@@ -38,9 +41,9 @@ public:
 	void Fatal( const char* pattern, ... ) __attribute__( ( format( printf, 2, 3 ) ) );
 
 private:
-	string		m_name;
+	std::string	m_name;
 	ELogLevel	m_level;
-	Stream&		m_stream;
+	StreamPtr	m_stream;
 };
 
 #endif//_LOG_H_

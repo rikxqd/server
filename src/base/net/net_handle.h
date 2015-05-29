@@ -12,14 +12,23 @@ namespace Net
 class NetHandle : public RefCounter
 {
 public:
+	NetHandle( SockFd sock );
 	NetHandle( int32 domain, int32 type, int32 protocol );
 	~NetHandle();
 
-	bool Init() const;
+	SockFd Get() const;
+
+	bool Valid() const;
 
 	bool Bind( AddressPtr addr );
 
-	bool Listen( int32 backlog = 5 );
+	bool Listen( int32 backlog );
+
+	SharePtr<NetHandle> Accept( AddressPtr addr );
+
+	int32 SetNonBlocking( bool non_blocking );
+
+	int32 SetNoDelay( bool no_delay );
 
 	bool Close();
 

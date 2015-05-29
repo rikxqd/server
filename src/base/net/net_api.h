@@ -13,17 +13,23 @@ namespace API
 
 SockFd Socket( int32 domain, int32 type, int32 protocol );
 
-int32 Connect( int32 sock, const sockaddr* addr, socklen_t addrlen );
+int32 Connect( SockFd sock, const sockaddr* addr, socklen_t len );
 
-int32 Bind( int32 sock, const sockaddr* sa, socklen_t salen );
+int32 Bind( SockFd sock, const sockaddr* sa, socklen_t len );
 
-int32 Bind( int32 sock, const sockaddr_in* sa, socklen_t salen );
+int32 Bind( SockFd sock, const sockaddr_in* sa, socklen_t len );
 
-int32 Listen( int32 sock, int32 backlog );
+int32 Listen( SockFd sock, int32 backlog );
 
-SockFd Accept( int32 sock, sockaddr* sa, socklen_t* len );
+SockFd Accept( SockFd sock, sockaddr* sa, socklen_t* len );
 
-void Close( int32 sock );
+SockFd Accept( SockFd sock, sockaddr_in* sa, socklen_t* len );
+
+int32 Fcntl( SockFd sock, bool non_blocking );
+
+int32 SetSockOpt( SockFd sock, bool no_delay );
+
+void Close( int32 fd );
 
 }/* end of Net::API */
 

@@ -3,11 +3,10 @@
 
 #include <vector>
 #include <queue>
-
 #include "public.h"
+#include "singleton/singleton.h"
 #include "thread/thread_task.h"
 #include "thread/thread_worker.h"
-#include "utility/share_ptr.h"
 
 
 namespace Thread
@@ -15,16 +14,18 @@ namespace Thread
 
 class ThreadWorker;
 
-class ThreadPool : public RefCounter
+class ThreadPool : public Singleton<ThreadPool>
 {
+	friend class Singleton<ThreadPool>;
 	friend class ThreadWorker;
-	friend void* PoolMasterThreadFunc( void* param );
-public:
+	friend void* MasterThreadPoolFunc( void* param );
 	ThreadPool();
-	explicit ThreadPool( uint32 count );
+public:
 	~ThreadPool();
 
-	void Start();
+	ThreadHandle Key() const;
+
+	void Start( uint32 count = 0 );
 
 	void Stop();
 	
@@ -44,14 +45,12 @@ private:
 	ThreadMutex						m_lock;
 	
 	volatile mutable bool			m_running;
-	uint32	m_count;
+	uint32							m_count;
 
 	std::vector< ThreadWorkerPtr >	m_workers;
 	std::queue< ThreadWorkerPtr >	m_idles;
 	std::queue< ThreadTaskPtr >		m_waitting_tasks;
 };
-
-typedef SharePtr<ThreadPool> ThreadPoolPtr;
 
 }// End of Thread
 

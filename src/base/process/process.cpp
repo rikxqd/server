@@ -11,19 +11,19 @@ using namespace std;
 
 #define BUF_SIZE 256
 
-namespace ProcFunc
+namespace Process
 {
 
 pid_t Fork(void)
 {
 	pid_t pid = fork();
 	if ( -1 == pid )
-		g_log.Fatal( "fork fatal" );
+		FATAL( "fork fatal" );
 
 	return pid;
 }
 
-string ProcName()
+std::string ProcessName()
 {
 	char file_name[BUF_SIZE] = {0};
 	char path[BUF_SIZE] = {0};
@@ -52,12 +52,12 @@ string ProcName()
 
 	char name[BUF_SIZE] = {0};
 	strncpy( name, index, sizeof(name) );
-	return name;
+	return std::move( name );
 }
 
-pid_t ProcId()
+pid_t ProcessId()
 {
 	return static_cast< pid_t >( ::syscall( SYS_gettid ) );
 }
 
-}/* end of ProcFunc */
+}/* end of Process */

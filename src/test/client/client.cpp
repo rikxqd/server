@@ -8,7 +8,8 @@
 #include <string.h>
 #include <arpa/inet.h>
 
-#include "net/warp_socket.h"
+#include "net/net_api.h"
+#include "public.h"
 
 
 #define	MAXLINE		4096	/* max text line length */
@@ -20,28 +21,33 @@ int main( int argc, char **argv )
 	struct sockaddr_in servaddr;
 	
 	if ( argc != 3 )
-		printf( "usage: a.out <IPaddress>" );
+		DEBUG( "usage: a.out <IPaddress>" );
 
-	if ( ( sockfd = Socket( AF_INET, SOCK_STREAM, 0 ) ) < 0)
+	DEBUG( "argv[1]:%s\n", argv[1] );
+
+	if ( ( sockfd = Net::API::Socket( AF_INET, SOCK_STREAM, 0 ) ) < 0)
 		exit( -1 );
 
 	bzero( &servaddr, sizeof servaddr );
 	servaddr.sin_family = AF_INET;
 	servaddr.sin_port   = htons( atoi( argv[2] ) );
-	if ( inet_pton(AF_INET, argv[1], &servaddr.sin_addr ) <= 0)
-		printf( "inet_pton error for %s", argv[1] );
+	if ( inet_pton( AF_INET, argv[1], &servaddr.sin_addr ) <= 0)
+		DEBUG( "inet_pton error for %s\n", argv[1] );
 
-	if ( Connect( sockfd, (sockaddr*) &servaddr, sizeof servaddr ) < 0)
-		printf( "connect error" );
+	if ( Net::API::Connect( sockfd, (sockaddr*) &servaddr, sizeof servaddr ) < 0)
+	{
+		DEBUG( "connect error\n" );
+		exit( -1 );
+	}
 
-	while ( ( n = read(sockfd, recvline, MAXLINE ) ) > 0) 
+	while ( ( n = read( sockfd, recvline, MAXLINE ) ) > 0) 
 	{
 		recvline[n] = 0;
 		if ( fputs( recvline, stdout ) == EOF )
-			printf( "fputs error" );
+			DEBUG( "fputs error\n" );
 	}
 	if ( n < 0 )
-		printf( "read error" );
+		DEBUG( "read error\n" );
 
 	exit( 0 );
 }

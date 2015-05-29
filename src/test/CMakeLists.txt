@@ -8,8 +8,8 @@ include_directories(${PROJECT_SOURCE_DIR}/src/frame)
 include_directories(${PROJECT_SOURCE_DIR}/third/tinyxml)
 
 # 添加编译可执行目标文件及其依赖
-add_executable(server server/server.cpp)
-#add_executable(client client/client.cpp)
+add_executable(server server/server.cpp server/xml.cpp)
+add_executable(client client/client.cpp)
 #add_executable(mutilparam template/mutilparam.cpp)
 #add_executable(template template/template.cpp)
 #add_executable(typeoptest template/typeoptest.cpp)
@@ -26,7 +26,7 @@ add_executable(server server/server.cpp)
 
 # 添加链接库
 target_link_libraries(server base xml)
-#target_link_libraries(client base)
+target_link_libraries(client base)
 #target_link_libraries(log base)
 #target_link_libraries(mutilparam base)
 #target_link_libraries(kmp base)

@@ -9,17 +9,18 @@
 namespace Thread
 {
 
-class ThreadPool;
 class ThreadTask;
 
 class ThreadWorker : public RefCounter
 {
-	friend void* PoolThreadFunc( void* param );
+	friend void* ThreadWorkerFunc( void* param );
 public:
 	ThreadWorker();
 	~ThreadWorker();
 	
-	bool Init( ThreadPool* pool );
+	bool Init();
+
+	void DoOnce();
 	
 	bool Busy() const;
 
@@ -27,13 +28,8 @@ public:
 	
 	ThreadCond& Condition();
 
-	ThreadPool* Owner();
-
 	void Join( ThreadTaskPtr task );
-
-protected:
-	void Start();
-	
+		
 private:
 	ThreadHandle			m_handle;
 	ThreadCond				m_t_cond;
@@ -42,7 +38,6 @@ private:
 	volatile mutable bool	m_busy;
 	
 	ThreadTaskPtr			m_task;
-	ThreadPool*				m_owner;
 };
 
 typedef SharePtr<ThreadWorker> ThreadWorkerPtr;

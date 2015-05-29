@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "global.h"
 #include "utility/share_ptr.h"
 
 
@@ -20,7 +21,17 @@ typedef SharePtr<A> APtr;
 
 int main( int argc, char* argv[] )
 {
-	APtr a = new A();
-	APtr b = a;
+	g_log.Debug( "[%d][%d][%d]", g_count, g_new, g_delete );
+	{
+		for ( uint32 i = 0 ; i < 100 ; ++i )
+		{
+			APtr a = new A();
+			APtr& b = a;
+			if ( i == 99 )
+				g_log.Debug( "[%d][%d][%d]", g_count, g_new, g_delete );
+		}
+		g_log.Debug( "[%d][%d][%d]", g_count, g_new, g_delete );
+	}
+
 	return 0;
 }

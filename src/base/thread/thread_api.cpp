@@ -1,7 +1,5 @@
 #include "thread_api.h"
 
-#include "global.h"
-
 
 namespace Thread
 {
@@ -15,7 +13,7 @@ namespace API
 	{
 		int32 ret = pthread_create( tidp, attr, func, arg );
 		if ( 0 != ret )
-			 g_log.Fatal( "Thread create fatal" );
+			 FATAL( "Thread create fatal" );
 
 		return ret;
 	}

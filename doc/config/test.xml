@@ -4,4 +4,9 @@
 		<ip>127.0.0.1</ip>
 		<port>3000</port>
 	</server>
+	<log>
+		<name>测试</name>
+		<file_name>log</file_name>
+		<level>4</level>
+	</log>
 </Root>

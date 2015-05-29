@@ -3,19 +3,18 @@
 #include <fstream>
 
 
-LogStream::LogStream()
+LogStream::LogStream( const char* file_name )
+	: m_file_name( file_name )
 {
-
 }
 
 LogStream::~LogStream()
 {
-
 }
 
 void LogStream::Flush()
 {
-	static ofstream file( "aa", ios::app );
+	std::ofstream file( m_file_name.c_str(), std::ios::app );
 	if ( file )
 	{
 		file << *this;

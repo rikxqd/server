@@ -1,12 +1,9 @@
 #include "timer_manager.h"
-
 #include "global.h"
-#include "time/timer.h"
 #include "thread/thread_pool.h"
 #include "thread/thread_lock.h"
 #include "thread/thread_api.h"
 
-void TimerManagerFunc( void *param );
 
 TimerManager::TimerManager()
 	: m_running( false )
@@ -38,15 +35,12 @@ void TimerManager::RemoveTimer( TimerPtr timer )
 	}
 }
 
-void TimerManager::Start( Thread::ThreadPoolPtr pool )
+void TimerManager::Start()
 {
-	if ( NULL == pool )
-		pool = g_pool;
-
-	if ( pool->Running() )
-		pool->Join( this );
+	if ( Thread::ThreadPool::Instance().Running() )
+		Thread::ThreadPool::Instance().Join( this );
 	else
-		g_log.Error( "The ThreadPool do not running!\n" );
+		ERROR( "The ThreadPool do not running!\n" );
 }
 
 void TimerManager::Stop()
@@ -75,7 +69,7 @@ void TimerManager::Tick()
 			else if( Timer::TIMER_TYPE_CIRCLE == timer->m_type )   
 				timer->m_counter = timer->m_interval;
 			else
-				g_log.Fatal( "Timer type is fatal ! type:%d", timer->m_type );
+				FATAL( "Timer type is fatal ! type:%d", timer->m_type );
 		} 
 	}
 }
@@ -83,7 +77,7 @@ void TimerManager::Tick()
 void TimerManager::Process()
 {
 	m_running = true;
-	while ( m_running )
+	while ( m_running && Thread::ThreadPool::Instance().Running() )
 	{
 		Time::SleepMsec( m_delay );
 		Tick();

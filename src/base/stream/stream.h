@@ -1,13 +1,14 @@
 #ifndef _STREAM_H_
 #define _STREAM_H_
 
+#include <string>
 #include "buffer/buffer.h"
-#include "log/source_file.h"
+#include "utility/share_ptr.h"
 
 
 #define MAX_SIZE 2 << 10
 
-class Stream
+class Stream : public RefCounter
 {
 	typedef Buffer< MAX_SIZE > SBuffer;
 public:
@@ -37,10 +38,14 @@ public:
 	void Append( const char* v, int32 l );
 	void Reset();
 
+	void Format( const char* pattern, ... ) __attribute__( ( format( printf, 2, 3 ) ) );
+
 	virtual void Flush() = 0;
     
 private:
 	SBuffer m_buffer;
 };
+
+typedef SharePtr<Stream> StreamPtr;
 
 #endif//_STREAM_H_

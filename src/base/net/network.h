@@ -1,27 +1,37 @@
 #ifndef _NETWORK_H_
 #define _NETWORK_H_
 
+#include <map>
 #include "utility/share_ptr.h"
+#include "thread/thread_task.h"
+#include "net/event_poller.h"
 #include "net/endpoint.h"
 
 
 namespace Net
 {
 
-class Network : public RefCounter
+class Network : public Thread::ThreadTask
 {
 public:
 	Network();
 	~Network();
 
-	void Init( string ip, uint16 port );
+	bool Init( std::string ip, uint16 port );
 
 	void Start();
 
-	EndpointPtr Addr();
+	void RegisteClient( EndpointPtr endpoint );
+
+	void Stop();
+
+	virtual void Process();
 
 private:
-	EndpointPtr	m_endpoint;
+	volatile mutable bool			m_running;
+	EventPollerPtr					m_event_poller;
+	EndpointPtr						m_endpoint;
+	std::map<int32, EndpointPtr>	m_client_endpoints;
 };
 
 typedef SharePtr<Network> NetworkPtr;

@@ -9,6 +9,7 @@
 #include <netdb.h>
 
 #include "utility/common.h"
+#include "global.h"
 
 
 namespace Net
@@ -34,12 +35,15 @@ Address::Address( const char* ip, uint16 port )
 	m_addr.sin_port = htobe16( port );
 	int32 res = ::inet_pton( AF_INET, ip, &m_addr.sin_addr );
 	if ( 0 >= res )
-		cout << "ip is wrong" << endl;
+		FATAL("ip is wrong");
 }
 
 Address::Address( uint32 ip, uint16 port )
 {
 	::memset( &m_addr, 0x00, sizeof(m_addr) );
+	m_addr.sin_family = AF_INET;
+	m_addr.sin_addr.s_addr = htobe32( ip );
+	m_addr.sin_port = htobe16( port );
 }
 
 static __thread char t_buf[64 * 1024] = {0};
@@ -64,12 +68,17 @@ Address::Address( const char* host )
 		m_addr.sin_addr = *reinterpret_cast<in_addr*>( he->h_addr );
 	}
 	else if ( res )
-		cout << "host is wrong" << endl;
+		FATAL("host is wrong");
+}
+
+Address::Address( SockAddr& addr )
+{
+	::memset( &m_addr, 0x00, sizeof(m_addr) );
+	::memcpy( &m_addr, &addr, sizeof(m_addr) );
 }
 
 Address::~Address()
 {
-
 }
 
 uint16 Address::Port() const
@@ -77,7 +86,7 @@ uint16 Address::Port() const
 	return be16toh( m_addr.sin_port );
 }
 
-string Address::IP() const
+std::string Address::IP() const
 {
 	char ip[32] = {0};
 	assert( sizeof(ip) >= INET_ADDRSTRLEN );
@@ -100,16 +109,16 @@ const SockAddr& Address::Get() const
 	return m_addr;
 }
 
-int32 Address::Length() const
+uint32 Address::Length() const
 {
 	return sizeof m_addr;
 }
 
-string Address::String() const
+std::string Address::String() const
 {
 	char buf[32] = {0};
 	snprintf( buf, sizeof(buf), "%s:%u", IP().c_str(), Port() );
 	return buf;
 }
 
-}
+}/* end of Net */
