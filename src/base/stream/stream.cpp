@@ -145,9 +145,6 @@ void Stream::Reset()
 void Stream::Format( const char* pattern, ... )
 {
 	char buffer[BUF_MED] = {0};
-	va_list list;
-	va_start( list, pattern );
-	int res = vsnprintf( (buffer), sizeof(buffer), pattern, list );
-	va_end( list );
+	VA_BUFFER( buffer )
 	m_buffer.Append( buffer, strlen( buffer ) );
 }

@@ -1,6 +1,7 @@
 #ifndef _REF_COUNT_H_
 #define _REF_COUNT_H_
 
+#include "define/integer.h"
 
 
 class RefCounter 
@@ -21,7 +22,7 @@ protected:
 	virtual ~RefCounter();
 
 protected:
-	volatile mutable int m_ref_count;
+	volatile mutable int32 m_ref_count;
 };
 
 #endif//_REF_COUNT_H_

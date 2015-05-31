@@ -21,9 +21,9 @@ int main( int argc, char **argv )
 	struct sockaddr_in servaddr;
 	
 	if ( argc != 3 )
-		DEBUG( "usage: a.out <IPaddress>" );
+		LOG_DEBUG("usage: a.out <IPaddress>");
 
-	DEBUG( "argv[1]:%s\n", argv[1] );
+	LOG_DEBUG("argv[1]:%s\n", argv[1]);
 
 	if ( ( sockfd = Net::API::Socket( AF_INET, SOCK_STREAM, 0 ) ) < 0)
 		exit( -1 );
@@ -32,11 +32,11 @@ int main( int argc, char **argv )
 	servaddr.sin_family = AF_INET;
 	servaddr.sin_port   = htons( atoi( argv[2] ) );
 	if ( inet_pton( AF_INET, argv[1], &servaddr.sin_addr ) <= 0)
-		DEBUG( "inet_pton error for %s\n", argv[1] );
+		LOG_DEBUG("inet_pton error for %s\n", argv[1]);
 
 	if ( Net::API::Connect( sockfd, (sockaddr*) &servaddr, sizeof servaddr ) < 0)
 	{
-		DEBUG( "connect error\n" );
+		LOG_DEBUG("connect error\n");
 		exit( -1 );
 	}
 
@@ -44,10 +44,10 @@ int main( int argc, char **argv )
 	{
 		recvline[n] = 0;
 		if ( fputs( recvline, stdout ) == EOF )
-			DEBUG( "fputs error\n" );
+			LOG_DEBUG("fputs error\n");
 	}
 	if ( n < 0 )
-		DEBUG( "read error\n" );
+		LOG_DEBUG("read error\n");
 
 	exit( 0 );
 }

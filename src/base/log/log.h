@@ -32,13 +32,21 @@ public:
 	StreamPtr Stream() const;
 	void Stream( StreamPtr stream );
 
+#ifdef WIN32
+	void Pattern(SourceFile file, ELogLevel level, const char* pattern, ...);
+	void Debug( const char* pattern, ... );
+	void Info( const char* pattern, ... );
+	void Warning( const char* pattern, ... );
+	void Error( const char* pattern, ... );
+	void Fatal( const char* pattern, ... );
+#elif UNIX
 	void Pattern( SourceFile file, ELogLevel level, const char* pattern, ... ) __attribute__( ( format( printf, 4, 5 ) ) );
-
 	void Debug( const char* pattern, ... ) __attribute__( ( format( printf, 2, 3 ) ) );
 	void Info( const char* pattern, ... ) __attribute__( ( format( printf, 2, 3 ) ) );
 	void Warning( const char* pattern, ... ) __attribute__( ( format( printf, 2, 3 ) ) );
 	void Error( const char* pattern, ... ) __attribute__( ( format( printf, 2, 3 ) ) );
 	void Fatal( const char* pattern, ... ) __attribute__( ( format( printf, 2, 3 ) ) );
+#endif
 
 private:
 	std::string	m_name;

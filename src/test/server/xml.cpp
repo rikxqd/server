@@ -19,7 +19,7 @@ bool LoadSeverCfg( const char* filename )
 	TiXmlDocument doc( filename );
 	if ( !doc.LoadFile() )
 	{
-		ERROR( "Load XML[%s], fail!", filename );
+		LOG_ERROR("Load XML[%s], fail!", filename);
 		return false;
 	}
 

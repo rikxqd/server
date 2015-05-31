@@ -42,7 +42,7 @@ void Network::Start()
 void Network::RegisteClient( EndpointPtr endpoint )
 {	
 	m_client_endpoints[*(endpoint.Get())] = endpoint;
-	DEBUG( "new client [%s]", ((std::string)*(endpoint.Get())).c_str() );
+	LOG_DEBUG("new client [%s]", ((std::string)*(endpoint.Get())).c_str());
 }
 
 void Network::Stop()

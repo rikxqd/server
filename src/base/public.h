@@ -9,7 +9,7 @@
 #include "log/log.h"
 
 
-// 最大值，最小值
+// 最大值、最小值
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 
@@ -52,15 +52,48 @@
 #endif
 
 // 日志
-#define DEBUG( buffer, ... )	\
+#ifdef WIN32
+#define LOG_DEBUG( buffer, ... )	\
+	Log::Instance().Pattern( {__FILE__, __LINE__}, Log::LOG_DEBUG, buffer, __VA_ARGS__ )
+#define LOG_INFO( buffer, ... )	\
+	Log::Instance().Pattern({ __FILE__, __LINE__ }, Log::LOG_INFO, buffer, __VA_ARGS__)
+#define LOG_WARN( buffer, ... )	\
+	Log::Instance().Pattern({ __FILE__, __LINE__ }, Log::LOG_WARNING, buffer, __VA_ARGS__)
+#define LOG_ERROR( buffer, ... )	\
+	Log::Instance().Pattern({ __FILE__, __LINE__ }, Log::LOG_ERROR, buffer, __VA_ARGS__)
+#define LOG_FATAL( buffer, ... )	\
+	Log::Instance().Pattern({ __FILE__, __LINE__ }, Log::LOG_FATAL, buffer, __VA_ARGS__)
+#elif UNIX
+#define LOG_DEBUG( buffer, ... )	\
 	Log::Instance().Pattern( {__FILE__, __LINE__}, Log::LOG_DEBUG, buffer, ##__VA_ARGS__ )
-#define INFO( buffer, ... )	\
-	Log::Instance().Pattern( {__FILE__, __LINE__}, Log::LOG_INFO, buffer, ##__VA_ARGS__ )
-#define WARN( buffer, ... )	\
-	Log::Instance().Pattern( {__FILE__, __LINE__}, Log::LOG_WARNING, buffer, ##__VA_ARGS__ )
-#define ERROR( buffer, ... )	\
-	Log::Instance().Pattern( {__FILE__, __LINE__}, Log::LOG_ERROR, buffer, ##__VA_ARGS__ )
-#define FATAL( buffer, ... )	\
-	Log::Instance().Pattern( {__FILE__, __LINE__}, Log::LOG_FATAL, buffer, ##__VA_ARGS__ )
+#define LOG_INFO( buffer, ... )	\
+	Log::Instance().Pattern({ __FILE__, __LINE__ }, Log::LOG_INFO, buffer, ##__VA_ARGS__)
+#define LOG_WARN( buffer, ... )	\
+	Log::Instance().Pattern({ __FILE__, __LINE__ }, Log::LOG_WARNING, buffer, ##__VA_ARGS__)
+#define LOG_ERROR( buffer, ... )	\
+	Log::Instance().Pattern({ __FILE__, __LINE__ }, Log::LOG_ERROR, buffer, ##__VA_ARGS__)
+#define LOG_FATAL( buffer, ... )	\
+	Log::Instance().Pattern({ __FILE__, __LINE__ }, Log::LOG_FATAL, buffer, ##__VA_ARGS__)
+#endif
+
+// VA_BUFFER
+#ifdef WIN32
+#define VA_BUFFER( buffer )												\
+	va_list list;														\
+	va_start( list, pattern );											\
+	int res = vsnprintf_s( buffer, sizeof(buffer)-1, pattern, list );	\
+	if ( res > 0 )														\
+		buffer[res] = 0;												\
+	else if ( -1 == res )												\
+		buffer[sizeof(buffer)-1] = 0;									\
+	va_end(list);
+#elif UNIX
+#define VA_BUFFER( buffer )												\
+	va_list list;														\
+	va_start( list, pattern );											\
+	int res = vsnprintf((buffer), sizeof(buffer), pattern, list);		\
+	buffer[sizeof(buffer)-1] = 0;										\
+	va_end(list);
+#endif
 
 #endif//_PUBLIC_H_

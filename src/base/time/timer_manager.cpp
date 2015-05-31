@@ -40,7 +40,7 @@ void TimerManager::Start()
 	if ( Thread::ThreadPool::Instance().Running() )
 		Thread::ThreadPool::Instance().Join( this );
 	else
-		ERROR( "The ThreadPool do not running!\n" );
+		LOG_ERROR("The ThreadPool do not running!\n");
 }
 
 void TimerManager::Stop()
@@ -69,7 +69,7 @@ void TimerManager::Tick()
 			else if( Timer::TIMER_TYPE_CIRCLE == timer->m_type )   
 				timer->m_counter = timer->m_interval;
 			else
-				FATAL( "Timer type is fatal ! type:%d", timer->m_type );
+				LOG_FATAL("Timer type is fatal ! type:%d", timer->m_type);
 		} 
 	}
 }

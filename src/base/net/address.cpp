@@ -35,7 +35,7 @@ Address::Address( const char* ip, uint16 port )
 	m_addr.sin_port = htobe16( port );
 	int32 res = ::inet_pton( AF_INET, ip, &m_addr.sin_addr );
 	if ( 0 >= res )
-		FATAL("ip is wrong");
+		LOG_FATAL("ip is wrong");
 }
 
 Address::Address( uint32 ip, uint16 port )
@@ -68,7 +68,7 @@ Address::Address( const char* host )
 		m_addr.sin_addr = *reinterpret_cast<in_addr*>( he->h_addr );
 	}
 	else if ( res )
-		FATAL("host is wrong");
+		LOG_FATAL("host is wrong");
 }
 
 Address::Address( SockAddr& addr )

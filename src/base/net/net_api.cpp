@@ -20,7 +20,7 @@ SockFd Socket( int32 domain, int32 type, int32 protocol )
 {
 	SockFd ssock = ::socket( domain, type, protocol );
 	if ( 0 > ssock )
-		FATAL( "create socket fail " );
+		LOG_FATAL("create socket fail ");
 	return ssock;
 }
 
@@ -28,7 +28,7 @@ int32 Connect( SockFd sock, const sockaddr* addr, socklen_t len )
 {
 	int32 res = ::connect( sock, addr, len );
 	if ( 0 > res )
-		FATAL( "connect fail " );
+		LOG_FATAL("connect fail ");
 	return res;
 }
 
@@ -36,7 +36,7 @@ int32 Bind( SockFd sock, const sockaddr* sa, socklen_t len )
 {
 	int32 res = ::bind( sock, sa, len );
 	if ( 0 > res )
-		FATAL( "bind fail " );
+		LOG_FATAL("bind fail ");
 	return res;
 }
 
@@ -52,7 +52,7 @@ int32 Listen( SockFd sock, int32 backlog )
 		backlog = ::atoi(env);
 	int32 res = ::listen( sock, backlog );
 	if ( 0 > res )
-		FATAL( "listen fail " );
+		LOG_FATAL("listen fail ");
 	return res;
 }
 
@@ -70,7 +70,7 @@ SockFd Accept( SockFd sock, sockaddr* sa, socklen_t* len )
 #else
 		if ( ECONNABORTED == errno )
 #endif
-			FATAL( "accept again " );
+			LOG_FATAL("accept again ");
 		else
 			break;
 	}

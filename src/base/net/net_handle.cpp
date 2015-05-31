@@ -18,7 +18,7 @@ NetHandle::NetHandle( int32 domain, int32 type, int32 protocol )
 
 NetHandle::~NetHandle()
 {
-	DEBUG( "NetHandle::~NetHandle" );
+	LOG_DEBUG("NetHandle::~NetHandle");
 	Close();
 }
 

@@ -13,7 +13,7 @@ namespace API
 	{
 		int32 ret = pthread_create( tidp, attr, func, arg );
 		if ( 0 != ret )
-			 FATAL( "Thread create fatal" );
+			LOG_FATAL("Thread create fatal");
 
 		return ret;
 	}

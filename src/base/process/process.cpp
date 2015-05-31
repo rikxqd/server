@@ -18,7 +18,7 @@ pid_t Fork(void)
 {
 	pid_t pid = fork();
 	if ( -1 == pid )
-		FATAL( "fork fatal" );
+		LOG_FATAL("fork fatal");
 
 	return pid;
 }

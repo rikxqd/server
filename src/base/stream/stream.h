@@ -38,7 +38,11 @@ public:
 	void Append( const char* v, int32 l );
 	void Reset();
 
+#ifdef WIN32
+	void Format(const char* pattern, ...);
+#elif UNIX
 	void Format( const char* pattern, ... ) __attribute__( ( format( printf, 2, 3 ) ) );
+#endif
 
 	virtual void Flush() = 0;
     

@@ -2,7 +2,6 @@
 #define _MATH_H_
 
 #include <vector>
-
 #include "public.h"
 
 

@@ -74,14 +74,14 @@ void* ThreadWorkerFunc( void* param )
 	if ( !worker )
 		return NULL;
 
-	DEBUG( "Start Worker %d", Process::ProcessId() );
+	LOG_DEBUG("Start Worker %d", Process::ProcessId());
 
 	while ( ThreadPool::Instance().Running() || worker->Busy() )
 	{
 		worker->DoOnce();
 	}
 
-	DEBUG( "Stop Worker %d", Process::ProcessId() );
+	LOG_DEBUG("Stop Worker %d", Process::ProcessId());
 	
 	return NULL;
 }

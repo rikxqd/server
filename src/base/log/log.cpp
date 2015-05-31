@@ -5,6 +5,53 @@
 
 
 #ifdef WIN32
+#include <windows.h>
+inline std::ostream& Blue(std::ostream &s)
+{
+	HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(hStdout, FOREGROUND_BLUE
+		|FOREGROUND_GREEN|FOREGROUND_INTENSITY);
+	return s;
+} 
+
+inline std::ostream& Red(std::ostream &s)
+{
+	HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(hStdout,
+		FOREGROUND_RED | FOREGROUND_INTENSITY);
+	return s;
+}
+
+inline std::ostream& Green(std::ostream &s)
+{
+	HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(hStdout,
+		FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+	return s;
+}
+
+inline std::ostream& Yellow(std::ostream &s)
+{
+	HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(hStdout,
+		FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY);
+	return s;
+}
+
+inline std::ostream& White(std::ostream &s)
+{
+	HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(hStdout,
+		FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+	return s;
+}
+
+#define WHITE( buffer )		std::cout << White << (buffer) << std::endl
+#define RED( buffer )		std::cout << Red << (buffer) << std::endl
+#define GREEN( buffer )		std::cout << Green << (buffer) << std::endl
+#define YELLOW( buffer )	std::cout << Yellow << (buffer) << std::endl
+#define BLUE( buffer )		std::cout << Blue << (buffer) << std::endl
+#define RED_WHITE( buffer )	std::cout << Red << (buffer) << std::endl
 
 #elif UNIX
 	#define WHITE( buffer )		std::cout << "\x1b[40;30m" << (buffer) << "\033[0m" << std::endl
@@ -14,12 +61,6 @@
 	#define BLUE( buffer )		std::cout << "\x1b[40;34m" << (buffer) << "\033[0m" << std::endl
 	#define RED_WHITE( buffer )	std::cout << "\x1b[41;30m" << (buffer) << "\033[0m" << std::endl	
 #endif
-
-#define VA_BUFFER( buffer )  \
-	va_list list;	\
-	va_start( list, pattern );	\
-	int res = vsnprintf( (buffer), sizeof(buffer), pattern, list );	\
-	va_end( list );
 
 static char s_level_name[Log::LOG_ALL][8] = { "Fatal", "Error", "Warn", "Info", "Debug" };
 
@@ -76,6 +117,7 @@ void Log::Pattern( SourceFile file, ELogLevel level, const char* pattern, ... )
 
 	if ( m_stream )
 	{
+/*
 		Time now;
 		m_stream->Format( "[%s][%s][%s][%s:%d] %s\n", 
 			now.AsString().c_str(), 
@@ -85,7 +127,7 @@ void Log::Pattern( SourceFile file, ELogLevel level, const char* pattern, ... )
 			file.Line(), 
 			buffer );
 
-		m_stream->Flush();
+		m_stream->Flush();*/
 	}
 	else
 	{
