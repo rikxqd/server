@@ -1,5 +1,9 @@
 #!/bin/bash
 
+if [ ! -n "$WS_PATH" ]; then
+	echo "WS_PATH IS NULL"
+else
+
 MakePath=${WS_PATH}/build
 if [ ! -d $MakePath ]; then 
 	mkdir $MakePath 
@@ -13,4 +17,6 @@ elif [ 1 == $# ]; then
 	cd $MakePath
 	make $1
 	cd -
+fi
+
 fi
