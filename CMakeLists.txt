@@ -1,7 +1,7 @@
 # 最上层cmake
 
 # 支持的最低版本
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8)
 
 # cmake过程输出
 message(STATUS "WS_PATH = $ENV{WS_PATH}")
