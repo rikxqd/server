@@ -3,14 +3,10 @@
 LINE=$2
 if [ -z $2 ] 
 then
-	LINE="-wn"
-elif [ "all" = "$2" ]
-then
-	LINE=""
-else
-	LINE="-wn"$s
+	LINE="."
 fi
-find . -iname \*.[ch] -exec grep $LINE -n --color -H $1 \{\} \;
-find . -iname \*.cpp -exec grep $LINE -n --color -H $1 \{\} \;
-find . -iname \*.h -exec grep $LINE -n --color -H $1 \{\} \;
-find . -iname \*.cc -exec grep $LINE -n --color -H $1 \{\} \;
+
+find $LINE -iname \*.[ch] -exec grep -wn -n --color -H $1 \{\} \;
+find $LINE -iname \*.cpp -exec grep -wn -n --color -H $1 \{\} \;
+find $LINE -iname \*.h -exec grep -wn -n --color -H $1 \{\} \;
+find $LINE -iname \*.cc -exec grep -wn -n --color -H $1 \{\} \;
