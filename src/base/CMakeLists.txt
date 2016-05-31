@@ -45,5 +45,6 @@ include_directories(${PROJECT_SOURCE_DIR}/src/base)
 
 # 添加动态库编译目标文件及其依赖文件
 #add_library(base SHARED ${LIBBASE_SRC})
-add_library(base STATIC ${LIBBASE_SRC})
-target_link_libraries(base pthread)
+add_library(libbase STATIC ${LIBBASE_SRC})
+target_link_libraries(libbase pthread)
+set_target_properties(libbase PROPERTIES OUTPUT_NAME "base")

@@ -6,7 +6,7 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 include_directories(${PROJECT_SOURCE_DIR}/src/base)
 include_directories(${PROJECT_SOURCE_DIR}/src/frame)
 include_directories(${PROJECT_SOURCE_DIR}/third/tinyxml)
-#include_directories(${PROJECT_SOURCE_DIR}/third/lua)
+include_directories(${PROJECT_SOURCE_DIR}/third/lua)
 
 # 添加编译可执行目标文件及其依赖
 add_executable(server server/server.cpp server/xml.cpp)
@@ -27,9 +27,9 @@ add_executable(test_lua lua/lua.cpp)
  
 
 # 添加链接库
-target_link_libraries(server base xml)
-target_link_libraries(client base)
-target_link_libraries(test_lua base lua)
+target_link_libraries(server libbase libxml)
+target_link_libraries(client libbase)
+target_link_libraries(test_lua libbase liblua dl readline)
 #target_link_libraries(log base)
 #target_link_libraries(mutilparam base)
 #target_link_libraries(kmp base)

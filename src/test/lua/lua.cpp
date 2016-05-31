@@ -1,5 +1,5 @@
-#include <stdio.h>
-#include <string.h>
+#include <iostream>
+
 
 extern "C" 
 {
@@ -8,86 +8,62 @@ extern "C"
     #include <lualib.h>
 }
 
-void luaM_setstring(lua_State *L, const char *index, char *value)
+static int average(lua_State *L)
 {
-    lua_pushstring(L, index);
-    lua_pushstring(L, value);
-    lua_settable(L, -3);
-}
-void luaM_setnumber(lua_State *L, const char *index, int value)
-{
-    lua_pushstring(L, index);
-    lua_pushnumber(L, (double)value);
-    lua_settable(L, -3);
-}
-int luaM_getstring(lua_State *L, const char *index, char *value)
-{
-    lua_pushstring(L, index);
-    lua_gettable(L, -2);
-    fprintf(stderr,"type[%s]\n", lua_typename(L, lua_type(L, -1)));
-    if ( ! lua_isstring(L, -1) )
-    {
-        lua_pop(L, 1);
-        return 0;
+    //返回栈中元素的个数  
+    int n = lua_gettop(L); 
+    double sum = 0;  
+    int i;  
+    for (i = 1; i <= n; i++)  
+    {  
+        if (!lua_isnumber(L, i))   
+        {  
+            lua_pushstring(L, "Incorrect argument to 'average'");  
+            lua_error(L);  
+        }  
+        sum += lua_tonumber(L, i);  
     }
-    strcpy(value, lua_tostring(L, -1));
-    lua_pop(L, 1);
-    return 1;
-}
-int luaM_getnumber(lua_State *L, const char *index)
-{
-    int result;
+    /* push the average */
+    lua_pushnumber(L, sum / n);
+    /* push the sum */  
+    lua_pushnumber(L, sum);
 
-    lua_pushstring(L, index);
-    lua_gettable(L, -2);
-    if ( ! lua_isnumber(L, -1) )
-    {
-       lua_pop(L,1);
-        return 0;
-    }
-    result = lua_tonumber(L, -1);
-    lua_pop(L, 1);
-    return result;
+    /* return the number of results */
+    return 2;
 }
 
-int main(int argc, char **argv)
+int luaadd(lua_State* L, int x, int y)
 {
-    lua_State *L = luaL_newstate();
+    lua_getglobal(L, "add");
+    lua_pushnumber(L, x);
+    lua_pushnumber(L, y);
+    lua_call(L, 2, 1);
+
+    int sum = (int)lua_tonumber(L, -1);
+
+    lua_pop(L, 1);                  
+
+    return sum;
+}
+
+int main(int argc, char** agrv)
+{
+    lua_State* L = luaL_newstate();
     luaL_openlibs(L);
-    char sTest[512]="<?xml version=\"1.0\" encoding=\"utf-8\" ?><req msg=\"test\"></req>";
+    lua_register(L, "average", average);
+    luaL_dofile(L, "test.lua");
 
-    lua_newtable(L);
-    luaM_setstring(L, "version", "1.1");
-    luaM_setstring(L, "host", "127.0.0.1");
-    luaM_setstring(L, "method", "POST");
-    luaM_setstring(L, "content", sTest);
-    luaM_setnumber(L, "contentlength", strlen(sTest));
-    lua_setglobal( L, "server");
+    lua_getglobal(L,"avg");  
+    std::cout<<"avg is:"<<lua_tonumber(L,-1)<<std::endl;  
+    lua_pop(L,1);  
+    lua_getglobal(L,"sum");  
+    std::cout<<"sum is:"<<lua_tonumber(L,-1)<<std::endl;  
+    lua_pop(L,1);  
 
+    std::cout<<"add result is:"<<luaadd(L, 10, 15)<<std::endl;
 
-    if ( luaL_loadfile(L, "./test.lua") || lua_pcall(L, 0, 0, 0) )
-    {
-        fprintf(stderr, "can not run loader.lua: %s\n", lua_tostring(L, -1));
-        return 1;
-    }
+    /* cleanup Lua */
+    lua_close(L); 
 
-    lua_getglobal(L,"server");
-    if (!lua_istable(L, -1) )
-    {
-        fprintf(stderr, "loader.lua data err \n");
-       return 1;
-    }
-    char buf[1024];
-    luaM_getstring(L, "content",buf);
-    int ret = luaM_getnumber(L, "contentlength");
-    fprintf(stderr,"resp content[%d]:\n%s\n", ret, buf);
-    memset(buf, 0x0, sizeof(buf));
-    luaM_getstring(L, "reasonphrase",buf);
-    fprintf(stderr,"resp reasonphrase:\n%s\n",  buf);
-    ret = luaM_getnumber(L, "statuscode");
-    fprintf(stderr,"resp statuscode:\n%d\n",  ret);
-
-    lua_close(L);
-
-    return 1;
+    return 0;
 }
