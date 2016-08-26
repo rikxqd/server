@@ -1,0 +1,7 @@
+#!/bin/bash
+
+pwd=$0
+path=${pwd%%goto}
+cd $path
+
+python goto.py $@

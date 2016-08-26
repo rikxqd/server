@@ -1,0 +1,8 @@
+#!/bin/bash
+if [ $1 = "-h" ]; then
+    echo "只显示log:                 gitlog "
+    echo "显示每次的修改文件:        gitlog --name-status"
+    echo "指定文件或所有文件的diff:  gitlog -p [filename]"
+else
+    git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset %C(yellow)%cN%Creset' $1 $2
+fi
