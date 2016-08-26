@@ -23,7 +23,7 @@ int main( int argc, char* argv[] )
 
 	LogStream s;
 
-      s <<v1<<"\n"
+	s 	<<v1<<"\n"
 		<<v2<<"\n"
 		<<v3<<"\n"
 		<<v4<<"\n"

@@ -13,6 +13,8 @@
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 
+#define SQUARE(x) ((x)*(x))
+
 // 删除指针
 #define DELETE_VALUE(_ptr)	\
 	if((_ptr)) { delete (_ptr); (_ptr) = NULL; };

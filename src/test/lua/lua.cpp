@@ -23,12 +23,9 @@ static int average(lua_State *L)
         }  
         sum += lua_tonumber(L, i);  
     }
-    /* push the average */
     lua_pushnumber(L, sum / n);
-    /* push the sum */  
     lua_pushnumber(L, sum);
 
-    /* return the number of results */
     return 2;
 }
 

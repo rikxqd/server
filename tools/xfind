@@ -1,12 +1,15 @@
 #!/bin/bash
 
-LINE=$2
+DIR=$2
 if [ -z $2 ] 
 then
-	LINE="."
+	DIR="./"
 fi
 
-find $LINE -iname \*.[ch] -exec grep -wn -n --color -H $1 \{\} \;
-find $LINE -iname \*.cpp -exec grep -wn -n --color -H $1 \{\} \;
-find $LINE -iname \*.h -exec grep -wn -n --color -H $1 \{\} \;
-find $LINE -iname \*.cc -exec grep -wn -n --color -H $1 \{\} \;
+find $DIR -iname \*.cpp -exec grep -wn -n --color -H $1 \{\} \;
+find $DIR -iname \*.h -exec grep -wn -n --color -H $1 \{\} \;
+find $DIR -iname \*.cc -exec grep -wn -n --color -H $1 \{\} \;
+find $DIR -iname \*.c -exec grep -wn -n --color -H $1 \{\} \;
+find $DIR -iname \*.lua -exec grep -wn -n --color -H $1 \{\} \;
+find $DIR -iname \*.td -exec grep -wn -n --color -H $1 \{\} \;
+find $DIR -iname \*.sproto -exec grep -wn -n --color -H $1 \{\} \;

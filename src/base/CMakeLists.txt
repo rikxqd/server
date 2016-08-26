@@ -24,6 +24,8 @@ set(LIBBASE_SRC
 	utility/math.cpp
 	utility/ref_counter.cpp
 	utility/common.cpp
+	utility/collision/common.cpp
+	utility/collision/collision_math.cpp
 	net/network.cpp
 	net/net_api.cpp
 	net/endpoint.cpp
