@@ -6,10 +6,11 @@ then
 	DIR="./"
 fi
 
-find $DIR -iname \*.cpp -exec grep -wn -n --color -H $1 \{\} \;
-find $DIR -iname \*.h -exec grep -wn -n --color -H $1 \{\} \;
-find $DIR -iname \*.cc -exec grep -wn -n --color -H $1 \{\} \;
-find $DIR -iname \*.c -exec grep -wn -n --color -H $1 \{\} \;
+#find $DIR -iname \*.cpp -exec grep -wn -n --color -H $1 \{\} \;
+#find $DIR -iname \*.h -exec grep -wn -n --color -H $1 \{\} \;
+#find $DIR -iname \*.cc -exec grep -wn -n --color -H $1 \{\} \;
+#find $DIR -iname \*.c -exec grep -wn -n --color -H $1 \{\} \;
 find $DIR -iname \*.lua -exec grep -wn -n --color -H $1 \{\} \;
 find $DIR -iname \*.td -exec grep -wn -n --color -H $1 \{\} \;
 find $DIR -iname \*.sproto -exec grep -wn -n --color -H $1 \{\} \;
+#find $DIR -iname \*.py -exec grep -wn -n --color -H $1 \{\} \;

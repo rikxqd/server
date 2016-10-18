@@ -8,7 +8,7 @@ set(LIBLUA_SRC
 	lcode.c
 	lctype.c
 	ldebug.c
-	ldo.c	
+	ldo.c
 	ldump.c
 	lfunc.c
 	lgc.c
